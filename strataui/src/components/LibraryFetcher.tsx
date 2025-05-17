@@ -63,6 +63,7 @@ export default function LibraryFetcher() {
             <p className="text-sm text-gray-500 dark:text-gray-400 break-all">{lib.url}</p>
             <span className="self-start mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
               {TAG_LABELS[lib.tag] || lib.tag}
+
             </span>
           </div>
         </li>
