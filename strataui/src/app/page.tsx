@@ -1,10 +1,7 @@
-import LibraryFetcher from '@/components/LibraryFetcher'; 
-
 export default function Page() {
   return (
     <main>
-      <h1>Tailwind Component Libraries</h1>
-      <LibraryFetcher />
+      <h1>Home</h1>
     </main>
   );
 }

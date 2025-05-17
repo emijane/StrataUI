@@ -2,72 +2,83 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-
-const TAG_LABELS: Record<string, string> = {
-  tailwind: 'Tailwind CSS',
-  react: 'React',
-  vue: 'Vue.js',
-  angular: 'Angular',
-  svelte: 'Svelte',
-};
-
-
-type Library = {
-  id: number;
-  name: string;
-  url: string;
-  tag: string;
-};
+import LibraryList from './LibraryList';
+import FilterSidebar from './FilterSidebar';
+import type { Library } from '@/types';
 
 export default function LibraryFetcher() {
   const [libraries, setLibraries] = useState<Library[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTag, setSelectedTag] = useState('all');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchLibraries() {
-      const { data, error } = await supabase
-        .from('tailwind_libraries')
-        .select('*')
-        .order('name');
+      setLoading(true);
 
-      console.log("Fetched libraries:", data);
+      let query = supabase
+        .from('libraries')
+        .select('id, name, url, tags, category');
 
-      if (error) console.error('Error fetching libraries:', error);
-      else setLibraries(data || []);
+      if (selectedTag !== 'all') {
+        query = query.contains('tags', [selectedTag]);
+      }
+
+      if (selectedCategories.length > 0) {
+        query = query.in('category', selectedCategories);
+      }
+
+      const { data, error } = await query.order('name');
+      console.log('SUPABASE DATA:', data);
+
+      if (error) {
+        console.error('Error fetching libraries:', error);
+        setLibraries([]);
+      } else {
+        const term = searchTerm.toLowerCase();
+        const filtered = data?.filter((lib: Library) => {
+          const nameMatch = lib.name.toLowerCase().includes(term);
+          const tagMatch = (lib.tags || []).some((tag: string) =>
+            tag.toLowerCase().includes(term)
+          );
+          return nameMatch || tagMatch;
+        });
+
+        setLibraries(filtered || []);
+      }
 
       setLoading(false);
     }
 
     fetchLibraries();
-  }, []);
-
-  if (loading) return <p className="text-gray-500">Loading libraries...</p>;
-  if (!libraries.length) return <p className="text-red-500">No libraries found.</p>;
+  }, [selectedTag, selectedCategories, searchTerm]);
 
   return (
-    <ul className="space-y-4 mt-6">
-      {libraries.map((lib) => (
-        <li
-          key={lib.id}
-          className="p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900"
-        >
-          <div className="flex flex-col gap-1">
-            <a
-              href={lib.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 text-lg font-semibold hover:underline"
-            >
-              {lib.name}
-            </a>
-            <p className="text-sm text-gray-500 dark:text-gray-400 break-all">{lib.url}</p>
-            <span className="self-start mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
-              {TAG_LABELS[lib.tag] || lib.tag}
+    <div className="flex flex-col md:flex-row gap-8">
+      {/* Sidebar with tag & category filters */}
+        <FilterSidebar
+            selectedTag={selectedTag}
+            onSelect={setSelectedTag}
+            selectedCategories={selectedCategories}
+            onCategoryChange={setSelectedCategories}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+        />
 
-            </span>
-          </div>
-        </li>
-      ))}
-    </ul>
+
+      {/* Main content */}
+      <div className="flex-1">
+
+        {/* Results */}
+        {loading ? (
+          <p>Loading libraries...</p>
+        ) : libraries.length === 0 ? (
+          <p>No libraries found.</p>
+        ) : (
+          <LibraryList libraries={libraries} />
+        )}
+      </div>
+    </div>
   );
 }
