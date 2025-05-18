@@ -1,6 +1,6 @@
 'use client';
 
-import LibraryFetcher from '@/components/LibraryFetcher';
+import LibraryFetcher from '@/components/library/LibraryFetcher';
 
 export default function LibraryPage() {
   return (

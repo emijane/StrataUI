@@ -54,9 +54,9 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
       href={lib.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex-grow min-w-[260px] max-w-[100%] sm:max-w-[48%] lg:max-w-[31%] p-4 
+      className="flex-grow min-w-[150px] max-w-[100%] sm:max-w-[48%] lg:max-w-[31%] p-4 
         bg-white/10 backdrop-blur-md border border-white/20 
-        rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer no-underline"
+        rounded-2xl shadow-md cursor-pointer no-underline"
     >
       <div className="flex flex-col h-full">
         <h2 className="text-white font-semibold text-lg mb-1">{lib.name}</h2>

@@ -80,16 +80,16 @@ export default function FilterSidebar({
     <aside
       className="sticky top-18 w-full md:w-70 lg:w-80 md:p-4 outline outline-white/20 text-white 
       max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 
-      backdrop-blur-md border border-white/10 shadow-lg"
+      backdrop-blur-md border-r-1 border-white/10 shadow-lg"
     >
       {/* Mobile Toggle */}
       <div className="md:hidden flex justify-between items-center p-4 border-b border-white/10">
         <h2 className="text-white font-semibold">Filters</h2>
         <button
           onClick={() => setIsSidebarOpen((prev) => !prev)}
-          className="bg-purple-400 text-white p-2 rounded-md"
+          className="outline-2 outline-white/10 focus:outline-white/30 text-white p-1 rounded-md"
         >
-          {isSidebarOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          {isSidebarOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </button>
       </div>
 

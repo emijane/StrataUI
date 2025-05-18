@@ -1,0 +1,18 @@
+'use client';
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons";
+
+export default function HeaderSection() {
+  return (
+    <div className="max-w-2xl text-center mx-auto mb-10 px-4 ">
+      <div className="flex flex-row items-center gap-4 justify-center">
+        <FontAwesomeIcon icon={faScrewdriverWrench} className="text-white text-2xl" />
+        <h1 className="text-white text-3xl font-semibold">Explore Toolkits</h1>
+      </div>
+      <p className="text-white/80 mt-5">
+        Discover your next go-to toolkit — explore powerful, beautifully crafted libraries and components to supercharge your next project and streamline your development workflow.
+      </p>
+    </div>
+  );
+}
