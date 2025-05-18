@@ -130,7 +130,7 @@ export default function FilterSidebar({
                   value={tag}
                   checked={selectedTag === tag}
                   onChange={() => onSelect(tag)}
-                  className="accent-blue-500 appearance-none ml-2 w-4 h-4 outline outline-white/20 rounded-full checked:bg-purple-300 checked:border-transparent"
+                  className="appearance-none ml-2 w-4 h-4 outline outline-white/20 rounded-full checked:bg-purple-300 checked:border-transparent pointer-cursor"
                 />
                 {formatLabel(tag, TAG_LABELS)}
               </label>
@@ -151,7 +151,7 @@ export default function FilterSidebar({
                   type="checkbox"
                   checked={selectedCategories.includes(cat)}
                   onChange={() => toggleCategory(cat)}
-                  className="appearance-none w-4 h-4 ml-2 border border-white/20 rounded-md checked:bg-purple-300 checked:border-transparent accent-blue-500"
+                  className="appearance-none w-4 h-4 ml-2 border border-white/20 rounded-md checked:bg-purple-300 checked:border-transparent cursor-pointer"
                 />
                 {formatLabel(cat, CATEGORY_LABELS)}
               </label>
