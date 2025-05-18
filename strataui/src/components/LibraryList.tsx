@@ -26,7 +26,7 @@ function formatCategoryLabel(category: string): string {
 
 export default function LibraryList({ libraries }: { libraries: Library[] }) {
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-5 m-8">
       {libraries.map((lib) => (
         <a
           key={lib.id}

@@ -34,9 +34,9 @@ export default function FilterSidebar({
   }
 
   return (
-    <aside className="w-full md:w-64 h-full bg-blue-950 text-white md:block">
-      {/* Toggle button (only visible on mobile) */}
-      <div className="md:hidden flex justify-between items-center p-4">
+    <aside className="sticky top-16 w-full md:w-75 md:p-4 bg-blue-950 text-white max-h-[calc(100vh-4rem)] overflow-y-auto">
+      {/* Mobile Toggle Button */}
+      <div className="md:hidden flex justify-between items-center p-4 border-b border-blue-800">
         <h2 className="text-white font-semibold">Filters</h2>
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -46,9 +46,9 @@ export default function FilterSidebar({
         </button>
       </div>
 
-      {/* Filter Content (collapsible on mobile) */}
+      {/* Filter Content */}
       <div
-        className={`transition-all duration-600 ease-in-out overflow-hidden ${
+        className={`transition-all duration-500 ease-in-out overflow-hidden ${
           isOpen ? 'max-h-[1000px] p-4' : 'max-h-0 p-0'
         } md:max-h-none md:p-4`}
       >

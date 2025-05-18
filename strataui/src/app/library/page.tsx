@@ -4,7 +4,7 @@ import LibraryFetcher from '@/components/LibraryFetcher';
 
 export default function LibraryPage() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen overflow-visible">
       <LibraryFetcher />
     </div>
   );

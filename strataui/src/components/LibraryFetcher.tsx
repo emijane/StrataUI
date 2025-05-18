@@ -55,7 +55,7 @@ export default function LibraryFetcher() {
   }, [selectedTag, selectedCategories, searchTerm]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
+    <div className="flex flex-col md:flex-row">
       {/* Sidebar with tag & category filters */}
         <FilterSidebar
             selectedTag={selectedTag}
