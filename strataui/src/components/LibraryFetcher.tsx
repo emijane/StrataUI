@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabaseClient';
 import LibraryList from './LibraryList';
 import FilterSidebar from './FilterSidebar';
 import type { Library } from '@/types';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons"; // Import the icon
 
 export default function LibraryFetcher() {
   const [libraries, setLibraries] = useState<Library[]>([]);
@@ -88,11 +90,17 @@ export default function LibraryFetcher() {
 
       {/* Main content */}
       <div className="flex-1">
-        <h1 className="text-white ml-8 mt-8 text-3xl font-semibold">Explore Libraries</h1>
+        <div className='max-w-[40rem] text-center mx-auto mt-8'>
+          <div className='flex flex-row m-8 center items-center gap-4 justify-center'>
+            <FontAwesomeIcon icon={faScrewdriverWrench} className='text-white text-2xl' />
+            <h1 className="text-white text-3xl font-semibold">Explore Toolkits</h1>
+          </div>
+          <p className='text-white/80'>Discover your next go-to toolkit — explore powerful, beautifully crafted libraries and components to supercharge your next project and streamline your development workflow.</p>
+        </div>
         {loading ? (
-          <p>Loading libraries...</p>
+          <p className="text-white/80 p-8">Loading tools..</p>
         ) : libraries.length === 0 ? (
-          <p>No libraries found.</p>
+          <p className="text-white/80 p-8">No tools found. Contact us to feature your development tool!</p>
         ) : (
           <LibraryList libraries={libraries} />
         )}

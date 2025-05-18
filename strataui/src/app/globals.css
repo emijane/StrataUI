@@ -34,7 +34,7 @@ body {
   background: var(--color-pink);
   border-radius: 9999px;
   filter: blur(170px);
-  opacity: 100%;
+  opacity: 80%;
   z-index: 0;
   pointer-events: none;
 }

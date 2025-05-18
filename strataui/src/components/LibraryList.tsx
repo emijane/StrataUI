@@ -60,11 +60,8 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
     >
       <div className="flex flex-col h-full">
         <h2 className="text-white font-semibold text-lg mb-1">{lib.name}</h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 break-words">
-          {lib.url}
-        </p>
 
-        <div className="flex flex-wrap gap-2 mt-5 items-center">
+        <div className="flex flex-wrap gap-2 mt-3 items-center">
           {formattedTags.map(({ key, label }) => (
             <span
               key={key}
@@ -91,7 +88,7 @@ LibraryCard.displayName = 'LibraryCard';
 
 export default function LibraryList({ libraries }: { libraries: Library[] }) {
   if (libraries.length === 0) {
-    return <p className="m-8 text-gray-400">No libraries to display.</p>;
+    return <p className="m-8 text-white">No libraries to display.</p>;
   }
 
   return (
