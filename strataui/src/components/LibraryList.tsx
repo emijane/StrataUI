@@ -33,23 +33,25 @@ export default function LibraryList({ libraries }: { libraries: Library[] }) {
           href={lib.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-grow min-w-[260px] max-w-[100%] sm:max-w-[48%] lg:max-w-[31%] p-4 border rounded-lg shadow-sm dark:border-gray-700 bg-white dark:bg-gray-900 hover:shadow-md transition-shadow duration-200 cursor-pointer no-underline"
+          className="flex-grow min-w-[260px] max-w-[100%] sm:max-w-[48%] lg:max-w-[31%] p-4 
+          bg-white/10 backdrop-blur-md border border-white/20 
+            rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer no-underline"
         >
           <div className="flex flex-col h-full">
-            <h2 className="text-blue-600 font-semibold text-lg mb-1">{lib.name}</h2>
+            <h2 className="text-white font-semibold text-lg mb-1">{lib.name}</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 break-words">{lib.url}</p>
 
             <div className="flex flex-wrap gap-2 mt-2 items-center">
               {(lib.tags || []).map((tag: string) => (
                 <span
                   key={tag}
-                  className="text-xs bg-gray-200 text-gray-800 px-2 py-0.5 rounded-full dark:bg-gray-700 dark:text-white"
+                  className="text-xs outline outline-white/30 text-white p-2 rounded-xl"
                 >
                   {formatTagLabel(tag)}
                 </span>
               ))}
               {lib.category && (
-                <span className="text-xs bg-gray-300 text-gray-900 px-2 py-0.5 rounded-full dark:bg-gray-600 dark:text-white">
+                <span className="text-xs outline outline-white/30 text-white p-2 rounded-xl">
                   {formatCategoryLabel(lib.category)}
                 </span>
               )}
