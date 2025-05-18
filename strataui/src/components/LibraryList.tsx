@@ -64,7 +64,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
           {lib.url}
         </p>
 
-        <div className="flex flex-wrap gap-2 mt-2 items-center">
+        <div className="flex flex-wrap gap-2 mt-5 items-center">
           {formattedTags.map(({ key, label }) => (
             <span
               key={key}

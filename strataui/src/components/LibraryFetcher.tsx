@@ -88,6 +88,7 @@ export default function LibraryFetcher() {
 
       {/* Main content */}
       <div className="flex-1">
+        <h1 className="text-white ml-8 mt-8 text-3xl font-semibold">Explore Libraries</h1>
         {loading ? (
           <p>Loading libraries...</p>
         ) : libraries.length === 0 ? (
