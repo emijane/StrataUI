@@ -85,7 +85,7 @@ export default function FilterSidebar({
 
         {/* Category Checkboxes */}
         <div>
-          <h3 className="text-sm font-medium mb-2 text-white/80">Filter by Category</h3>
+          <h3 className="text-sm font-medium mb-2 text-magic">Filter by Category</h3>
           <div className="flex flex-col gap-2 text-sm">
             {CATEGORY_TAGS.map((cat) => (
               <label key={cat} className="flex items-center gap-2 cursor-pointer">
