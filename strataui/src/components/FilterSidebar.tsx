@@ -1,17 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
-// Utility hook to prevent hydration mismatch
-function useHasMounted() {
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-  return hasMounted;
-}
-
+// ----- Types -----
 type Props = {
   selectedTag: string;
   onSelect: (tag: string) => void;
@@ -21,9 +13,39 @@ type Props = {
   onSearchChange: (term: string) => void;
 };
 
+// ----- Constants -----
 const FRAMEWORK_TAGS = ['all', 'tailwind', 'react', 'vue', 'angular', 'svelte'];
 const CATEGORY_TAGS = ['framework', 'font', 'color-tool', 'animation', 'icon'];
 
+const TAG_LABELS: Record<string, string> = {
+  all: 'All',
+  tailwind: 'Tailwind CSS',
+  react: 'React',
+  vue: 'Vue.js',
+  angular: 'Angular',
+  svelte: 'Svelte',
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  framework: 'Framework',
+  font: 'Font',
+  'color-tool': 'Color Tool',
+  animation: 'Animation',
+  icon: 'Icon',
+};
+
+function formatLabel(value: string, labels: Record<string, string>): string {
+  return labels[value] || value;
+}
+
+// ----- Utility: Hydration Guard -----
+function useHasMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+}
+
+// ----- Main Component -----
 export default function FilterSidebar({
   selectedTag,
   onSelect,
@@ -37,8 +59,8 @@ export default function FilterSidebar({
   const [isFrameworkOpen, setIsFrameworkOpen] = useState(true);
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
 
-  // Collapse sidebar on mobile
-  useEffect(() => {
+  // Collapse sidebar on mobile layout
+  useLayoutEffect(() => {
     if (window.innerWidth < 768) {
       setIsSidebarOpen(false);
     }
@@ -46,32 +68,32 @@ export default function FilterSidebar({
 
   if (!hasMounted) return null;
 
-  function toggleCategory(category: string) {
-    if (selectedCategories.includes(category)) {
-      onCategoryChange(selectedCategories.filter((cat) => cat !== category));
-    } else {
-      onCategoryChange([...selectedCategories, category]);
-    }
-  }
+  const toggleCategory = (cat: string) => {
+    onCategoryChange(
+      selectedCategories.includes(cat)
+        ? selectedCategories.filter((c) => c !== cat)
+        : [...selectedCategories, cat]
+    );
+  };
 
   return (
     <aside
       className="sticky top-16 w-full md:w-80 md:p-4 outline outline-white/20 text-white 
-        max-h-[calc(100vh-4rem)] overflow-y-auto 
-        bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl"
+      max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 
+      backdrop-blur-md border border-white/10 shadow-lg"
     >
-      {/* Mobile Toggle Button */}
+      {/* Mobile Toggle */}
       <div className="md:hidden flex justify-between items-center p-4 border-b border-blue-800">
         <h2 className="text-white font-semibold">Filters</h2>
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClick={() => setIsSidebarOpen((prev) => !prev)}
           className="bg-blue-800 text-white p-2 rounded-md"
         >
           {isSidebarOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
       </div>
 
-      {/* Filter Content */}
+      {/* Filters Content */}
       <div
         className={`transition-all duration-500 ease-in-out overflow-hidden ${
           isSidebarOpen ? 'max-h-[1000px] p-4' : 'max-h-0 p-0'
@@ -95,11 +117,13 @@ export default function FilterSidebar({
           title="Framework"
           isOpen={isFrameworkOpen}
           onToggle={() => setIsFrameworkOpen((prev) => !prev)}
-          className="text-purple-300"
         >
           <div className="flex flex-col gap-2 text-sm mt-2">
             {FRAMEWORK_TAGS.map((tag) => (
-              <label key={tag} className="flex items-center gap-3 cursor-pointer">
+              <label
+                key={tag}
+                className="flex items-center gap-3 cursor-pointer"
+              >
                 <input
                   type="radio"
                   name="framework"
@@ -108,7 +132,7 @@ export default function FilterSidebar({
                   onChange={() => onSelect(tag)}
                   className="accent-blue-500 appearance-none ml-2 w-4 h-4 outline outline-white/20 rounded-full checked:bg-purple-300 checked:border-transparent"
                 />
-                {formatTagLabel(tag)}
+                {formatLabel(tag, TAG_LABELS)}
               </label>
             ))}
           </div>
@@ -119,7 +143,6 @@ export default function FilterSidebar({
           title="Category"
           isOpen={isCategoryOpen}
           onToggle={() => setIsCategoryOpen((prev) => !prev)}
-          className="text-purple-300"
         >
           <div className="flex flex-col gap-2 text-sm mt-2">
             {CATEGORY_TAGS.map((cat) => (
@@ -130,7 +153,7 @@ export default function FilterSidebar({
                   onChange={() => toggleCategory(cat)}
                   className="appearance-none w-4 h-4 ml-2 border border-white/20 rounded-md checked:bg-purple-300 checked:border-transparent accent-blue-500"
                 />
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                {formatLabel(cat, CATEGORY_LABELS)}
               </label>
             ))}
           </div>
@@ -140,22 +163,21 @@ export default function FilterSidebar({
   );
 }
 
-// --- Collapsible helper component with animation ---
+// ----- Collapsible Component -----
 type CollapsibleProps = {
   title: string;
   isOpen: boolean;
   onToggle: () => void;
   children: React.ReactNode;
-  className?: string;
 };
 
-function Collapsible({ title, isOpen, onToggle, children, className = '' }: CollapsibleProps) {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState('0px');
+function Collapsible({ title, isOpen, onToggle, children }: CollapsibleProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<string>('0px');
 
   useEffect(() => {
-    if (contentRef.current) {
-      setHeight(isOpen ? `${contentRef.current.scrollHeight}px` : '0px');
+    if (ref.current) {
+      setHeight(isOpen ? `${ref.current.scrollHeight}px` : '0px');
     }
   }, [isOpen]);
 
@@ -163,13 +185,13 @@ function Collapsible({ title, isOpen, onToggle, children, className = '' }: Coll
     <div className="mb-6 border-b border-white/10 pb-1">
       <button
         onClick={onToggle}
-        className={`w-full flex justify-between items-center text-left text-sm font-medium mb-4 ${className}`}
+        className="w-full flex justify-between items-center text-left text-sm font-medium mb-4 text-purple-300"
       >
         {title}
         {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
       <div
-        ref={contentRef}
+        ref={ref}
         style={{ maxHeight: height }}
         className="transition-all duration-500 ease-in-out overflow-hidden mb-4"
       >
@@ -177,17 +199,4 @@ function Collapsible({ title, isOpen, onToggle, children, className = '' }: Coll
       </div>
     </div>
   );
-}
-
-// --- Label formatting ---
-function formatTagLabel(tag: string): string {
-  const labels: Record<string, string> = {
-    all: 'All',
-    tailwind: 'Tailwind CSS',
-    react: 'React',
-    vue: 'Vue.js',
-    angular: 'Angular',
-    svelte: 'Svelte',
-  };
-  return labels[tag] || tag;
 }
