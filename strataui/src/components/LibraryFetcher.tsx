@@ -89,13 +89,13 @@ export default function LibraryFetcher() {
       />
 
       {/* Main content */}
-      <div className="flex-1">
-        <div className='max-w-[40rem] text-center mx-auto mt-8'>
-          <div className='flex flex-row m-8 center items-center gap-4 justify-center'>
+      <div className="flex-1 mt-20 mb-15">
+        <div className='max-w-[40rem] text-center mx-auto mb-15'>
+          <div className='flex flex-row center items-center gap-4 justify-center'>
             <FontAwesomeIcon icon={faScrewdriverWrench} className='text-white text-2xl' />
             <h1 className="text-white text-3xl font-semibold">Explore Toolkits</h1>
           </div>
-          <p className='text-white/80'>Discover your next go-to toolkit — explore powerful, beautifully crafted libraries and components to supercharge your next project and streamline your development workflow.</p>
+          <p className='text-white/80 mt-5'>Discover your next go-to toolkit — explore powerful, beautifully crafted libraries and components to supercharge your next project and streamline your development workflow.</p>
         </div>
         {loading ? (
           <p className="text-white/80 p-8">Loading tools..</p>
