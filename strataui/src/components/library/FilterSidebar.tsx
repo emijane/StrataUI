@@ -8,8 +8,6 @@ type Props = {
     onTagChange: (tags: string[]) => void;
     selectedTech: string[];
     onTechChange: (techs: string[]) => void;
-    searchTerm: string;
-    onSearchChange: (term: string) => void;
 };
 
 const TAGS = [
@@ -67,8 +65,6 @@ export default function FilterSidebar({
     onTagChange,
     selectedTech,
     onTechChange,
-    searchTerm,
-    onSearchChange
 }: Props) {
     const hasMounted = useHasMounted();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -100,7 +96,7 @@ export default function FilterSidebar({
     };
 
     return (
-        <aside className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-15 outline outline-white/20 text-white max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 shadow-lg">
+        <aside className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-5 outline outline-white/20 text-white max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 shadow-lg z-50">
             <div className="md:hidden flex justify-between items-center p-4 border-b border-white/10">
                 <h2 className="text-white font-semibold">Filters</h2>
                 <button
@@ -116,15 +112,6 @@ export default function FilterSidebar({
                     isSidebarOpen ? 'max-h-[1000px] p-4' : 'max-h-0 p-0'
                 } md:max-h-none md:p-4`}
             >
-                <div className="mb-12">
-                    <input
-                        type="text"
-                        placeholder="Search libraries..."
-                        value={searchTerm}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                        className="w-full font-space-mono px-3 py-2 rounded-lg text-sm outline outline-white/20 text-white bg-transparent focus:outline-none focus:ring"
-                    />
-                </div>
 
                 <Collapsible
                     title="TYPE"

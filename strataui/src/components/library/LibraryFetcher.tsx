@@ -7,6 +7,8 @@ import FilterSidebar from './FilterSidebar';
 import AppliedFilters from './AppliedFilters';
 import type { Library } from '@/types';
 import HeaderSection from './LibraryFiltersHeader';
+import SearchBar from './SearchBar';
+
 
 export default function LibraryFetcher() {
     const [libraries, setLibraries] = useState<Library[]>([]);
@@ -82,12 +84,15 @@ export default function LibraryFetcher() {
                 onTagChange={setSelectedTags}
                 selectedTech={selectedTech}
                 onTechChange={setSelectedTech}
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
             />
 
             <div className="flex-1 px-4 pt-16 pb-10">
                 <HeaderSection />
+
+                <SearchBar
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                />
 
                 {loading ? (
                     <p className="text-white/80 p-8">Loading tools...</p>
