@@ -1,7 +1,7 @@
 'use client';
 
 import type { Library } from '@/types';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, ReactNode } from 'react';
 
 const TAG_LABELS: Record<string, string> = {
   tailwind: 'Tailwind CSS',
@@ -29,24 +29,24 @@ function formatCategoryLabel(category: string): string {
 
 const LibraryCard = memo(({ lib }: { lib: Library }) => {
   const formattedTags = useMemo(
-    () =>
-      (lib.tags || []).map((tag) => ({
-        key: tag,
-        label: formatTagLabel(tag),
-      })),
+    () => (lib.tags || []).map((tag) => ({ key: tag, label: formatTagLabel(tag) })),
     [lib.tags]
   );
 
   const category = useMemo(
-    () =>
-      lib.category
-        ? {
-            key: lib.category,
-            label: formatCategoryLabel(lib.category),
-          }
-        : null,
+    () => (lib.category ? { key: lib.category, label: formatCategoryLabel(lib.category) } : null),
     [lib.category]
   );
+
+  // Random width variation (for demo purposes)
+  const widthClasses = [
+    'sm:w-[45%]',
+    'sm:w-[60%]',
+    'sm:w-[48%]',
+    'sm:w-[52%]',
+    'sm:w-[40%]',
+  ];
+  const randomWidth = widthClasses[Math.floor(Math.random() * widthClasses.length)];
 
   return (
     <a
@@ -54,9 +54,10 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
       href={lib.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex-grow min-w-[150px] max-w-[100%] sm:max-w-[48%] lg:max-w-[31%] p-4 
+      className={`w-full ${randomWidth} md:w-auto flex-grow 
         bg-white/10 backdrop-blur-md border border-white/20 
-        rounded-2xl shadow-md cursor-pointer no-underline"
+        rounded-2xl shadow-md cursor-pointer no-underline p-4 
+        transition-all duration-300 hover:scale-[1.02] hover:shadow-lg`}
     >
       <div className="flex flex-col h-full">
         <h2 className="text-white font-semibold text-lg mb-1">{lib.name}</h2>
@@ -86,19 +87,30 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
 
 LibraryCard.displayName = 'LibraryCard';
 
-export default function LibraryList({ libraries }: { libraries: Library[] }) {
-  if (libraries.length === 0) {
-    return <p className="m-8 text-white">No libraries to display.</p>;
-  }
-
+export default function LibraryList({
+  libraries,
+  children,
+}: {
+  libraries: Library[];
+  children?: ReactNode;
+}) {
   return (
-    <section
-      aria-label="Library results"
-      className="flex flex-wrap gap-5 m-8"
-    >
-      {libraries.map((lib) => (
-        <LibraryCard key={lib.id} lib={lib} />
-      ))}
+    <section className="w-full max-w-[94rem] mx-auto px-4 md:px-6" aria-label="Library section">
+      {children && (
+        <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-white">
+          {children}
+        </div>
+      )}
+
+      {libraries.length === 0 ? (
+        <p className="text-white">No libraries to display.</p>
+      ) : (
+        <div className="flex flex-wrap justify-start gap-5">
+          {libraries.map((lib) => (
+            <LibraryCard key={lib.id} lib={lib} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

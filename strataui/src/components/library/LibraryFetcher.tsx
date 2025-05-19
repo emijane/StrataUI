@@ -92,18 +92,6 @@ export default function LibraryFetcher() {
         {/* Header Section */}
         <HeaderSection />
 
-        {/* Applied Filters */}
-        <AppliedFilters
-          selectedTag={selectedTag}
-          onTagClear={() => setSelectedTag('all')}
-          selectedCategories={selectedCategories}
-          onCategoryClear={(cat) =>
-            setSelectedCategories((prev) => prev.filter((c) => c !== cat))
-          }
-          searchTerm={searchTerm}
-          onSearchClear={() => setSearchTerm('')}
-        />
-
         {loading ? (
           <p className="text-white/80 p-8">Loading tools...</p>
         ) : libraries.length === 0 ? (
@@ -111,7 +99,19 @@ export default function LibraryFetcher() {
             No tools found. Contact us to feature your development tool!
           </p>
         ) : (
-          <LibraryList libraries={libraries} />
+          <LibraryList libraries={libraries}>
+            <AppliedFilters
+              selectedTag={selectedTag}
+              onTagClear={() => setSelectedTag('all')}
+              selectedCategories={selectedCategories}
+              onCategoryClear={(cat) =>
+                setSelectedCategories((prev) => prev.filter((c) => c !== cat))
+              }
+              searchTerm={searchTerm}
+              onSearchClear={() => setSearchTerm('')}
+            />
+          </LibraryList>
+
         )}
       </div>
     </div>
