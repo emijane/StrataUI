@@ -12,7 +12,7 @@ export default function LibraryFetcher() {
     const [libraries, setLibraries] = useState<Library[]>([]);
     const [allFetchedLibraries, setAllFetchedLibraries] = useState<Library[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedTag, setSelectedTag] = useState('all');
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [selectedTech, setSelectedTech] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
@@ -33,8 +33,8 @@ export default function LibraryFetcher() {
                 .from('libraries')
                 .select('id, name, url, tags, tech, description');
 
-            if (selectedTag !== 'all') {
-                query = query.contains('tags', [selectedTag]);
+            if (selectedTags.length > 0) {
+                query = query.overlaps('tags', selectedTags);
             }
 
             if (selectedTech.length > 0) {
@@ -55,7 +55,7 @@ export default function LibraryFetcher() {
         }
 
         fetchLibraries();
-    }, [selectedTag, selectedTech]);
+    }, [selectedTags, selectedTech]);
 
     const filteredLibraries = useMemo(() => {
         if (!debouncedSearch.trim()) return allFetchedLibraries;
@@ -78,8 +78,8 @@ export default function LibraryFetcher() {
     return (
         <div className="flex flex-col md:flex-row">
             <FilterSidebar
-                selectedTag={selectedTag}
-                onSelect={setSelectedTag}
+                selectedTags={selectedTags}
+                onTagChange={setSelectedTags}
                 selectedTech={selectedTech}
                 onTechChange={setSelectedTech}
                 searchTerm={searchTerm}
@@ -98,8 +98,10 @@ export default function LibraryFetcher() {
                 ) : (
                     <LibraryList libraries={libraries}>
                         <AppliedFilters
-                            selectedTag={selectedTag}
-                            onTagClear={() => setSelectedTag('all')}
+                            selectedTags={selectedTags}
+                            onTagClear={(tag) =>
+                                setSelectedTags((prev) => prev.filter((t) => t !== tag))
+                            }
                             selectedTech={selectedTech}
                             onTechClear={(tech) =>
                                 setSelectedTech((prev) => prev.filter((t) => t !== tech))

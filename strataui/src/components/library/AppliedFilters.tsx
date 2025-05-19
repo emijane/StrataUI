@@ -1,8 +1,8 @@
 'use client';
 
 type Props = {
-    selectedTag: string;
-    onTagClear: () => void;
+    selectedTags: string[];
+    onTagClear: (tag: string) => void;
     selectedTech: string[];
     onTechClear: (tech: string) => void;
     searchTerm: string;
@@ -30,25 +30,29 @@ const TECH_LABELS: Record<string, string> = {
 };
 
 export default function AppliedFilters({
-    selectedTag,
+    selectedTags,
     onTagClear,
     selectedTech,
     onTechClear,
     searchTerm,
-    onSearchClear,
+    onSearchClear
 }: Props) {
     const hasActiveFilters =
-        selectedTag !== 'all' || selectedTech.length > 0 || searchTerm.trim().length > 0;
+        selectedTags.length > 0 || selectedTech.length > 0 || searchTerm.trim().length > 0;
 
     if (!hasActiveFilters) return null;
 
     return (
-        <div className="mb-6 flex flex-row items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto sm:invisible md:visible">
+        <div className="mb-6 flex flex-row flex-wrap items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto sm:invisible md:visible">
             <p className="text-white/70">Filters applied:</p>
 
-            {selectedTag !== 'all' && (
-                <FilterPill label={TAG_LABELS[selectedTag] || selectedTag} onRemove={onTagClear} />
-            )}
+            {selectedTags.map((tag) => (
+                <FilterPill
+                    key={tag}
+                    label={TAG_LABELS[tag] || tag}
+                    onRemove={() => onTagClear(tag)}
+                />
+            ))}
 
             {selectedTech.map((tech) => (
                 <FilterPill

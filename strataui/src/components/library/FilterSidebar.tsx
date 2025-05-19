@@ -4,8 +4,8 @@ import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 type Props = {
-    selectedTag: string;
-    onSelect: (tag: string) => void;
+    selectedTags: string[];
+    onTagChange: (tags: string[]) => void;
     selectedTech: string[];
     onTechChange: (techs: string[]) => void;
     searchTerm: string;
@@ -63,12 +63,12 @@ function useHasMounted() {
 }
 
 export default function FilterSidebar({
-    selectedTag,
-    onSelect,
+    selectedTags,
+    onTagChange,
     selectedTech,
     onTechChange,
     searchTerm,
-    onSearchChange,
+    onSearchChange
 }: Props) {
     const hasMounted = useHasMounted();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -82,6 +82,14 @@ export default function FilterSidebar({
     }, []);
 
     if (!hasMounted) return null;
+
+    const toggleTag = (tag: string) => {
+        onTagChange(
+            selectedTags.includes(tag)
+                ? selectedTags.filter((t) => t !== tag)
+                : [...selectedTags, tag]
+        );
+    };
 
     const toggleTech = (tech: string) => {
         onTechChange(
@@ -125,14 +133,12 @@ export default function FilterSidebar({
                 >
                     <div className="flex flex-col gap-2 text-sm mt-2">
                         {TAGS.map((tag) => (
-                            <label key={tag} className="flex items-center gap-3 cursor-pointer">
+                            <label key={tag} className="flex items-center gap-2 cursor-pointer">
                                 <input
-                                    type="radio"
-                                    name="tag"
-                                    value={tag}
-                                    checked={selectedTag === tag}
-                                    onChange={() => onSelect(tag)}
-                                    className="appearance-none ml-2 w-4 h-4 outline outline-white/20 rounded-full checked:bg-purple-300 checked:border-transparent pointer-cursor"
+                                    type="checkbox"
+                                    checked={selectedTags.includes(tag)}
+                                    onChange={() => toggleTag(tag)}
+                                    className="appearance-none w-4 h-4 ml-2 border border-white/20 rounded-md checked:bg-purple-300 checked:border-transparent cursor-pointer"
                                 />
                                 {formatLabel(tag, TAG_LABELS)}
                             </label>
