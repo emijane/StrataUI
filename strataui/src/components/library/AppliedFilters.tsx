@@ -48,8 +48,8 @@ export default function AppliedFilters({
   if (!hasActiveFilters) return null;
 
   return (
-    <div className="mb-6 px-4 flex flex-wrap gap-2 text-sm text-white w-full max-w-[94rem] mx-auto p-4 z-50 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 sm:invisible md:visible">
-      <p className="w-full font-medium mb-2">Filters applied:</p>
+    <div className="mb-6 flex flex-row items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto sm:invisible md:visible">
+      <p className="text-white/70">Filters applied:</p>
 
       {selectedTag !== 'all' && (
         <FilterPill label={TAG_LABELS[selectedTag] || selectedTag} onRemove={onTagClear} />
@@ -72,11 +72,11 @@ export default function AppliedFilters({
 
 function FilterPill({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <span className="flex items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20">
+    <span className="flex font-space-mono text-sm items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20">
       {label}
       <button
         onClick={onRemove}
-        className="text-white hover:text-red-400 focus:outline-none"
+        className="text-white focus:outline-none"
         aria-label={`Remove ${label}`}
       >
         ×

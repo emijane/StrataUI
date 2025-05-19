@@ -78,7 +78,7 @@ export default function FilterSidebar({
 
   return (
     <aside
-      className="sticky top-18 w-full md:w-70 lg:w-80 md:p-4 outline outline-white/20 text-white 
+      className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-15 outline outline-white/20 text-white 
       max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 
       backdrop-blur-md border-r-1 border-white/10 shadow-lg"
     >
@@ -99,22 +99,21 @@ export default function FilterSidebar({
           isSidebarOpen ? 'max-h-[1000px] p-4' : 'max-h-0 p-0'
         } md:max-h-none md:p-4`}
       >
-        <h2 className="text-lg font-semibold mb-4 text-white">Filter Content</h2>
 
         {/* Search */}
-        <div className="mb-6">
+        <div className="mb-12">
           <input
             type="text"
             placeholder="Search libraries..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full px-3 py-2 rounded-md text-sm outline outline-white/20 text-white bg-transparent focus:outline-none focus:ring"
+            className="w-full font-space-mono px-3 py-2 rounded-lg text-sm outline outline-white/20 text-white bg-transparent focus:outline-none focus:ring"
           />
         </div>
 
         {/* Framework Section */}
         <Collapsible
-          title="Framework"
+          title="FRAMEWORK"
           isOpen={isFrameworkOpen}
           onToggle={() => setIsFrameworkOpen((prev) => !prev)}
         >
@@ -140,7 +139,7 @@ export default function FilterSidebar({
 
         {/* Category Section */}
         <Collapsible
-          title="Category"
+          title="CATEGORY"
           isOpen={isCategoryOpen}
           onToggle={() => setIsCategoryOpen((prev) => !prev)}
         >
@@ -185,7 +184,7 @@ function Collapsible({ title, isOpen, onToggle, children }: CollapsibleProps) {
     <div className="mb-6 border-b border-white/10 pb-1">
       <button
         onClick={onToggle}
-        className="w-full flex justify-between items-center text-left text-sm font-medium mb-4 text-purple-300"
+        className="w-full font-space-mono flex justify-between items-center text-left text-xs font-semibold tracking-wide mb-4 text-purple-300/80"
       >
         {title}
         {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}

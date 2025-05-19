@@ -24,6 +24,10 @@ body {
   background-color: #080518;
 }
 
+.font-space-mono {
+  font-family: var(--font-space-mono), monospace;
+}
+
 /* Background glow effect */
 .background-glow-pink {
   position: fixed;

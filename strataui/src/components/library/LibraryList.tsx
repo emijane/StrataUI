@@ -65,7 +65,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
           {formattedTags.map(({ key, label }) => (
             <span
               key={key}
-              className="text-xs outline outline-white/30 text-white p-2 rounded-xl"
+              className="font-space-mono text-xs outline outline-white/30 text-white pl-3 pr-3 pt-2 pb-2 rounded-xl"
             >
               {label}
             </span>
@@ -73,7 +73,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
           {category && (
             <span
               key={category.key}
-              className="text-xs outline outline-white/30 text-white p-2 rounded-xl"
+              className="font-space-mono text-xs outline outline-white/30 text-white pl-3 pr-3 pt-2 pb-2 rounded-xl"
             >
               {category.label}
             </span>

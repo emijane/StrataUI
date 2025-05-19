@@ -107,7 +107,7 @@ export default function LibraryFetcher() {
         {loading ? (
           <p className="text-white/80 p-8">Loading tools...</p>
         ) : libraries.length === 0 ? (
-          <p className="text-white/80 p-8">
+          <p className="text-white/80 p-8 font-space-mono">
             No tools found. Contact us to feature your development tool!
           </p>
         ) : (
