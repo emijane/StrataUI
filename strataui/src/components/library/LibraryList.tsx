@@ -3,20 +3,28 @@
 import type { Library } from '@/types';
 import { memo, useMemo, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpRightFromSquare, faWind } from '@fortawesome/free-solid-svg-icons';
-import { faReact, faVuejs, faAngular, faBootstrap, faCss3Alt, faHtml5 } from '@fortawesome/free-brands-svg-icons';
+import {
+    faArrowUpRightFromSquare,
+    faCubes
+} from '@fortawesome/free-solid-svg-icons';
+import {
+    faReact,
+    faVuejs,
+    faAngular,
+    faBootstrap,
+    faHtml5
+} from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import SvelteIcon from '@/svg/SvelteIcon';
-import TailwindIcon from '@/svg/TailwindIcon';
 
 const TECH_ICONS: Record<string, IconDefinition> = {
     react: faReact,
     vue: faVuejs,
     angular: faAngular,
+    svelte: faCubes,
+    tailwind: faCubes,
     bootstrap: faBootstrap,
-    tailwind: faWind,
     html: faHtml5,
-    css: faCss3Alt,
+    bulma: faCubes
 };
 
 function getTechColor(tech: string): string {
@@ -24,11 +32,11 @@ function getTechColor(tech: string): string {
         react: '#61DAFB',
         vue: '#42b883',
         angular: '#dd0031',
-        bootstrap: '#7952b3',
-        tailwind: '#38bdf8',
-        html: '#e34c26',
-        css: '#264de4',
         svelte: '#ff3e00',
+        tailwind: '#38bdf8',
+        bootstrap: '#7952b3',
+        html: '#e34c26',
+        bulma: '#00d1b2'
     };
     return colors[tech] || '#ffffff';
 }
@@ -39,11 +47,7 @@ const TAG_LABELS: Record<string, string> = {
     'design-system': 'Design System',
     'headless-ui': 'Headless UI',
     'mobile-ui-framework': 'Mobile UI Framework',
-    tailwind: 'Tailwind CSS',
-    react: 'React',
-    vue: 'Vue.js',
-    angular: 'Angular',
-    svelte: 'Svelte',
+    framework: 'Framework'
 };
 
 function formatTagLabel(tag: string): string {
@@ -52,7 +56,10 @@ function formatTagLabel(tag: string): string {
 
 const LibraryCard = memo(({ lib }: { lib: Library }) => {
     const formattedTags = useMemo(
-        () => (lib.tags || []).map((tag: string) => ({ key: tag, label: formatTagLabel(tag) })),
+        () => (lib.tags || []).map((tag: string) => ({
+            key: tag,
+            label: formatTagLabel(tag)
+        })),
         [lib.tags]
     );
 
@@ -63,7 +70,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                 .share({
                     title: lib.name,
                     url: lib.url,
-                    text: `Check out this library: ${lib.name}`,
+                    text: `Check out this library: ${lib.name}`
                 })
                 .catch((err) => console.error('Sharing failed:', err));
         } else {
@@ -89,12 +96,6 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                             <h2 className="text-white font-semibold text-lg leading-tight flex items-center gap-2">
                                 {lib.name}
                                 {(lib.tech || []).map((tech: string) => {
-                                    if (tech === 'svelte') {
-                                        return <SvelteIcon key={tech} className="w-4 h-4" />;
-                                    }
-                                    if (tech === 'tailwind') {
-                                        return <TailwindIcon key={tech} className="w-4 h-4" />;
-                                    }
                                     const icon = TECH_ICONS[tech];
                                     return icon ? (
                                         <FontAwesomeIcon
@@ -141,7 +142,7 @@ LibraryCard.displayName = 'LibraryCard';
 
 export default function LibraryList({
     libraries,
-    children,
+    children
 }: {
     libraries: Library[];
     children?: ReactNode;

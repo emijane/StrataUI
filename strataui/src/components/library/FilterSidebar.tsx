@@ -3,199 +3,200 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
-// ----- Types -----
 type Props = {
-  selectedTag: string;
-  onSelect: (tag: string) => void;
-  selectedCategories: string[];
-  onCategoryChange: (categories: string[]) => void;
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
+    selectedTag: string;
+    onSelect: (tag: string) => void;
+    selectedTech: string[];
+    onTechChange: (techs: string[]) => void;
+    searchTerm: string;
+    onSearchChange: (term: string) => void;
 };
 
-// ----- Constants -----
-const FRAMEWORK_TAGS = ['all', 'tailwind', 'react', 'vue', 'angular', 'svelte'];
-const CATEGORY_TAGS = ['framework', 'font', 'color-tool', 'animation', 'icon'];
+const TAGS = [
+    'ui-library',
+    'component-kit',
+    'design-system',
+    'headless-ui',
+    'mobile-ui-framework',
+    'framework'
+];
+
+const TECHS = [
+    'react',
+    'vue',
+    'angular',
+    'svelte',
+    'tailwind',
+    'bootstrap',
+    'html',
+    'bulma'
+];
 
 const TAG_LABELS: Record<string, string> = {
-  all: 'All',
-  tailwind: 'Tailwind CSS',
-  react: 'React',
-  vue: 'Vue.js',
-  angular: 'Angular',
-  svelte: 'Svelte',
+    'ui-library': 'UI Library',
+    'component-kit': 'Component Kit',
+    'design-system': 'Design System',
+    'headless-ui': 'Headless UI',
+    'mobile-ui-framework': 'Mobile UI Framework',
+    framework: 'Framework'
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  framework: 'Framework',
-  font: 'Font',
-  'color-tool': 'Color Tool',
-  animation: 'Animation',
-  icon: 'Icon',
+const TECH_LABELS: Record<string, string> = {
+    react: 'React',
+    vue: 'Vue.js',
+    angular: 'Angular',
+    svelte: 'Svelte',
+    tailwind: 'Tailwind CSS',
+    bootstrap: 'Bootstrap',
+    html: 'HTML',
+    bulma: 'Bulma'
 };
 
 function formatLabel(value: string, labels: Record<string, string>): string {
-  return labels[value] || value;
+    return labels[value] || value;
 }
 
-// ----- Utility: Hydration Guard -----
 function useHasMounted() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted;
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+    return mounted;
 }
 
-// ----- Main Component -----
 export default function FilterSidebar({
-  selectedTag,
-  onSelect,
-  selectedCategories,
-  onCategoryChange,
-  searchTerm,
-  onSearchChange,
+    selectedTag,
+    onSelect,
+    selectedTech,
+    onTechChange,
+    searchTerm,
+    onSearchChange,
 }: Props) {
-  const hasMounted = useHasMounted();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isFrameworkOpen, setIsFrameworkOpen] = useState(true);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+    const hasMounted = useHasMounted();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isTagOpen, setIsTagOpen] = useState(true);
+    const [isTechOpen, setIsTechOpen] = useState(true);
 
-  // Collapse sidebar on mobile layout
-  useLayoutEffect(() => {
-    if (window.innerWidth < 768) {
-      setIsSidebarOpen(false);
-    }
-  }, []);
+    useLayoutEffect(() => {
+        if (window.innerWidth < 768) {
+            setIsSidebarOpen(false);
+        }
+    }, []);
 
-  if (!hasMounted) return null;
+    if (!hasMounted) return null;
 
-  const toggleCategory = (cat: string) => {
-    onCategoryChange(
-      selectedCategories.includes(cat)
-        ? selectedCategories.filter((c) => c !== cat)
-        : [...selectedCategories, cat]
+    const toggleTech = (tech: string) => {
+        onTechChange(
+            selectedTech.includes(tech)
+                ? selectedTech.filter((t) => t !== tech)
+                : [...selectedTech, tech]
+        );
+    };
+
+    return (
+        <aside className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-15 outline outline-white/20 text-white max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 shadow-lg">
+            <div className="md:hidden flex justify-between items-center p-4 border-b border-white/10">
+                <h2 className="text-white font-semibold">Filters</h2>
+                <button
+                    onClick={() => setIsSidebarOpen((prev) => !prev)}
+                    className="outline-2 outline-white/10 focus:outline-white/30 text-white p-1 rounded-md"
+                >
+                    {isSidebarOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                </button>
+            </div>
+
+            <div
+                className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                    isSidebarOpen ? 'max-h-[1000px] p-4' : 'max-h-0 p-0'
+                } md:max-h-none md:p-4`}
+            >
+                <div className="mb-12">
+                    <input
+                        type="text"
+                        placeholder="Search libraries..."
+                        value={searchTerm}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        className="w-full font-space-mono px-3 py-2 rounded-lg text-sm outline outline-white/20 text-white bg-transparent focus:outline-none focus:ring"
+                    />
+                </div>
+
+                <Collapsible
+                    title="TYPE"
+                    isOpen={isTagOpen}
+                    onToggle={() => setIsTagOpen((prev) => !prev)}
+                >
+                    <div className="flex flex-col gap-2 text-sm mt-2">
+                        {TAGS.map((tag) => (
+                            <label key={tag} className="flex items-center gap-3 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="tag"
+                                    value={tag}
+                                    checked={selectedTag === tag}
+                                    onChange={() => onSelect(tag)}
+                                    className="appearance-none ml-2 w-4 h-4 outline outline-white/20 rounded-full checked:bg-purple-300 checked:border-transparent pointer-cursor"
+                                />
+                                {formatLabel(tag, TAG_LABELS)}
+                            </label>
+                        ))}
+                    </div>
+                </Collapsible>
+
+                <Collapsible
+                    title="TECHNOLOGY"
+                    isOpen={isTechOpen}
+                    onToggle={() => setIsTechOpen((prev) => !prev)}
+                >
+                    <div className="flex flex-col gap-2 text-sm mt-2">
+                        {TECHS.map((tech) => (
+                            <label key={tech} className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedTech.includes(tech)}
+                                    onChange={() => toggleTech(tech)}
+                                    className="appearance-none w-4 h-4 ml-2 border border-white/20 rounded-md checked:bg-purple-300 checked:border-transparent cursor-pointer"
+                                />
+                                {formatLabel(tech, TECH_LABELS)}
+                            </label>
+                        ))}
+                    </div>
+                </Collapsible>
+            </div>
+        </aside>
     );
-  };
-
-  return (
-    <aside
-      className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-15 outline outline-white/20 text-white 
-      max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 
-      backdrop-blur-md border-r-1 border-white/10 shadow-lg"
-    >
-      {/* Mobile Toggle */}
-      <div className="md:hidden flex justify-between items-center p-4 border-b border-white/10">
-        <h2 className="text-white font-semibold">Filters</h2>
-        <button
-          onClick={() => setIsSidebarOpen((prev) => !prev)}
-          className="outline-2 outline-white/10 focus:outline-white/30 text-white p-1 rounded-md"
-        >
-          {isSidebarOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-        </button>
-      </div>
-
-      {/* Filters Content */}
-      <div
-        className={`transition-all duration-500 ease-in-out overflow-hidden ${
-          isSidebarOpen ? 'max-h-[1000px] p-4' : 'max-h-0 p-0'
-        } md:max-h-none md:p-4`}
-      >
-
-        {/* Search */}
-        <div className="mb-12">
-          <input
-            type="text"
-            placeholder="Search libraries..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full font-space-mono px-3 py-2 rounded-lg text-sm outline outline-white/20 text-white bg-transparent focus:outline-none focus:ring"
-          />
-        </div>
-
-        {/* Framework Section */}
-        <Collapsible
-          title="FRAMEWORK"
-          isOpen={isFrameworkOpen}
-          onToggle={() => setIsFrameworkOpen((prev) => !prev)}
-        >
-          <div className="flex flex-col gap-2 text-sm mt-2">
-            {FRAMEWORK_TAGS.map((tag) => (
-              <label
-                key={tag}
-                className="flex items-center gap-3 cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="framework"
-                  value={tag}
-                  checked={selectedTag === tag}
-                  onChange={() => onSelect(tag)}
-                  className="appearance-none ml-2 w-4 h-4 outline outline-white/20 rounded-full checked:bg-purple-300 checked:border-transparent pointer-cursor"
-                />
-                {formatLabel(tag, TAG_LABELS)}
-              </label>
-            ))}
-          </div>
-        </Collapsible>
-
-        {/* Category Section */}
-        <Collapsible
-          title="TECHNOLOGY"
-          isOpen={isCategoryOpen}
-          onToggle={() => setIsCategoryOpen((prev) => !prev)}
-        >
-          <div className="flex flex-col gap-2 text-sm mt-2">
-            {CATEGORY_TAGS.map((cat) => (
-              <label key={cat} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(cat)}
-                  onChange={() => toggleCategory(cat)}
-                  className="appearance-none w-4 h-4 ml-2 border border-white/20 rounded-md checked:bg-purple-300 checked:border-transparent cursor-pointer"
-                />
-                {formatLabel(cat, CATEGORY_LABELS)}
-              </label>
-            ))}
-          </div>
-        </Collapsible>
-      </div>
-    </aside>
-  );
 }
 
-// ----- Collapsible Component -----
 type CollapsibleProps = {
-  title: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
+    title: string;
+    isOpen: boolean;
+    onToggle: () => void;
+    children: React.ReactNode;
 };
 
 function Collapsible({ title, isOpen, onToggle, children }: CollapsibleProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<string>('0px');
+    const ref = useRef<HTMLDivElement>(null);
+    const [height, setHeight] = useState<string>('0px');
 
-  useEffect(() => {
-    if (ref.current) {
-      setHeight(isOpen ? `${ref.current.scrollHeight}px` : '0px');
-    }
-  }, [isOpen]);
+    useEffect(() => {
+        if (ref.current) {
+            setHeight(isOpen ? `${ref.current.scrollHeight}px` : '0px');
+        }
+    }, [isOpen]);
 
-  return (
-    <div className="mb-6 border-b border-white/10 pb-1">
-      <button
-        onClick={onToggle}
-        className="w-full font-space-mono flex justify-between items-center text-left text-xs font-semibold tracking-wide mb-4 text-purple-300/80"
-      >
-        {title}
-        {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-      </button>
-      <div
-        ref={ref}
-        style={{ maxHeight: height }}
-        className="transition-all duration-500 ease-in-out overflow-hidden mb-4"
-      >
-        {children}
-      </div>
-    </div>
-  );
+    return (
+        <div className="mb-6 border-b border-white/10 pb-1">
+            <button
+                onClick={onToggle}
+                className="w-full font-space-mono flex justify-between items-center text-left text-xs font-semibold tracking-wide mb-4 text-purple-300/80"
+            >
+                {title}
+                {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </button>
+            <div
+                ref={ref}
+                style={{ maxHeight: height }}
+                className="transition-all duration-500 ease-in-out overflow-hidden mb-4"
+            >
+                {children}
+            </div>
+        </div>
+    );
 }

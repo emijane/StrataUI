@@ -1,86 +1,81 @@
 'use client';
 
 type Props = {
-  selectedTag: string;
-  onTagClear: () => void;
-  selectedTech: string[];
-  onTechClear: (tech: string) => void;
-  searchTerm: string;
-  onSearchClear: () => void;
+    selectedTag: string;
+    onTagClear: () => void;
+    selectedTech: string[];
+    onTechClear: (tech: string) => void;
+    searchTerm: string;
+    onSearchClear: () => void;
 };
 
 const TAG_LABELS: Record<string, string> = {
-  all: 'All',
-  tailwind: 'Tailwind CSS',
-  react: 'React',
-  vue: 'Vue.js',
-  angular: 'Angular',
-  svelte: 'Svelte',
+    'ui-library': 'UI Library',
+    'component-kit': 'Component Kit',
+    'design-system': 'Design System',
+    'headless-ui': 'Headless UI',
+    'mobile-ui-framework': 'Mobile UI Framework',
+    framework: 'Framework'
 };
 
 const TECH_LABELS: Record<string, string> = {
-  framework: 'Framework',
-  font: 'Font',
-  'color-tool': 'Color Tool',
-  animation: 'Animation',
-  icon: 'Icon',
+    react: 'React',
+    vue: 'Vue.js',
+    angular: 'Angular',
+    svelte: 'Svelte',
+    tailwind: 'Tailwind CSS',
+    bootstrap: 'Bootstrap',
+    html: 'HTML',
+    bulma: 'Bulma'
 };
 
 export default function AppliedFilters({
-  selectedTag,
-  onTagClear,
-  selectedTech,
-  onTechClear,
-  searchTerm,
-  onSearchClear,
-}: Props) {
-  console.log('🧪 AppliedFilters props:', {
     selectedTag,
+    onTagClear,
     selectedTech,
+    onTechClear,
     searchTerm,
-  });
+    onSearchClear,
+}: Props) {
+    const hasActiveFilters =
+        selectedTag !== 'all' || selectedTech.length > 0 || searchTerm.trim().length > 0;
 
-  const hasActiveFilters =
-    selectedTag !== 'all' ||
-    selectedTech.length > 0 ||
-    searchTerm.trim().length > 0;
+    if (!hasActiveFilters) return null;
 
-  if (!hasActiveFilters) return null;
+    return (
+        <div className="mb-6 flex flex-row items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto sm:invisible md:visible">
+            <p className="text-white/70">Filters applied:</p>
 
-  return (
-    <div className="mb-6 flex flex-row items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto sm:invisible md:visible">
-      <p className="text-white/70">Filters applied:</p>
+            {selectedTag !== 'all' && (
+                <FilterPill label={TAG_LABELS[selectedTag] || selectedTag} onRemove={onTagClear} />
+            )}
 
-      {selectedTag !== 'all' && (
-        <FilterPill label={TAG_LABELS[selectedTag] || selectedTag} onRemove={onTagClear} />
-      )}
+            {selectedTech.map((tech) => (
+                <FilterPill
+                    key={tech}
+                    label={TECH_LABELS[tech] || tech}
+                    onRemove={() => onTechClear(tech)}
+                />
+            ))}
 
-      {selectedTech.map((tech) => (
-        <FilterPill
-          key={tech}
-          label={TECH_LABELS[tech] || tech}
-          onRemove={() => onTechClear(tech)}
-        />
-      ))}
-
-      {searchTerm.trim() && (
-        <FilterPill label={`Search: "${searchTerm}"`} onRemove={onSearchClear} />
-      )}
-    </div>
-  );
+            {searchTerm.trim() && (
+                <FilterPill label={`Search: "${searchTerm}"`} onRemove={onSearchClear} />
+            )}
+        </div>
+    );
 }
 
 function FilterPill({ label, onRemove }: { label: string; onRemove: () => void }) {
-  return (
-    <span className="flex font-space-mono text-sm items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20">
-      {label}
-      <button
-        onClick={onRemove}
-        className="text-white focus:outline-none"
-        aria-label={`Remove ${label}`}
-      >
-        ×
-      </button>
-    </span>
-  );
+    return (
+        <span className="flex font-space-mono text-sm items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20">
+            {label}
+            <button
+                onClick={onRemove}
+                className="text-white focus:outline-none"
+                aria-label={`Remove ${label}`}
+            >
+                ×
+            </button>
+        </span>
+    );
 }
