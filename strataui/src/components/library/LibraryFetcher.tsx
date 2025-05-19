@@ -12,8 +12,8 @@ export default function LibraryFetcher() {
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [allFetchedLibraries, setAllFetchedLibraries] = useState<Library[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTag, setSelectedTag] = useState('tailwind'); // not 'all'
-  const [selectedCategories, setSelectedCategories] = useState(['framework']); // not empty
+  const [selectedTag, setSelectedTag] = useState('tailwind');
+  const [selectedTech, setSelectedTech] = useState(['framework']);
   const [loading, setLoading] = useState(true);
 
   const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
@@ -32,14 +32,14 @@ export default function LibraryFetcher() {
 
       let query = supabase
         .from('libraries')
-        .select('id, name, url, tags, category');
+        .select('id, name, url, tags, tech, description');
 
       if (selectedTag !== 'all') {
         query = query.contains('tags', [selectedTag]);
       }
 
-      if (selectedCategories.length > 0) {
-        query = query.in('category', selectedCategories);
+      if (selectedTech.length > 0) {
+        query = query.overlaps('tech', selectedTech);
       }
 
       const { data, error } = await query;
@@ -56,7 +56,7 @@ export default function LibraryFetcher() {
     }
 
     fetchLibraries();
-  }, [selectedTag, selectedCategories]);
+  }, [selectedTag, selectedTech]);
 
   const filteredLibraries = useMemo(() => {
     if (!debouncedSearch.trim()) return allFetchedLibraries;
@@ -64,10 +64,11 @@ export default function LibraryFetcher() {
     const term = debouncedSearch.toLowerCase();
     return allFetchedLibraries.filter((lib: Library) => {
       const nameMatch = lib.name.toLowerCase().includes(term);
+      const descriptionMatch = lib.description?.toLowerCase().includes(term) ?? false;
       const tagMatch = (lib.tags || []).some((tag: string) =>
         tag.toLowerCase().includes(term)
       );
-      return nameMatch || tagMatch;
+      return nameMatch || tagMatch || descriptionMatch;
     });
   }, [debouncedSearch, allFetchedLibraries]);
 
@@ -77,19 +78,16 @@ export default function LibraryFetcher() {
 
   return (
     <div className="flex flex-col md:flex-row">
-      {/* Sidebar with tag & category filters */}
       <FilterSidebar
         selectedTag={selectedTag}
         onSelect={setSelectedTag}
-        selectedCategories={selectedCategories}
-        onCategoryChange={setSelectedCategories}
+        selectedCategories={selectedTech}
+        onCategoryChange={setSelectedTech}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
       />
 
-      {/* Main content */}
       <div className="flex-1 px-4 pt-16 pb-10">
-        {/* Header Section */}
         <HeaderSection />
 
         {loading ? (
@@ -103,15 +101,14 @@ export default function LibraryFetcher() {
             <AppliedFilters
               selectedTag={selectedTag}
               onTagClear={() => setSelectedTag('all')}
-              selectedCategories={selectedCategories}
-              onCategoryClear={(cat) =>
-                setSelectedCategories((prev) => prev.filter((c) => c !== cat))
+              selectedTech={selectedTech}
+              onTechClear={(tech) =>
+                setSelectedTech((prev) => prev.filter((t) => t !== tech))
               }
               searchTerm={searchTerm}
               onSearchClear={() => setSearchTerm('')}
             />
           </LibraryList>
-
         )}
       </div>
     </div>

@@ -3,8 +3,8 @@
 type Props = {
   selectedTag: string;
   onTagClear: () => void;
-  selectedCategories: string[];
-  onCategoryClear: (category: string) => void;
+  selectedTech: string[];
+  onTechClear: (tech: string) => void;
   searchTerm: string;
   onSearchClear: () => void;
 };
@@ -18,7 +18,7 @@ const TAG_LABELS: Record<string, string> = {
   svelte: 'Svelte',
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
+const TECH_LABELS: Record<string, string> = {
   framework: 'Framework',
   font: 'Font',
   'color-tool': 'Color Tool',
@@ -29,20 +29,20 @@ const CATEGORY_LABELS: Record<string, string> = {
 export default function AppliedFilters({
   selectedTag,
   onTagClear,
-  selectedCategories,
-  onCategoryClear,
+  selectedTech,
+  onTechClear,
   searchTerm,
   onSearchClear,
 }: Props) {
   console.log('🧪 AppliedFilters props:', {
     selectedTag,
-    selectedCategories,
+    selectedTech,
     searchTerm,
   });
 
   const hasActiveFilters =
     selectedTag !== 'all' ||
-    selectedCategories.length > 0 ||
+    selectedTech.length > 0 ||
     searchTerm.trim().length > 0;
 
   if (!hasActiveFilters) return null;
@@ -55,11 +55,11 @@ export default function AppliedFilters({
         <FilterPill label={TAG_LABELS[selectedTag] || selectedTag} onRemove={onTagClear} />
       )}
 
-      {selectedCategories.map((cat) => (
+      {selectedTech.map((tech) => (
         <FilterPill
-          key={cat}
-          label={CATEGORY_LABELS[cat] || cat}
-          onRemove={() => onCategoryClear(cat)}
+          key={tech}
+          label={TECH_LABELS[tech] || tech}
+          onRemove={() => onTechClear(tech)}
         />
       ))}
 

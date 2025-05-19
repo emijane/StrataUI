@@ -6,6 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 const TAG_LABELS: Record<string, string> = {
+  'ui-library': 'UI Library',
+  'component-kit': 'Component Kit',
+  'design-system': 'Design System',
+  'headless-ui': 'Headless UI',
+  'mobile-ui-framework': 'Mobile UI Framework',
   tailwind: 'Tailwind CSS',
   react: 'React',
   vue: 'Vue.js',
@@ -13,41 +18,36 @@ const TAG_LABELS: Record<string, string> = {
   svelte: 'Svelte',
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  framework: 'Framework',
-  font: 'Font',
-  'color-tool': 'Color Tool',
-  animation: 'Animation',
-  icon: 'Icon',
+const TECH_LABELS: Record<string, string> = {
+  "angular": "Angular",
+  "bootstrap": "Bootstrap",
+  "bulma": "Bulma",
+  "html": "HTML",
+  "react": "React",
+  "svelte": "Svelte",
+  "tailwind": "Tailwind",
+  "vue": "Vue",
 };
+
 
 function formatTagLabel(tag: string): string {
   return TAG_LABELS[tag] || tag;
 }
 
-function formatCategoryLabel(category: string): string {
-  return CATEGORY_LABELS[category] || category;
+function formatTechLabel(tech: string): string {
+  return TECH_LABELS[tech] || tech;
 }
 
 const LibraryCard = memo(({ lib }: { lib: Library }) => {
   const formattedTags = useMemo(
-    () => (lib.tags || []).map((tag) => ({ key: tag, label: formatTagLabel(tag) })),
+    () => (lib.tags || []).map((tag: string) => ({ key: tag, label: formatTagLabel(tag) })),
     [lib.tags]
   );
 
-  const category = useMemo(
-    () => (lib.category ? { key: lib.category, label: formatCategoryLabel(lib.category) } : null),
-    [lib.category]
+  const techLabels = useMemo(
+    () => (lib.tech || []).map((item: string) => ({ key: item, label: formatTechLabel(item) })),
+    [lib.tech]
   );
-
-  const widthClasses = [
-    'sm:w-[45%]',
-    'sm:w-[60%]',
-    'sm:w-[48%]',
-    'sm:w-[52%]',
-    'sm:w-[40%]',
-  ];
-  const randomWidth = widthClasses[Math.floor(Math.random() * widthClasses.length)];
 
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -67,48 +67,52 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
   };
 
   return (
-    <a
-      key={lib.id}
-      href={lib.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`w-full ${randomWidth} md:w-auto flex-grow 
-        bg-white/10 backdrop-blur-md border border-white/20 
-        rounded-2xl shadow-md cursor-pointer no-underline p-4 
-        transition-all duration-300 hover:scale-[1.02] hover:shadow-lg`}
-    >
-      <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between">
-          <h2 className="text-white font-semibold text-lg mb-1">{lib.name}</h2>
-          <button
-            onClick={handleShare}
-            className="text-white hover:text-white/80 transition-colors"
-            aria-label={`Share ${lib.name}`}
-          >
-            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-3 h-3 opacity-60" />
-          </button>
-        </div>
+    <div className="break-inside-avoid mb-6 w-full inline-block">
+      <a
+        href={lib.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block bg-white/10 backdrop-blur-md border border-white/20 
+          rounded-2xl shadow-md cursor-pointer no-underline p-4 
+          transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+      >
+        <div className="flex flex-col h-full">
+          <div className="relative">
+            <h2 className="text-white font-semibold text-lg mb-1 pr-8">{lib.name}</h2>
+            <button
+              onClick={handleShare}
+              className="absolute top-0 right-0 text-white hover:text-white/80 transition-colors"
+              aria-label={`Share ${lib.name}`}
+            >
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-3 h-3 opacity-60" />
+            </button>
+          </div>
 
-        <div className="flex flex-wrap gap-2 mt-3 items-center">
-          {formattedTags.map(({ key, label }) => (
-            <span
-              key={key}
-              className="font-space-mono text-xs outline outline-white/30 text-white pl-3 pr-3 pt-2 pb-2 rounded-xl"
-            >
-              {label}
-            </span>
-          ))}
-          {category && (
-            <span
-              key={category.key}
-              className="font-space-mono text-xs outline outline-white/30 text-white pl-3 pr-3 pt-2 pb-2 rounded-xl"
-            >
-              {category.label}
-            </span>
+          {lib.description && (
+            <p className="text-white/70 text-sm mt-2">{lib.description}</p>
           )}
+
+          <div className="flex flex-wrap gap-2 mt-3 items-center">
+            {formattedTags.map(({ key, label }: { key: string; label: string }) => (
+              <span
+                key={key}
+                className="font-space-mono text-xs outline outline-white/30 text-white pl-3 pr-3 pt-2 pb-2 rounded-xl"
+              >
+                {label}
+              </span>
+            ))}
+            {techLabels.map(({ key, label }: { key: string; label: string }) => (
+              <span
+                key={key}
+                className="font-space-mono text-xs outline outline-white/30 text-white pl-3 pr-3 pt-2 pb-2 rounded-xl"
+              >
+                {label}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
   );
 });
 
@@ -132,7 +136,7 @@ export default function LibraryList({
       {libraries.length === 0 ? (
         <p className="text-white">No libraries to display.</p>
       ) : (
-        <div className="flex flex-wrap justify-start gap-5">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
           {libraries.map((lib) => (
             <LibraryCard key={lib.id} lib={lib} />
           ))}

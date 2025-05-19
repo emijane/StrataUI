@@ -9,7 +9,7 @@ export default function LibraryPage() {
       <div className="background-glow-pink-wide"></div>
 
       {/* Foreground content */}
-      <div className="relative z-10 max-w-[80rem] mx-auto">
+      <div className="relative z-10 max-w-[95rem] mx-auto">
         <LibraryFetcher />
       </div>
     </main>

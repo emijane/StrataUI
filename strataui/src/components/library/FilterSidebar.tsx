@@ -139,7 +139,7 @@ export default function FilterSidebar({
 
         {/* Category Section */}
         <Collapsible
-          title="CATEGORY"
+          title="TECHNOLOGY"
           isOpen={isCategoryOpen}
           onToggle={() => setIsCategoryOpen((prev) => !prev)}
         >
