@@ -2,6 +2,8 @@
 
 import type { Library } from '@/types';
 import { memo, useMemo, ReactNode } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 const TAG_LABELS: Record<string, string> = {
   tailwind: 'Tailwind CSS',
@@ -38,7 +40,6 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
     [lib.category]
   );
 
-  // Random width variation (for demo purposes)
   const widthClasses = [
     'sm:w-[45%]',
     'sm:w-[60%]',
@@ -47,6 +48,23 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
     'sm:w-[40%]',
   ];
   const randomWidth = widthClasses[Math.floor(Math.random() * widthClasses.length)];
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (navigator.share) {
+      navigator
+        .share({
+          title: lib.name,
+          url: lib.url,
+          text: `Check out this library: ${lib.name}`,
+        })
+        .catch((err) => console.error('Sharing failed:', err));
+    } else {
+      navigator.clipboard.writeText(lib.url).then(() => {
+        alert('Link copied to clipboard!');
+      });
+    }
+  };
 
   return (
     <a
@@ -60,7 +78,16 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
         transition-all duration-300 hover:scale-[1.02] hover:shadow-lg`}
     >
       <div className="flex flex-col h-full">
-        <h2 className="text-white font-semibold text-lg mb-1">{lib.name}</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-white font-semibold text-lg mb-1">{lib.name}</h2>
+          <button
+            onClick={handleShare}
+            className="text-white hover:text-white/80 transition-colors"
+            aria-label={`Share ${lib.name}`}
+          >
+            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-3 h-3 opacity-60" />
+          </button>
+        </div>
 
         <div className="flex flex-wrap gap-2 mt-3 items-center">
           {formattedTags.map(({ key, label }) => (
