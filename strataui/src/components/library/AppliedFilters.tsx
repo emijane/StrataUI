@@ -7,6 +7,7 @@ type Props = {
     onTechClear: (tech: string) => void;
     searchTerm: string;
     onSearchClear: () => void;
+    onClearAll: () => void; // ✅ NEW PROP
 };
 
 const TAG_LABELS: Record<string, string> = {
@@ -35,7 +36,8 @@ export default function AppliedFilters({
     selectedTech,
     onTechClear,
     searchTerm,
-    onSearchClear
+    onSearchClear,
+    onClearAll
 }: Props) {
     const hasActiveFilters =
         selectedTags.length > 0 || selectedTech.length > 0 || searchTerm.trim().length > 0;
@@ -43,7 +45,7 @@ export default function AppliedFilters({
     if (!hasActiveFilters) return null;
 
     return (
-        <div className="mb-6 flex flex-row flex-wrap items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto sm:invisible md:visible">
+        <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto">
             <p className="text-white/70">Filters applied:</p>
 
             {selectedTags.map((tag) => (
@@ -65,13 +67,24 @@ export default function AppliedFilters({
             {searchTerm.trim() && (
                 <FilterPill label={`Search: "${searchTerm}"`} onRemove={onSearchClear} />
             )}
+
+            <span className="flex font-space-mono text-xs items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20">
+                Clear Filters
+                <button
+                    onClick={onClearAll}
+                    className="text-white focus:outline-none"
+                    aria-label="Clear filters"
+                >
+                    ×
+                </button>
+            </span>
         </div>
     );
 }
 
 function FilterPill({ label, onRemove }: { label: string; onRemove: () => void }) {
     return (
-        <span className="flex font-space-mono text-sm items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20">
+        <span className="flex font-space-mono text-xs items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20">
             {label}
             <button
                 onClick={onRemove}

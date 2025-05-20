@@ -8,6 +8,7 @@ import AppliedFilters from './AppliedFilters';
 import type { Library } from '@/types';
 import HeaderSection from './LibraryFiltersHeader';
 import SearchBar from './SearchBar';
+import FilterSorting from './FilterSorting';
 
 
 export default function LibraryFetcher() {
@@ -77,6 +78,12 @@ export default function LibraryFetcher() {
         setLibraries(filteredLibraries);
     }, [filteredLibraries]);
 
+    const handleClearAll = () => {
+    setSelectedTags([]);
+    setSelectedTech([]);
+    setSearchTerm('');
+    };
+
     return (
         <div className="flex flex-col md:flex-row">
             <FilterSidebar
@@ -86,13 +93,13 @@ export default function LibraryFetcher() {
                 onTechChange={setSelectedTech}
             />
 
-            <div className="flex-1 px-4 pt-16 pb-10">
+            <div className="filter-container px-6 md:px-5 lg:px-10 max-w-[80rem] flex-1 pt-16 pb-10 mx-auto">
                 <HeaderSection />
-
                 <SearchBar
                   searchTerm={searchTerm}
                   onSearchChange={setSearchTerm}
                 />
+                <FilterSorting />
 
                 {loading ? (
                     <p className="text-white/80 p-8">Loading tools...</p>
@@ -113,6 +120,7 @@ export default function LibraryFetcher() {
                             }
                             searchTerm={searchTerm}
                             onSearchClear={() => setSearchTerm('')}
+                            onClearAll={handleClearAll}
                         />
                     </LibraryList>
                 )}

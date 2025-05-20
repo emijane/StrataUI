@@ -149,7 +149,7 @@ export default function LibraryList({
     children?: ReactNode;
 }) {
     return (
-        <section className="w-full max-w-[94rem] mx-auto px-4 md:px-6" aria-label="Library section">
+        <section className="w-full mx-auto" aria-label="Library section">
             {children && (
                 <div>
                     {children}

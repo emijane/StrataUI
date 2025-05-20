@@ -96,7 +96,7 @@ export default function FilterSidebar({
     };
 
     return (
-        <aside className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-5 md:pl-5 outline outline-white/20 text-white max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 z-50">
+        <aside className="sticky top-18 md:min-w-55 lg:min-w-80 md:pt-5 outline outline-white/20 text-white overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 z-50">
             <div className="md:hidden flex justify-between items-center p-4 border-b border-white/10">
                 <h2 className="text-white font-semibold">Filters</h2>
                 <button
