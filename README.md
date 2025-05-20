@@ -21,7 +21,7 @@
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Supabase](https://supabase.com/)
 - [Lucide Icons](https://lucide.dev/)
-- TypeScript
+- [TypeScript](https://www.typescriptlang.org/)
 
 ---
 
