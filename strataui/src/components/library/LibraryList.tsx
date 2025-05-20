@@ -3,6 +3,7 @@
 import type { Library } from '@/types';
 import { memo, useMemo, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {
     faArrowUpRightFromSquare,
     faCubes
@@ -87,13 +88,13 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block bg-white/10 backdrop-blur-md border border-white/20 
-                rounded-2xl shadow-md cursor-pointer no-underline p-4 
+                rounded-2xl shadow-md cursor-pointer no-underline p-5 
                 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
             >
                 <div className="flex flex-col h-full">
                     <div className="relative">
                         <div className="flex items-center gap-3 pr-10">
-                            <h2 className="text-white font-semibold text-lg leading-tight flex items-center gap-2">
+                            <p className="text-white font-semibold text-lg leading-tight flex items-center gap-2">
                                 {lib.name}
                                 {(lib.tech || []).map((tech: string) => {
                                     const icon = TECH_ICONS[tech];
@@ -107,7 +108,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                                         />
                                     ) : null;
                                 })}
-                            </h2>
+                            </p>
                         </div>
                         <button
                             onClick={handleShare}
@@ -126,7 +127,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                         {formattedTags.map(({ key, label }: { key: string; label: string }) => (
                             <span
                                 key={key}
-                                className="font-space-mono text-xs outline outline-white/30 text-white pl-3 pr-3 pt-2 pb-2 rounded-xl"
+                                className="font-space-mono text-[0.7rem] outline outline-white/30 text-white pl-2 pr-2 pt-1 pb-1 rounded-xl"
                             >
                                 {label}
                             </span>
@@ -150,7 +151,7 @@ export default function LibraryList({
     return (
         <section className="w-full max-w-[94rem] mx-auto px-4 md:px-6" aria-label="Library section">
             {children && (
-                <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-white">
+                <div>
                     {children}
                 </div>
             )}

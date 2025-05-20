@@ -96,7 +96,7 @@ export default function FilterSidebar({
     };
 
     return (
-        <aside className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-5 outline outline-white/20 text-white max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 shadow-lg z-50">
+        <aside className="sticky top-18 w-full md:w-70 lg:w-80 md:pt-5 md:pl-5 outline outline-white/20 text-white max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 z-50">
             <div className="md:hidden flex justify-between items-center p-4 border-b border-white/10">
                 <h2 className="text-white font-semibold">Filters</h2>
                 <button
@@ -107,18 +107,16 @@ export default function FilterSidebar({
                 </button>
             </div>
 
-            <div
-                className={`transition-all duration-500 ease-in-out overflow-hidden ${
+            <div className={`transition-all duration-500 ease-in-out overflow-hidden ${
                     isSidebarOpen ? 'max-h-[1000px] p-4' : 'max-h-0 p-0'
                 } md:max-h-none md:p-4`}
             >
-
                 <Collapsible
-                    title="TYPE"
+                    title="CATEGORY"
                     isOpen={isTagOpen}
                     onToggle={() => setIsTagOpen((prev) => !prev)}
                 >
-                    <div className="flex flex-col gap-2 text-sm mt-2">
+                    <div className="flex flex-col gap-3 text-sm mt-2">
                         {TAGS.map((tag) => (
                             <label key={tag} className="flex items-center gap-2 cursor-pointer">
                                 <input
@@ -138,7 +136,7 @@ export default function FilterSidebar({
                     isOpen={isTechOpen}
                     onToggle={() => setIsTechOpen((prev) => !prev)}
                 >
-                    <div className="flex flex-col gap-2 text-sm mt-2">
+                    <div className="flex flex-col gap-3 text-sm mt-2">
                         {TECHS.map((tech) => (
                             <label key={tech} className="flex items-center gap-2 cursor-pointer">
                                 <input
