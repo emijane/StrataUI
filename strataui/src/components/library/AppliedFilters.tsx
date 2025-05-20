@@ -45,37 +45,39 @@ export default function AppliedFilters({
     if (!hasActiveFilters) return null;
 
     return (
-        <div className="flex flex-wrap items-center gap-2 text-sm text-white w-full max-w-[94rem] mx-auto">
-            <p className="text-white/70">Filters applied:</p>
+        <div className="flex flex-col gap-3 mb-5">
+            <p className="text-white/70 text-sm">Filters applied:</p>
 
-            {selectedTags.map((tag) => (
-                <FilterPill
-                    key={tag}
-                    label={TAG_LABELS[tag] || tag}
-                    onRemove={() => onTagClear(tag)}
-                />
-            ))}
+            <div className="flex flex-wrap flex-items-center gap-2 text-sm text-white w-full mx-auto">
+                {selectedTags.map((tag) => (
+                    <FilterPill
+                        key={tag}
+                        label={TAG_LABELS[tag] || tag}
+                        onRemove={() => onTagClear(tag)}
+                    />
+                ))}
 
-            {selectedTech.map((tech) => (
-                <FilterPill
-                    key={tech}
-                    label={TECH_LABELS[tech] || tech}
-                    onRemove={() => onTechClear(tech)}
-                />
-            ))}
+                {selectedTech.map((tech) => (
+                    <FilterPill
+                        key={tech}
+                        label={TECH_LABELS[tech] || tech}
+                        onRemove={() => onTechClear(tech)}
+                    />
+                ))}
 
-            {searchTerm.trim() && (
-                <FilterPill label={`Search: "${searchTerm}"`} onRemove={onSearchClear} />
-            )}
+                {searchTerm.trim() && (
+                    <FilterPill label={`Search: "${searchTerm}"`} onRemove={onSearchClear} />
+                )}
 
-            <button 
-                className="flex font-space-mono text-xs items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20 hover:cursor-pointer"
-                onClick={onClearAll}
-                aria-label="Clear filters"
-            >
-                Clear Filters
-                <div className="text-white focus:outline-none">×</div>
-            </button>
+                <button 
+                    className="flex font-space-mono text-xs items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-full border border-white/20 hover:cursor-pointer"
+                    onClick={onClearAll}
+                    aria-label="Clear filters"
+                >
+                    Clear Filters
+                    <div className="text-white focus:outline-none">×</div>
+                </button>
+            </div>
         </div>
     );
 }

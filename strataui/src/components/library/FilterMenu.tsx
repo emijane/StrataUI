@@ -110,7 +110,7 @@ export default function FilterMenu({
                             setIsTagOpen((prev) => !prev);
                             setIsTechOpen(false);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-sm rounded-xl border border-white/20 hover:bg-white/20 transition"
+                        className="font-space-mono flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-xs rounded-xl border border-white/20 hover:bg-white/20 transition"
                     >
                         Category
                         {selectedTags.length > 0 && (
@@ -120,15 +120,15 @@ export default function FilterMenu({
                     </button>
 
                     {isTagOpen && (
-                        <div className="absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
-                            <div className="flex flex-col gap-2 text-white text-sm">
+                        <div className="font-space-mono text-xs absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
+                            <div className="flex flex-col gap-3 text-white text-xs">
                                 {TAGS.map((tag) => (
-                                    <label key={tag} className="flex items-center gap-2 cursor-pointer">
+                                    <label key={tag} className="flex items-center gap-2 cursor-pointer hover:bg-gray-800">
                                         <input
                                             type="checkbox"
                                             checked={selectedTags.includes(tag)}
                                             onChange={() => toggleTag(tag)}
-                                            className="appearance-none w-4 h-4 border border-white/20 rounded-xl checked:bg-purple-300"
+                                            className="appearance-none w-3.5 h-3.5 border border-white/20 rounded-xl checked:bg-purple-300"
                                         />
                                         {TAG_LABELS[tag]} ({getTagCount(tag)})
                                     </label>
@@ -145,7 +145,7 @@ export default function FilterMenu({
                             setIsTechOpen((prev) => !prev);
                             setIsTagOpen(false);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-sm rounded-xl border border-white/20 hover:bg-white/20 transition"
+                        className="font-space-mono flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-xs rounded-xl border border-white/20 hover:bg-white/20 transition"
                     >
                         Technology
                         {selectedTech.length > 0 && (
@@ -155,15 +155,15 @@ export default function FilterMenu({
                     </button>
 
                     {isTechOpen && (
-                        <div className="absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
-                            <div className="flex flex-col gap-2 text-white text-sm">
+                        <div className="font-space-mono absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
+                            <div className="flex flex-col gap-3 text-white text-xs">
                                 {TECHS.map((tech) => (
                                     <label key={tech} className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={selectedTech.includes(tech)}
                                             onChange={() => toggleTech(tech)}
-                                            className="appearance-none w-4 h-4 border border-white/20 rounded-xl checked:bg-purple-300"
+                                            className="appearance-none w-3.5 h-3.5 border border-white/20 rounded-xl checked:bg-purple-300"
                                         />
                                         {TECH_LABELS[tech]} ({getTechCount(tech)})
                                     </label>
