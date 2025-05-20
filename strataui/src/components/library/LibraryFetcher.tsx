@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import LibraryList from './LibraryList';
-import FilterSidebar from './FilterMenu';
+import FilterMenu from './FilterMenu';
 import AppliedFilters from './AppliedFilters';
 import type { Library } from '@/types';
 import HeaderSection from './Header';
@@ -86,25 +86,17 @@ export default function LibraryFetcher() {
     return (
         <div className="flex flex-col">
 
-            <div className="filter-container px-6 md:px-5 lg:max-w-[85rem] flex-1 pt-16 pb-10 mx-auto">
+            <div className="filter-container flex-1 pt-16 pb-10 mx-auto px-6 md:px-5 lg:max-w-[90rem]">
                 <HeaderSection />
                 <SearchBar
                     searchTerm={searchTerm}
                     onSearchChange={setSearchTerm}
                 />
-                <FilterSidebar
-                    selectedTags={selectedTags}
-                    onTagChange={setSelectedTags}
-                    selectedTech={selectedTech}
-                    onTechChange={setSelectedTech}
-                    allLibraries={allFetchedLibraries}
-                />
-
 
                 {loading ? (
                     <p className="text-white/70 text-sm">Loading tools... Hang tight!</p>
                 ) : libraries.length === 0 ? (
-                    <p className="text-white/80 p-8 font-space-mono">
+                    <p className="text-white/80 font-space-mono">
                         No tools found. Contact us to feature your development tool!
                     </p>
                 ) : (
@@ -122,8 +114,17 @@ export default function LibraryFetcher() {
                             onSearchClear={() => setSearchTerm('')}
                             onClearAll={handleClearAll}
                         />
+                        <FilterMenu
+                            selectedTags={selectedTags}
+                            onTagChange={setSelectedTags}
+                            selectedTech={selectedTech}
+                            onTechChange={setSelectedTech}
+                            allLibraries={allFetchedLibraries}
+                        />
                     </LibraryList>
                 )}
+
+                
             </div>
         </div>
     );

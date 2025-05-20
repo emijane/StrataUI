@@ -52,7 +52,7 @@ const TECH_LABELS: Record<string, string> = {
     bulma: 'Bulma'
 };
 
-export default function FilterSidebar({
+export default function FilterMenu({
     selectedTags,
     onTagChange,
     selectedTech,
@@ -101,7 +101,7 @@ export default function FilterSidebar({
     };
 
     return (
-        <div className="w-full px-4 py-4 bg-white/5 backdrop-blur-md border-b border-white/10 relative z-50">
+        <div className="w-full py-4 relative z-50">
             <div className="flex gap-4 flex-wrap">
                 {/* Category Dropdown */}
                 <div className="relative" ref={tagRef}>
@@ -110,9 +110,9 @@ export default function FilterSidebar({
                             setIsTagOpen((prev) => !prev);
                             setIsTechOpen(false);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-sm rounded-lg border border-white/20 hover:bg-white/20 transition"
+                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-sm rounded-xl border border-white/20 hover:bg-white/20 transition"
                     >
-                        Filter by Category
+                        Category
                         {selectedTags.length > 0 && (
                             <span className="text-purple-300">({selectedTags.length})</span>
                         )}
@@ -120,7 +120,7 @@ export default function FilterSidebar({
                     </button>
 
                     {isTagOpen && (
-                        <div className="absolute left-0 mt-2 bg-black border border-white/10 rounded-lg shadow-lg p-4 w-64">
+                        <div className="absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
                             <div className="flex flex-col gap-2 text-white text-sm">
                                 {TAGS.map((tag) => (
                                     <label key={tag} className="flex items-center gap-2 cursor-pointer">
@@ -128,7 +128,7 @@ export default function FilterSidebar({
                                             type="checkbox"
                                             checked={selectedTags.includes(tag)}
                                             onChange={() => toggleTag(tag)}
-                                            className="appearance-none w-4 h-4 border border-white/20 rounded-md checked:bg-purple-300"
+                                            className="appearance-none w-4 h-4 border border-white/20 rounded-xl checked:bg-purple-300"
                                         />
                                         {TAG_LABELS[tag]} ({getTagCount(tag)})
                                     </label>
@@ -145,9 +145,9 @@ export default function FilterSidebar({
                             setIsTechOpen((prev) => !prev);
                             setIsTagOpen(false);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-sm rounded-lg border border-white/20 hover:bg-white/20 transition"
+                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-sm rounded-xl border border-white/20 hover:bg-white/20 transition"
                     >
-                        Filter by Technology
+                        Technology
                         {selectedTech.length > 0 && (
                             <span className="text-purple-300">({selectedTech.length})</span>
                         )}
@@ -155,7 +155,7 @@ export default function FilterSidebar({
                     </button>
 
                     {isTechOpen && (
-                        <div className="absolute left-0 mt-2 bg-black border border-white/10 rounded-lg shadow-lg p-4 z-50 w-64">
+                        <div className="absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
                             <div className="flex flex-col gap-2 text-white text-sm">
                                 {TECHS.map((tech) => (
                                     <label key={tech} className="flex items-center gap-2 cursor-pointer">
@@ -163,7 +163,7 @@ export default function FilterSidebar({
                                             type="checkbox"
                                             checked={selectedTech.includes(tech)}
                                             onChange={() => toggleTech(tech)}
-                                            className="appearance-none w-4 h-4 border border-white/20 rounded-md checked:bg-purple-300"
+                                            className="appearance-none w-4 h-4 border border-white/20 rounded-xl checked:bg-purple-300"
                                         />
                                         {TECH_LABELS[tech]} ({getTechCount(tech)})
                                     </label>

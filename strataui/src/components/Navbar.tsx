@@ -25,10 +25,10 @@ export default function Navbar() {
             </div>
             <ul className="flex flex-row gap-5 font-semibold text-white/90 justify-center">
                 <li>
-                    <Link href="/">Home</Link>
+                    <Link href="/" className='hidden'>Home</Link>
                 </li>
                 <li>
-                    <Link href="/library">Library</Link>
+                    <Link href="/library" className='hidden'>Library</Link>
                 </li>
                 <li>
                     <FontAwesomeIcon icon={faGithub} className='text-lg'/>
