@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 export default function Navbar() {
     return (
@@ -21,12 +23,15 @@ export default function Navbar() {
               </ul>
               <span className='text-white/60 bg-white/10 pt-1 pb-1 pl-2 pr-2 text-xs rounded-xl outline-1 outline-white/30 font-semibold'>v1.0</span>
             </div>
-            <ul className="flex flex-row gap-5 font-semibold text-white/90">
+            <ul className="flex flex-row gap-5 font-semibold text-white/90 justify-center">
                 <li>
                     <Link href="/">Home</Link>
                 </li>
                 <li>
                     <Link href="/library">Library</Link>
+                </li>
+                <li>
+                    <FontAwesomeIcon icon={faGithub} className='text-lg'/>
                 </li>
             </ul>
         </nav>
