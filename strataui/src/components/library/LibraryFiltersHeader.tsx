@@ -3,7 +3,7 @@
 
 export default function HeaderSection() {
   return (
-    <div className="max-w-2xl text-center mx-auto mb-10 px-4 ">
+    <div className="max-w-2xl text-center mx-auto mb-10">
       <div className="flex flex-row items-center gap-4 justify-center">
         <h1 className="text-white text-3xl font-semibold tracking-tight">Explore Toolkits</h1>
       </div>

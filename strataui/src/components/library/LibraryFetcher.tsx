@@ -8,7 +8,6 @@ import AppliedFilters from './AppliedFilters';
 import type { Library } from '@/types';
 import HeaderSection from './LibraryFiltersHeader';
 import SearchBar from './SearchBar';
-import FilterSorting from './FilterSorting';
 
 
 export default function LibraryFetcher() {
@@ -93,16 +92,15 @@ export default function LibraryFetcher() {
                 onTechChange={setSelectedTech}
             />
 
-            <div className="filter-container px-6 md:px-5 lg:px-10 max-w-[80rem] flex-1 pt-16 pb-10 mx-auto">
+            <div className="filter-container px-6 md:px-5 lg:max-w-[85rem] flex-1 pt-16 pb-10 mx-auto">
                 <HeaderSection />
                 <SearchBar
                   searchTerm={searchTerm}
                   onSearchChange={setSearchTerm}
                 />
-                <FilterSorting />
 
                 {loading ? (
-                    <p className="text-white/80 p-8">Loading tools...</p>
+                    <p className="text-white/70 text-sm">Loading tools... Hang tight!</p>
                 ) : libraries.length === 0 ? (
                     <p className="text-white/80 p-8 font-space-mono">
                         No tools found. Contact us to feature your development tool!

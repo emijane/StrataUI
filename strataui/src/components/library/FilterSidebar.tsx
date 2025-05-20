@@ -96,8 +96,8 @@ export default function FilterSidebar({
     };
 
     return (
-        <aside className="sticky top-18 md:min-w-55 lg:min-w-80 md:pt-5 outline outline-white/20 text-white overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 z-50">
-            <div className="md:hidden flex justify-between items-center p-4 border-b border-white/10">
+        <aside className="sticky top-18 w-full md:max-w-[18rem] lg:min-w-[14rem] md:pt-5 px-1 outline outline-white/20 text-white overflow-y-auto bg-white/5 backdrop-blur-md border-r-1 border-white/10 z-50">
+            <div className="md:hidden flex justify-between items-center p-5">
                 <h2 className="text-white font-semibold">Filters</h2>
                 <button
                     onClick={() => setIsSidebarOpen((prev) => !prev)}
@@ -173,10 +173,10 @@ function Collapsible({ title, isOpen, onToggle, children }: CollapsibleProps) {
     }, [isOpen]);
 
     return (
-        <div className="mb-6 border-b border-white/10 pb-1">
+        <div>
             <button
                 onClick={onToggle}
-                className="w-full font-space-mono flex justify-between items-center text-left text-xs font-semibold tracking-wide mb-4 text-purple-300/80"
+                className="w-full font-space-mono flex justify-between items-center text-left text-xs font-semibold tracking-wide text-purple-300/80"
             >
                 {title}
                 {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -184,7 +184,7 @@ function Collapsible({ title, isOpen, onToggle, children }: CollapsibleProps) {
             <div
                 ref={ref}
                 style={{ maxHeight: height }}
-                className="transition-all duration-500 ease-in-out overflow-hidden mb-4"
+                className="transition-all duration-500 ease-in-out overflow-hidden mt-4 mb-5"
             >
                 {children}
             </div>
