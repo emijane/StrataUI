@@ -3,10 +3,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import LibraryList from './LibraryList';
-import FilterSidebar from './FilterSidebar';
+import FilterSidebar from './FilterMenu';
 import AppliedFilters from './AppliedFilters';
 import type { Library } from '@/types';
-import HeaderSection from './LibraryFiltersHeader';
+import HeaderSection from './Header';
 import SearchBar from './SearchBar';
 
 
@@ -84,20 +84,22 @@ export default function LibraryFetcher() {
     };
 
     return (
-        <div className="flex flex-col md:flex-row">
-            <FilterSidebar
-                selectedTags={selectedTags}
-                onTagChange={setSelectedTags}
-                selectedTech={selectedTech}
-                onTechChange={setSelectedTech}
-            />
+        <div className="flex flex-col">
 
             <div className="filter-container px-6 md:px-5 lg:max-w-[85rem] flex-1 pt-16 pb-10 mx-auto">
                 <HeaderSection />
                 <SearchBar
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
                 />
+                <FilterSidebar
+                    selectedTags={selectedTags}
+                    onTagChange={setSelectedTags}
+                    selectedTech={selectedTech}
+                    onTechChange={setSelectedTech}
+                    allLibraries={allFetchedLibraries}
+                />
+
 
                 {loading ? (
                     <p className="text-white/70 text-sm">Loading tools... Hang tight!</p>
