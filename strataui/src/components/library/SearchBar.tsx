@@ -9,7 +9,7 @@ type Props = {
 
 export default function SearchBar({ searchTerm, onSearchChange }: Props) {
     return (
-        <div className="w-full max-w-[94rem] mx-auto px-6 mb-6">
+        <div className="w-full max-w-[94rem] mx-auto px-4 mb-10 md:px-6">
             <p className="text-white/70 mb-5">Search for your favorite design and development tools.</p>
 
             <div className="relative">
