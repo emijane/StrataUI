@@ -82,7 +82,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
     };
 
     return (
-        <div className="break-inside-avoid mb-6 w-full inline-block">
+        <article className="break-inside-avoid mb-6 w-full inline-block">
             <a
                 href={lib.url}
                 target="_blank"
@@ -135,7 +135,7 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                     </div>
                 </div>
             </a>
-        </div>
+        </article>
     );
 });
 
