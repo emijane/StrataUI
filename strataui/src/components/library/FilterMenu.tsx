@@ -1,3 +1,5 @@
+// DEPRECATED - Filter menu manager (horizontal)
+
 'use client';
 
 import { useState, useRef, useEffect, useMemo } from 'react';

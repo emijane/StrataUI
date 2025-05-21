@@ -1,3 +1,5 @@
+// Active filter manager
+
 'use client';
 
 type Props = {
@@ -7,7 +9,7 @@ type Props = {
     onTechClear: (tech: string) => void;
     searchTerm: string;
     onSearchClear: () => void;
-    onClearAll: () => void; // ✅ NEW PROP
+    onClearAll: () => void;
 };
 
 const TAG_LABELS: Record<string, string> = {

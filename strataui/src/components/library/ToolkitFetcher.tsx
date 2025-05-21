@@ -13,6 +13,7 @@ export default function ToolkitFetcher() {
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
+        subcategory: [] as string[],
         subcategory_slug: [] as string[],
         tech: [] as string[],
         languages: [] as string[],
@@ -103,6 +104,7 @@ export default function ToolkitFetcher() {
                     onSearchClear={() => setSearchTerm('')}
                     onClearAll={() =>
                         setFilters({
+                            subcategory: [],
                             subcategory_slug: [],
                             tech: [],
                             languages: [],

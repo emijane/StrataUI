@@ -5,6 +5,7 @@ import { FILTER_CATEGORIES } from '@/lib/filterConfig';
 import type { Toolkit } from '@/types';
 
 type FilterMap = {
+    subcategory: string[];
     subcategory_slug: string[];
     tech: string[];
     languages: string[];
@@ -33,6 +34,7 @@ const getUniqueValues = (toolkits: Toolkit[], field: keyof Toolkit): string[] =>
 export default function FilterSidebar({ allToolkits, filters, onFilterChange }: Props) {
     const dynamicOptions = useMemo(() => {
         const options: Record<keyof FilterMap, string[]> = {
+            subcategory: [],
             subcategory_slug: [],
             tech: [],
             languages: [],
@@ -46,6 +48,14 @@ export default function FilterSidebar({ allToolkits, filters, onFilterChange }: 
         return options;
     }, [allToolkits]);
 
+    const SUBCATEGORY_LABELS: Record<string, string> = useMemo(() => {
+        const entries = allToolkits
+            .filter(toolkit => toolkit.subcategory_slug && toolkit.subcategory)
+            .map(toolkit => [toolkit.subcategory_slug, toolkit.subcategory] as [string, string]);
+
+        return Object.fromEntries(entries);
+    }, [allToolkits]);
+
     const handleToggle = (key: keyof FilterMap, value: string) => {
         const current = filters[key] || [];
         const updated = current.includes(value)
@@ -55,7 +65,7 @@ export default function FilterSidebar({ allToolkits, filters, onFilterChange }: 
     };
 
     return (
-        <div className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white shadow-lg">
+        <div className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white shadow-lg p-4 rounded-xl space-y-6">
             {Object.entries(FILTER_CATEGORIES).map(([label, { field }]) => (
                 <div key={field}>
                     <h4 className="font-space-mono text-sm font-semibold uppercase tracking-wide mb-4">{label}</h4>
@@ -68,7 +78,7 @@ export default function FilterSidebar({ allToolkits, filters, onFilterChange }: 
                                     onChange={() => handleToggle(field as keyof FilterMap, option)}
                                     className="appearance-none w-4 h-4 border border-white/30 rounded-md checked:bg-purple-400 checked:border-transparent"
                                 />
-                                {option}
+                                {field === 'subcategory_slug' ? SUBCATEGORY_LABELS[option] ?? option : option}
                             </label>
                         ))}
                     </div>

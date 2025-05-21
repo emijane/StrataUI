@@ -7,8 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faArrowUpRightFromSquare
 } from '@fortawesome/free-solid-svg-icons';
-import { TECH_ICONS, getTechColor } from '@/lib/frameworkIcons';
-import { getLanguageIcon } from '@/lib/languageIcons';
+import { getTechColor } from '@/lib/IconColorsTech';
+import { getLanguageIcon, TECH_ICONS } from '@/lib/languageIcons';
 
 const TAG_LABELS: Record<string, string> = {
     'ui-library': 'UI Library',
@@ -87,16 +87,16 @@ const LibraryCard = memo(({ lib }: { lib: Toolkit }) => {
                                 </span>
                             ))}
                             {(lib.tech || []).map((tech) => {
-                                const icon = TECH_ICONS[tech];
-                                return icon ? (
-                                    <FontAwesomeIcon
-                                        key={tech}
-                                        icon={icon}
-                                        style={{ color: getTechColor(tech) }}
-                                        className="w-4 h-4 hover:scale-110 transition"
-                                        title={tech}
-                                    />
-                                ) : null;
+                            const icon = TECH_ICONS[tech.toLowerCase()];
+                            return icon ? (
+                                <FontAwesomeIcon
+                                    key={tech}
+                                    icon={icon}
+                                    className="w-4 h-4"
+                                    style={{ color: getTechColor(tech.toLowerCase()) }}
+                                    title={tech}
+                                />
+                            ) : null;
                             })}
                         </div>
                     )}
