@@ -1,46 +1,14 @@
+
 'use client';
 
-import type { Library } from '@/types';
+import type { Toolkit } from '@/types';
 import { memo, useMemo, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import {
-    faArrowUpRightFromSquare,
-    faCubes
+    faArrowUpRightFromSquare
 } from '@fortawesome/free-solid-svg-icons';
-import {
-    faReact,
-    faVuejs,
-    faAngular,
-    faBootstrap,
-    faHtml5
-} from '@fortawesome/free-brands-svg-icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-
-const TECH_ICONS: Record<string, IconDefinition> = {
-    react: faReact,
-    vue: faVuejs,
-    angular: faAngular,
-    svelte: faCubes,
-    tailwind: faCubes,
-    bootstrap: faBootstrap,
-    html: faHtml5,
-    bulma: faCubes
-};
-
-function getTechColor(tech: string): string {
-    const colors: Record<string, string> = {
-        react: '#61DAFB',
-        vue: '#42b883',
-        angular: '#dd0031',
-        svelte: '#ff3e00',
-        tailwind: '#38bdf8',
-        bootstrap: '#7952b3',
-        html: '#e34c26',
-        bulma: '#00d1b2'
-    };
-    return colors[tech] || '#ffffff';
-}
+import { TECH_ICONS, getTechColor } from '@/lib/frameworkIcons';
+import { getLanguageIcon } from '@/lib/languageIcons';
 
 const TAG_LABELS: Record<string, string> = {
     'ui-library': 'UI Library',
@@ -55,7 +23,7 @@ function formatTagLabel(tag: string): string {
     return TAG_LABELS[tag] || tag;
 }
 
-const LibraryCard = memo(({ lib }: { lib: Library }) => {
+const LibraryCard = memo(({ lib }: { lib: Toolkit }) => {
     const formattedTags = useMemo(
         () => (lib.tags || []).map((tag: string) => ({
             key: tag,
@@ -96,18 +64,6 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                         <div className="flex items-center gap-3 pr-10">
                             <p className="text-white font-semibold text-lg leading-tight flex items-center gap-2">
                                 {lib.name}
-                                {(lib.tech || []).map((tech: string) => {
-                                    const icon = TECH_ICONS[tech];
-                                    return icon ? (
-                                        <FontAwesomeIcon
-                                            key={tech}
-                                            icon={icon}
-                                            style={{ color: getTechColor(tech) }}
-                                            className="w-4 h-4"
-                                            title={tech}
-                                        />
-                                    ) : null;
-                                })}
                             </p>
                         </div>
                         <button
@@ -123,8 +79,30 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
                         <p className="text-white/70 text-sm mt-2">{lib.description}</p>
                     )}
 
+                    {(lib.languages?.length || 0) + (lib.tech?.length || 0) > 0 && (
+                        <div className="flex gap-2 mt-3 text-white/80 text-xl items-center flex-wrap">
+                            {(lib.languages || []).map((lang) => (
+                                <span key={lang} className="hover:text-purple-300 transition">
+                                    {getLanguageIcon(lang)}
+                                </span>
+                            ))}
+                            {(lib.tech || []).map((tech) => {
+                                const icon = TECH_ICONS[tech];
+                                return icon ? (
+                                    <FontAwesomeIcon
+                                        key={tech}
+                                        icon={icon}
+                                        style={{ color: getTechColor(tech) }}
+                                        className="w-4 h-4 hover:scale-110 transition"
+                                        title={tech}
+                                    />
+                                ) : null;
+                            })}
+                        </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2 mt-3 items-center">
-                        {formattedTags.map(({ key, label }: { key: string; label: string }) => (
+                        {formattedTags.map(({ key, label }) => (
                             <span
                                 key={key}
                                 className="font-space-mono text-[0.7rem] outline outline-white/30 text-white pl-2 pr-2 pt-1 pb-1 rounded-xl"
@@ -141,20 +119,16 @@ const LibraryCard = memo(({ lib }: { lib: Library }) => {
 
 LibraryCard.displayName = 'LibraryCard';
 
-export default function LibraryList({
+export default function ToolkitList({
     libraries,
     children
 }: {
-    libraries: Library[];
+    libraries: Toolkit[];
     children?: ReactNode;
 }) {
     return (
         <section className="w-full mx-auto relative z-0" aria-label="Library section">
-            {children && (
-                <div>
-                    {children}
-                </div>
-            )}
+            {children && <div>{children}</div>}
 
             {libraries.length === 0 ? (
                 <p className="text-white">No libraries to display.</p>

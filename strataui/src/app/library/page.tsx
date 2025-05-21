@@ -1,6 +1,6 @@
 'use client';
 
-import LibraryFetcher from '@/components/library/LibraryFetcher';
+import ToolkitFetcher from '@/components/library/ToolkitFetcher';
 
 export default function LibraryPage() {
   return (
@@ -10,7 +10,7 @@ export default function LibraryPage() {
 
       {/* Foreground content */}
       <div className="relative z-10 mx-auto">
-        <LibraryFetcher />
+        <ToolkitFetcher />
       </div>
     </main>
   );

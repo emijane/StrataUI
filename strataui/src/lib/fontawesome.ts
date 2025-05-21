@@ -1,4 +1,4 @@
-// lib/fontawesome.ts
+// Manages icons for general icons.
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faUser, faSearch, faBars } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";

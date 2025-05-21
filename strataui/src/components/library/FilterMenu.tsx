@@ -1,74 +1,45 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import type { Library } from '@/types';
+import type { Toolkit } from '@/types';
 
 type Props = {
-    selectedTags: string[];
-    onTagChange: (tags: string[]) => void;
+    selectedSubcategories: string[];
+    onSubcategoryChange: (subcategories: string[]) => void;
     selectedTech: string[];
     onTechChange: (techs: string[]) => void;
-    allLibraries: Library[]; // ✅ NEW
-};
-
-const TAGS = [
-    'ui-library',
-    'component-kit',
-    'design-system',
-    'headless-ui',
-    'mobile-ui-framework',
-    'framework'
-];
-
-const TECHS = [
-    'react',
-    'vue',
-    'angular',
-    'svelte',
-    'tailwind',
-    'bootstrap',
-    'html',
-    'bulma'
-];
-
-const TAG_LABELS: Record<string, string> = {
-    'ui-library': 'UI Library',
-    'component-kit': 'Component Kit',
-    'design-system': 'Design System',
-    'headless-ui': 'Headless UI',
-    'mobile-ui-framework': 'Mobile UI Framework',
-    framework: 'Framework'
-};
-
-const TECH_LABELS: Record<string, string> = {
-    react: 'React',
-    vue: 'Vue.js',
-    angular: 'Angular',
-    svelte: 'Svelte',
-    tailwind: 'Tailwind CSS',
-    bootstrap: 'Bootstrap',
-    html: 'HTML',
-    bulma: 'Bulma'
+    allLibraries: Toolkit[];
 };
 
 export default function FilterMenu({
-    selectedTags,
-    onTagChange,
+    selectedSubcategories,
+    onSubcategoryChange,
     selectedTech,
     onTechChange,
     allLibraries
 }: Props) {
-    const [isTagOpen, setIsTagOpen] = useState(false);
+    const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false);
     const [isTechOpen, setIsTechOpen] = useState(false);
 
-    const tagRef = useRef<HTMLDivElement>(null);
+    const subcategoryRef = useRef<HTMLDivElement>(null);
     const techRef = useRef<HTMLDivElement>(null);
+
+    // ⬇️ Dynamically extract unique subcategories and techs
+    const uniqueSubcategories = useMemo(() => {
+        return [...new Set(allLibraries.map(lib => lib.subcategory_slug).filter(Boolean))].sort();
+    }, [allLibraries]);
+
+    const uniqueTechs = useMemo(() => {
+        const techSet = new Set<string>();
+        allLibraries.forEach(lib => lib.tech?.forEach(t => techSet.add(t)));
+        return [...techSet].sort();
+    }, [allLibraries]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (tagRef.current && !tagRef.current.contains(event.target as Node)) {
-                setIsTagOpen(false);
+            if (subcategoryRef.current && !subcategoryRef.current.contains(event.target as Node)) {
+                setIsSubcategoryOpen(false);
             }
             if (techRef.current && !techRef.current.contains(event.target as Node)) {
                 setIsTechOpen(false);
@@ -78,24 +49,24 @@ export default function FilterMenu({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const getTagCount = (tag: string) =>
-        allLibraries.filter((lib) => lib.tags?.includes(tag)).length;
+    const getSubcategoryCount = (slug: string) =>
+        allLibraries.filter(lib => lib.subcategory_slug === slug).length;
 
     const getTechCount = (tech: string) =>
-        allLibraries.filter((lib) => lib.tech?.includes(tech)).length;
+        allLibraries.filter(lib => lib.tech?.includes(tech)).length;
 
-    const toggleTag = (tag: string) => {
-        onTagChange(
-            selectedTags.includes(tag)
-                ? selectedTags.filter((t) => t !== tag)
-                : [...selectedTags, tag]
+    const toggleSubcategory = (slug: string) => {
+        onSubcategoryChange(
+            selectedSubcategories.includes(slug)
+                ? selectedSubcategories.filter(t => t !== slug)
+                : [...selectedSubcategories, slug]
         );
     };
 
     const toggleTech = (tech: string) => {
         onTechChange(
             selectedTech.includes(tech)
-                ? selectedTech.filter((t) => t !== tech)
+                ? selectedTech.filter(t => t !== tech)
                 : [...selectedTech, tech]
         );
     };
@@ -103,34 +74,35 @@ export default function FilterMenu({
     return (
         <div className="w-full py-4 relative z-50">
             <div className="flex gap-4 flex-wrap">
-                {/* Category Dropdown */}
-                <div className="relative" ref={tagRef}>
+
+                {/* Subcategory Filter */}
+                <div className="relative" ref={subcategoryRef}>
                     <button
                         onClick={() => {
-                            setIsTagOpen((prev) => !prev);
+                            setIsSubcategoryOpen(prev => !prev);
                             setIsTechOpen(false);
                         }}
                         className="font-space-mono flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-xs rounded-xl border border-white/20 hover:bg-white/20 transition"
                     >
-                        Category
-                        {selectedTags.length > 0 && (
-                            <span className="text-purple-300">({selectedTags.length})</span>
+                        Type
+                        {selectedSubcategories.length > 0 && (
+                            <span className="text-purple-300">({selectedSubcategories.length})</span>
                         )}
-                        {isTagOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        {isSubcategoryOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </button>
 
-                    {isTagOpen && (
+                    {isSubcategoryOpen && (
                         <div className="font-space-mono text-xs absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
                             <div className="flex flex-col gap-3 text-white text-xs">
-                                {TAGS.map((tag) => (
-                                    <label key={tag} className="flex items-center gap-2 cursor-pointer hover:bg-gray-800">
+                                {uniqueSubcategories.map(slug => (
+                                    <label key={slug} className="flex items-center gap-2 cursor-pointer hover:bg-gray-800">
                                         <input
                                             type="checkbox"
-                                            checked={selectedTags.includes(tag)}
-                                            onChange={() => toggleTag(tag)}
+                                            checked={selectedSubcategories.includes(slug)}
+                                            onChange={() => toggleSubcategory(slug)}
                                             className="appearance-none w-3.5 h-3.5 border border-white/20 rounded-xl checked:bg-purple-300"
                                         />
-                                        {TAG_LABELS[tag]} ({getTagCount(tag)})
+                                        {slug} ({getSubcategoryCount(slug)})
                                     </label>
                                 ))}
                             </div>
@@ -138,12 +110,12 @@ export default function FilterMenu({
                     )}
                 </div>
 
-                {/* Technology Dropdown */}
+                {/* Technology Filter */}
                 <div className="relative" ref={techRef}>
                     <button
                         onClick={() => {
-                            setIsTechOpen((prev) => !prev);
-                            setIsTagOpen(false);
+                            setIsTechOpen(prev => !prev);
+                            setIsSubcategoryOpen(false);
                         }}
                         className="font-space-mono flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-xs rounded-xl border border-white/20 hover:bg-white/20 transition"
                     >
@@ -157,7 +129,7 @@ export default function FilterMenu({
                     {isTechOpen && (
                         <div className="font-space-mono absolute left-0 mt-2 bg-custom-gray shadow-lg p-4 z-50 w-64 rounded-xl border border-white/20">
                             <div className="flex flex-col gap-3 text-white text-xs">
-                                {TECHS.map((tech) => (
+                                {uniqueTechs.map(tech => (
                                     <label key={tech} className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"
@@ -165,7 +137,7 @@ export default function FilterMenu({
                                             onChange={() => toggleTech(tech)}
                                             className="appearance-none w-3.5 h-3.5 border border-white/20 rounded-xl checked:bg-purple-300"
                                         />
-                                        {TECH_LABELS[tech]} ({getTechCount(tech)})
+                                        {tech} ({getTechCount(tech)})
                                     </label>
                                 ))}
                             </div>
