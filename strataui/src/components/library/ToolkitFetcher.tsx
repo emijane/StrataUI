@@ -9,7 +9,11 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import type { Toolkit } from '@/types';
 
-export default function ToolkitFetcher() {
+type Props = {
+    typeSlug?: string;
+};
+
+export default function ToolkitFetcher({ typeSlug }: Props) {
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
@@ -22,7 +26,7 @@ export default function ToolkitFetcher() {
 
     useEffect(() => {
         const fetchToolkits = async () => {
-            const { data, error } = await supabase
+            let query = supabase
                 .from('strataui_db')
                 .select(`
                     id,
@@ -42,6 +46,12 @@ export default function ToolkitFetcher() {
                     created_at
                 `);
 
+            if (typeSlug) {
+                query = query.eq('type_slug', typeSlug);
+            }
+
+            const { data, error } = await query;
+
             if (error) {
                 console.error('Error fetching toolkits:', error);
                 setToolkits([]);
@@ -51,9 +61,8 @@ export default function ToolkitFetcher() {
         };
 
         fetchToolkits();
-    }, []);
+    }, [typeSlug]);
 
-    // ✅ Apply client-side filtering
     const filteredToolkits = toolkits.filter((toolkit) => {
         return (
             (filters.subcategory_slug.length === 0 || filters.subcategory_slug.includes(toolkit.subcategory_slug)) &&
