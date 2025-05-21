@@ -1,3 +1,5 @@
+// components/ToolkitFetcher.tsx
+
 'use client';
 
 import HeaderSection from './Header';
@@ -9,7 +11,11 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import type { Toolkit } from '@/types';
 
-export default function ToolkitFetcher() {
+type Props = {
+    typeSlug?: string;
+};
+
+export default function ToolkitFetcher({ typeSlug }: Props) {
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
@@ -22,26 +28,29 @@ export default function ToolkitFetcher() {
 
     useEffect(() => {
         const fetchToolkits = async () => {
-            const { data, error } = await supabase
-                .from('strataui_db')
-                .select(`
-                    id,
-                    name,
-                    url,
-                    type,
-                    type_slug,
-                    subcategory,
-                    subcategory_slug,
-                    tech,
-                    languages,
-                    tags,
-                    pricing,
-                    description,
-                    image_url,
-                    popularity,
-                    created_at
-                `);
+            let query = supabase.from('strataui_db').select(`
+                id,
+                name,
+                url,
+                type,
+                type_slug,
+                subcategory,
+                subcategory_slug,
+                tech,
+                languages,
+                tags,
+                pricing,
+                description,
+                image_url,
+                popularity,
+                created_at
+            `);
 
+            if (typeSlug) {
+                query = query.eq('type_slug', typeSlug);
+            }
+
+            const { data, error } = await query;
             if (error) {
                 console.error('Error fetching toolkits:', error);
                 setToolkits([]);
@@ -51,9 +60,8 @@ export default function ToolkitFetcher() {
         };
 
         fetchToolkits();
-    }, []);
+    }, [typeSlug]);
 
-    // ✅ Apply client-side filtering
     const filteredToolkits = toolkits.filter((toolkit) => {
         return (
             (filters.subcategory_slug.length === 0 || filters.subcategory_slug.includes(toolkit.subcategory_slug)) &&
@@ -68,7 +76,6 @@ export default function ToolkitFetcher() {
 
     return (
         <div className="flex flex-col lg:flex-row w-full max-w-[94rem] mx-auto gap-8 px-4">
-            {/* Sidebar */}
             <aside className="w-full lg:max-w-xs flex-shrink-0">
                 <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
                     <FilterSidebar
@@ -81,7 +88,6 @@ export default function ToolkitFetcher() {
                 </div>
             </aside>
 
-            {/* Main content */}
             <main className="flex-1 w-full min-h-screen">
                 <HeaderSection />
                 <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
