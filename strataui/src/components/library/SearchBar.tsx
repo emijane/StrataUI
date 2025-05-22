@@ -7,14 +7,13 @@ type Props = {
 
 export default function SearchBar({ searchTerm, onSearchChange }: Props) {
     return (
-        <div className="w-full mx-auto mb-6">
-            <p className="text-white/70 mb-5">Search for your favorite design and development tools.</p>
+        <div className="max-w-[50rem] mx-auto mb-10">
             <input
                 type="text"
-                placeholder="Search for toolkits..."
+                placeholder="Search by name, tag, or technology.."
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full font-space-mono px-4 py-3 rounded-3xl text-sm text-white bg-white/10 outline-none border border-white/20 focus:ring"
+                className="w-full font-space-mono px-5 py-3 rounded-3xl text-sm text-white bg-white/10 outline-none border border-white/20 focus:ring"
             />
         </div>
     );

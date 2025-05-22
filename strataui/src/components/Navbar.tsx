@@ -43,6 +43,9 @@ export default function Navbar() {
             </div>
 
             <ul className="flex flex-row gap-5 font-semibold text-white/90 justify-center items-center text-sm relative">
+                <li>
+                    <Link href='/library/' className="text-white">Library</Link>
+                </li>
                 {/* Categories Dropdown */}
                 <li className="relative group inline-block">
                     <button className="flex items-center gap-2 hover:text-purple-300 transition focus:outline-none">

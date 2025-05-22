@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faArrowUpRightFromSquare
 } from '@fortawesome/free-solid-svg-icons';
-import { getTechColor } from '@/lib/IconColorsTech';
+import { getTechColor } from '@/lib/iconColorsTech';
 import { getLanguageIcon, TECH_ICONS } from '@/lib/languageIcons';
 
 const TAG_LABELS: Record<string, string> = {
@@ -131,7 +131,7 @@ export default function ToolkitList({
             {children && <div>{children}</div>}
 
             {libraries.length === 0 ? (
-                <p className="text-white">No libraries to display.</p>
+                <p className="text-white/70 text-sm">No tools to display. Try searching for an existing tool, or submit one to be added!</p>
             ) : (
                 <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-6 gap-y-8 [&>*]:break-inside-avoid">
                     {libraries.map((lib) => (
