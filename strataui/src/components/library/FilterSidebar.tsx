@@ -65,10 +65,10 @@ export default function FilterSidebar({ allToolkits, filters, onFilterChange }: 
     };
 
     return (
-        <div className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white shadow-lg p-4 rounded-xl space-y-6">
+        <div className="w-full bg-white/5 backdrop-blur-md border-x border-white/10 text-white shadow-lg p-6 space-y-6">
             {Object.entries(FILTER_CATEGORIES).map(([label, { field }]) => (
                 <div key={field}>
-                    <h4 className="font-space-mono text-sm font-semibold uppercase tracking-wide mb-4">{label}</h4>
+                    <h4 className="font-space-mono text-xs text-white/70 font-semibold uppercase tracking-wide mb-4">{label}</h4>
                     <div className="flex flex-col gap-2 text-sm">
                         {dynamicOptions[field as keyof FilterMap].map(option => (
                             <label key={option} className="flex items-center gap-3 text-sm hover:text-purple-300 cursor-pointer transition">

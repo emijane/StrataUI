@@ -79,7 +79,7 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
         <div className="flex flex-col lg:flex-row w-full max-w-[94rem] mx-auto gap-8 px-4">
             {/* Sidebar */}
             <aside className="w-full lg:max-w-xs flex-shrink-0">
-                <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                <div className="sticky top-18 max-h-[calc(100vh-6rem)] overflow-y-auto">
                     <FilterSidebar
                         allToolkits={toolkits}
                         filters={filters}
