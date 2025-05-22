@@ -11,9 +11,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --color-pink: #f5428a;
-  --color-blue: #4895EF;
-  --color-purple: #560BAD;
+
+  --color-white: #ffffff;
   --color-gray-custom: #221e2f;
 }
 
@@ -22,43 +21,12 @@
 body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-  background-color: #080518;
+  background-color: #ffffff;
 }
 
 .font-space-mono {
   font-family: var(--font-space-mono), monospace;
 }
-
-/* Background glow effect */
-.background-glow-pink {
-  position: fixed;
-  top: 1rem;
-  left: 30%;
-  width: 1500px;
-  height: 150px;
-  background: var(--color-pink);
-  border-radius: 9999px;
-  filter: blur(170px);
-  opacity: 80%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Background glow effect */
-.background-glow-pink-wide {
-  position: fixed;
-  top: 40rem;
-  left: -20%;
-  width: 2500px;
-  height: 70px;
-  background: var(--color-pink);
-  border-radius: 9999px;
-  filter: blur(100px);
-  opacity: 40%;
-  z-index: 0;
-  pointer-events: none;
-}
-
 
 /* Custom color utilities */
 /* Violet */

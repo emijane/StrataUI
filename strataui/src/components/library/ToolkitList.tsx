@@ -55,20 +55,19 @@ const LibraryCard = memo(({ lib }: { lib: Toolkit }) => {
                 href={lib.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block bg-white/10 backdrop-blur-md border border-white/20 
-                rounded-2xl shadow-md cursor-pointer no-underline p-5 
-                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                className="block outline-1 outline-black/10 
+                rounded-2xl shadow-sm cursor-pointer no-underline p-5"
             >
                 <div className="flex flex-col h-full">
                     <div className="relative">
                         <div className="flex items-center gap-3 pr-10">
-                            <p className="text-white font-semibold text-lg leading-tight flex items-center gap-2">
+                            <p className="text-black font-semibold text-lg leading-tight flex items-center gap-2">
                                 {lib.name}
                             </p>
                         </div>
                         <button
                             onClick={handleShare}
-                            className="absolute top-0 right-0 text-white hover:text-white/80 transition-colors"
+                            className="absolute top-0 right-0 text-black hover:text-black/80 transition-colors"
                             aria-label={`Share ${lib.name}`}
                         >
                             <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-3 h-3 opacity-60" />
@@ -76,11 +75,11 @@ const LibraryCard = memo(({ lib }: { lib: Toolkit }) => {
                     </div>
 
                     {lib.description && (
-                        <p className="text-white/70 text-sm mt-2">{lib.description}</p>
+                        <p className="text-black/70 text-sm mt-2">{lib.description}</p>
                     )}
 
                     {(lib.languages?.length || 0) + (lib.tech?.length || 0) > 0 && (
-                        <div className="flex gap-2 mt-3 text-white/80 text-xl items-center flex-wrap">
+                        <div className="flex gap-2 mt-3 text-black/80 text-xl items-center flex-wrap">
                             {(lib.languages || []).map((lang) => (
                                 <span key={lang} className="hover:text-purple-300 transition">
                                     {getLanguageIcon(lang)}
@@ -105,7 +104,7 @@ const LibraryCard = memo(({ lib }: { lib: Toolkit }) => {
                         {formattedTags.map(({ key, label }) => (
                             <span
                                 key={key}
-                                className="font-space-mono text-[0.7rem] outline outline-white/30 text-white pl-2 pr-2 pt-1 pb-1 rounded-xl"
+                                className="font-space-mono text-[0.6rem] outline outline-black/30 text-black pl-2 pr-2 pt-1 pb-1 rounded-xl"
                             >
                                 {label}
                             </span>
@@ -131,7 +130,7 @@ export default function ToolkitList({
             {children && <div>{children}</div>}
 
             {libraries.length === 0 ? (
-                <p className="text-white/70 text-sm">No tools to display. Try searching for an existing tool, or submit one to be added!</p>
+                <p className="text-black/70 text-sm">No tools to display. Try searching for an existing tool, or submit one to be added!</p>
             ) : (
                 <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-6 gap-y-8 [&>*]:break-inside-avoid">
                     {libraries.map((lib) => (

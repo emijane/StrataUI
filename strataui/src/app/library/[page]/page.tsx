@@ -23,8 +23,6 @@ export default function TypePage() {
                 <link rel="canonical" href={`https://strataui.dev${pathname}`} />
                 {pathname.includes('?') && <meta name="robots" content="noindex" />}
             </Head>
-            <div className="background-glow-pink"></div>
-            <div className="background-glow-pink-wide"></div>
             <div className="relative z-10 mx-auto">
                 <ToolkitFetcher typeSlug={type as string}/>
             </div>

@@ -25,9 +25,9 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav className="sticky top-0 z-50 text-white flex flex-row justify-between pt-5 pb-5 pr-10 pl-10 backdrop-blur-md border-b border-white/20 bg-black">
-            <div className="flex flex-row items-center gap-5">
-                <Link href="/" className="flex items-center gap-2 text-2xl font-semibold font-space-mono">
+        <nav className="sticky top-0 z-50 text-black flex flex-row justify-between pt-5 pb-5 pr-10 pl-10 backdrop-blur-md border-b border-black/20 bg-color-blue">
+            <div className="flex flex-row items-center gap-2">
+                <Link href="/" className="flex items-center gap-2 text-2xl font-semibold">
                     <Image
                         src="/strataui-icon.png"
                         alt="StrataUI Icon"
@@ -37,14 +37,14 @@ export default function Navbar() {
                     />
                     StrataUI
                 </Link>
-                <span className="text-white/60 bg-white/10 pt-1 pb-1 pl-2 pr-2 text-xs rounded-xl outline-1 outline-white/30 font-semibold">
-                    v1.0
+                <span className="text-black/60 pt-1 pb-1 pl-2 pr-2 text-xs rounded-xl outline-1 outline-black/30 font-semibold">
+                    v0.1
                 </span>
             </div>
 
-            <ul className="flex flex-row gap-5 font-semibold text-white/90 justify-center items-center text-sm relative">
+            <ul className="flex flex-row gap-5 font-semibold text-black/90 justify-center items-center text-sm relative">
                 <li>
-                    <Link href='/library/' className="text-white">Library</Link>
+                    <Link href='/library/' className="text-black">Library</Link>
                 </li>
                 {/* Categories Dropdown */}
                 <li className="relative group inline-block">
@@ -62,7 +62,7 @@ export default function Navbar() {
                                 <li key={type_slug}>
                                     <Link
                                         href={`/library/${type_slug}`}
-                                        className="block px-4 py-2 text-sm text-white/90 hover:bg-white/20 rounded transition whitespace-nowrap"
+                                        className="block px-4 py-2 text-sm text-black/90 hover:bg-white/20 rounded transition whitespace-nowrap"
                                     >
                                         {type}
                                     </Link>
