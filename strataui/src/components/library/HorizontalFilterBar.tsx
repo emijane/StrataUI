@@ -23,10 +23,11 @@ export default function HorizontalFilterBar({
     onTechChange: (techs: string[]) => void;
     allTypes: { type: string; type_slug: string }[];
 }) {
+    const pathname = usePathname();
+
     const [isSubOpen, setIsSubOpen] = useState(false);
     const [isTechOpen, setIsTechOpen] = useState(false);
 
-    const pathname = usePathname();
     const subRef = useRef<HTMLDivElement>(null);
     const techRef = useRef<HTMLDivElement>(null);
 
@@ -76,9 +77,9 @@ export default function HorizontalFilterBar({
     };
 
     return (
-        <div className="w-full py-4 z-50">
-            {/* TYPE Pills */}
-            <div className="flex flex-wrap gap-2 mb-4 mx-auto items-center justify-center max-w-[50rem]">
+        <div className="w-full z-50">
+            {/* Type pills */}
+            <div className="flex flex-wrap gap-2 mb-4 mx-auto items-center justify-center max-w-[55rem]">
                 {allTypes.map(({ type, type_slug }) => {
                     const isActive = pathname === `/library/${type_slug}`;
                     return (
@@ -95,8 +96,8 @@ export default function HorizontalFilterBar({
                 })}
             </div>
 
-            {/* Dropdowns */}
-            <div className="flex gap-4 flex-wrap">
+            {/* Subcategory & Technology Filters */}
+            <div className="flex gap-4 flex-wrap mt-10 mb-5">
                 {/* Subcategory Dropdown */}
                 <div className="relative" ref={subRef}>
                     <button
@@ -114,15 +115,15 @@ export default function HorizontalFilterBar({
                     </button>
 
                     {isSubOpen && (
-                        <div className="text-xs absolute left-0 mt-2 bg-white p-4 z-50 w-64 rounded-xl border border-black/20">
-                            <div className="flex flex-col gap-3 text-black text-xs">
+                        <div className="absolute left-0 mt-2 bg-white p-4 z-50 w-64 rounded-xl border border-black/20 shadow-lg text-xs">
+                            <div className="flex flex-col gap-2 text-black">
                                 {uniqueSubcategories.map(([slug, label]) => (
                                     <label key={slug} className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={selectedSubcategories.includes(slug)}
                                             onChange={() => toggleSub(slug)}
-                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-xl checked:bg-purple-500"
+                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-md checked:bg-purple-500"
                                         />
                                         {label}
                                     </label>
@@ -132,7 +133,7 @@ export default function HorizontalFilterBar({
                     )}
                 </div>
 
-                {/* Tech Dropdown */}
+                {/* Technology Dropdown */}
                 <div className="relative" ref={techRef}>
                     <button
                         onClick={() => {
@@ -149,15 +150,15 @@ export default function HorizontalFilterBar({
                     </button>
 
                     {isTechOpen && (
-                        <div className="text-xs absolute left-0 mt-2 bg-white p-4 z-50 w-64 rounded-xl border border-black/20">
-                            <div className="flex flex-col gap-3 text-black text-xs">
+                        <div className="absolute left-0 mt-2 bg-white p-4 z-50 w-64 rounded-xl border border-black/20 shadow-lg text-xs">
+                            <div className="flex flex-col gap-2 text-black">
                                 {uniqueTechs.map((tech) => (
                                     <label key={tech} className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={selectedTech.includes(tech)}
                                             onChange={() => toggleTech(tech)}
-                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-xl checked:bg-purple-500"
+                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-md checked:bg-purple-500"
                                         />
                                         {tech}
                                     </label>

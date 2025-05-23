@@ -87,7 +87,7 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
     });
 
     return (
-        <div className="flex flex-col w-full max-w-[94rem] mt-20 mx-auto px-4">
+        <div className="flex flex-col w-full mt-20 mx-auto px-15">
             <HeaderSection />
             <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
             <HorizontalFilterBar
