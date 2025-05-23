@@ -5,7 +5,6 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { Toolkit } from '@/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import TypePills from './TypePills';
 
 
 export default function HorizontalFilterBar({
@@ -15,7 +14,6 @@ export default function HorizontalFilterBar({
     onSubcategoryChange,
     selectedTech,
     onTechChange,
-    allTypes,
     onClearAll
 }: {
     typeSlug?: string;
@@ -83,8 +81,6 @@ export default function HorizontalFilterBar({
 
     return (
         <div className="w-full z-50">
-            {/* Type pills */}
-            <TypePills allTypes={allTypes} />
 
             {/* Subcategory & Technology Filters + Clear Filters */}
             <div className="flex flex-wrap gap-4 items-center mt-10 mb-5">
