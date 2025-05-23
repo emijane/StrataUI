@@ -1,10 +1,12 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { Toolkit } from '@/types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import TypePills from './TypePills';
+
 
 export default function HorizontalFilterBar({
     typeSlug,
@@ -13,7 +15,8 @@ export default function HorizontalFilterBar({
     onSubcategoryChange,
     selectedTech,
     onTechChange,
-    allTypes
+    allTypes,
+    onClearAll
 }: {
     typeSlug?: string;
     allToolkits: Toolkit[];
@@ -22,8 +25,8 @@ export default function HorizontalFilterBar({
     selectedTech: string[];
     onTechChange: (techs: string[]) => void;
     allTypes: { type: string; type_slug: string }[];
+    onClearAll: () => void;
 }) {
-    const pathname = usePathname();
 
     const [isSubOpen, setIsSubOpen] = useState(false);
     const [isTechOpen, setIsTechOpen] = useState(false);
@@ -76,28 +79,15 @@ export default function HorizontalFilterBar({
         );
     };
 
+    const hasActiveFilters = selectedSubcategories.length > 0 || selectedTech.length > 0;
+
     return (
         <div className="w-full z-50">
             {/* Type pills */}
-            <div className="flex flex-wrap gap-2 mb-4 mx-auto items-center justify-center max-w-[55rem]">
-                {allTypes.map(({ type, type_slug }) => {
-                    const isActive = pathname === `/library/${type_slug}`;
-                    return (
-                        <Link
-                            key={type_slug}
-                            href={`/library/${type_slug}`}
-                            className={`text-xs px-3 py-1 rounded-full border border-black/20 transition ${
-                                isActive ? 'bg-black/10 text-black' : 'hover:bg-black/10'
-                            }`}
-                        >
-                            {type}
-                        </Link>
-                    );
-                })}
-            </div>
+            <TypePills allTypes={allTypes} />
 
-            {/* Subcategory & Technology Filters */}
-            <div className="flex gap-4 flex-wrap mt-10 mb-5">
+            {/* Subcategory & Technology Filters + Clear Filters */}
+            <div className="flex flex-wrap gap-4 items-center mt-10 mb-5">
                 {/* Subcategory Dropdown */}
                 <div className="relative" ref={subRef}>
                     <button
@@ -105,7 +95,7 @@ export default function HorizontalFilterBar({
                             setIsSubOpen(prev => !prev);
                             setIsTechOpen(false);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-black text-xs rounded-xl border border-black/20 hover:bg-white/20 transition"
+                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-black text-xs rounded-xl border border-black/20 hover:bg-black/5 transition hover:cursor-pointer"
                     >
                         Subcategory
                         {selectedSubcategories.length > 0 && (
@@ -116,6 +106,17 @@ export default function HorizontalFilterBar({
 
                     {isSubOpen && (
                         <div className="absolute left-0 mt-2 bg-white p-4 z-50 w-64 rounded-xl border border-black/20 shadow-lg text-xs">
+                            <div className="flex justify-between items-center mb-3">
+                                <span className="text-black font-medium">Subcategory</span>
+                                {selectedSubcategories.length > 0 && (
+                                    <button
+                                        onClick={() => onSubcategoryChange([])}
+                                        className="text-purple-500 hover:text-purple-600 transition text-xs hover:cursor-pointer"
+                                    >
+                                        Clear all
+                                    </button>
+                                )}
+                            </div>
                             <div className="flex flex-col gap-2 text-black">
                                 {uniqueSubcategories.map(([slug, label]) => (
                                     <label key={slug} className="flex items-center gap-2 cursor-pointer">
@@ -123,7 +124,7 @@ export default function HorizontalFilterBar({
                                             type="checkbox"
                                             checked={selectedSubcategories.includes(slug)}
                                             onChange={() => toggleSub(slug)}
-                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-md checked:bg-purple-500"
+                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-md checked:bg-purple-500 cursor-pointer"
                                         />
                                         {label}
                                     </label>
@@ -140,7 +141,7 @@ export default function HorizontalFilterBar({
                             setIsTechOpen(prev => !prev);
                             setIsSubOpen(false);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-black text-xs rounded-xl border border-black/20 hover:bg-white/20 transition"
+                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-black text-xs rounded-xl border border-black/20 hover:bg-black/5 transition hover:cursor-pointer"
                     >
                         Technology
                         {selectedTech.length > 0 && (
@@ -151,6 +152,17 @@ export default function HorizontalFilterBar({
 
                     {isTechOpen && (
                         <div className="absolute left-0 mt-2 bg-white p-4 z-50 w-64 rounded-xl border border-black/20 shadow-lg text-xs">
+                            <div className="flex justify-between items-center mb-3">
+                                <span className="text-black font-medium">Technology</span>
+                                {selectedTech.length > 0 && (
+                                    <button
+                                        onClick={() => onTechChange([])}
+                                        className="text-purple-500 hover:text-purple-600 transition text-xs cursor-pointer"
+                                    >
+                                        Clear all
+                                    </button>
+                                )}
+                            </div>
                             <div className="flex flex-col gap-2 text-black">
                                 {uniqueTechs.map((tech) => (
                                     <label key={tech} className="flex items-center gap-2 cursor-pointer">
@@ -158,7 +170,7 @@ export default function HorizontalFilterBar({
                                             type="checkbox"
                                             checked={selectedTech.includes(tech)}
                                             onChange={() => toggleTech(tech)}
-                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-md checked:bg-purple-500"
+                                            className="appearance-none w-3.5 h-3.5 border border-black/30 rounded-md checked:bg-purple-500 cursor-pointer"
                                         />
                                         {tech}
                                     </label>
@@ -167,6 +179,18 @@ export default function HorizontalFilterBar({
                         </div>
                     )}
                 </div>
+
+                {/* Global Clear Filters Button */}
+                {hasActiveFilters && (
+                    <button
+                        onClick={onClearAll}
+                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-black text-xs rounded-xl border border-black/20 hover:bg-white/20 transition hover:cursor-pointer"
+                    >
+                        <FontAwesomeIcon icon={faXmark} className="w-2 h-2" />
+                        Clear Filters
+                    </button>
+                )}
+
             </div>
         </div>
     );

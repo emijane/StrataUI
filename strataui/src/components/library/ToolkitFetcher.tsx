@@ -1,5 +1,4 @@
 import HeaderSection from './Header';
-import AppliedFilters from './ActiveFilters';
 import ToolkitList from './ToolkitList';
 import SearchBar from './SearchBar';
 import { useEffect, useState } from 'react';
@@ -86,50 +85,36 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
         );
     });
 
+    const handleClearAll = () => {
+        setFilters({
+            subcategory: [],
+            subcategory_slug: [],
+            tech: [],
+            languages: [],
+            pricing: []
+        });
+        setSearchTerm('');
+    };
+
     return (
         <div className="flex flex-col w-full mt-20 mx-auto px-15">
             <HeaderSection />
             <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
             <HorizontalFilterBar
-                typeSlug={typeSlug}
-                allToolkits={toolkits}
-                allTypes={getAllTypes(toolkits)}
-                selectedSubcategories={filters.subcategory_slug}
-                onSubcategoryChange={(subs) =>
-                    setFilters((prev) => ({ ...prev, subcategory_slug: subs }))
-                }
-                selectedTech={filters.tech}
-                onTechChange={(techs) =>
-                    setFilters((prev) => ({ ...prev, tech: techs }))
-                }
+            typeSlug={typeSlug}
+            allToolkits={toolkits}
+            allTypes={getAllTypes(toolkits)}
+            selectedSubcategories={filters.subcategory_slug}
+            onSubcategoryChange={(subs) =>
+                setFilters((prev) => ({ ...prev, subcategory_slug: subs }))
+            }
+            selectedTech={filters.tech}
+            onTechChange={(techs) =>
+                setFilters((prev) => ({ ...prev, tech: techs }))
+            }
+            onClearAll={handleClearAll}
             />
-            <AppliedFilters
-                selectedTags={filters.subcategory_slug}
-                onTagClear={(tag) =>
-                    setFilters((prev) => ({
-                        ...prev,
-                        subcategory_slug: prev.subcategory_slug.filter((t) => t !== tag)
-                    }))
-                }
-                selectedTech={filters.tech}
-                onTechClear={(tech) =>
-                    setFilters((prev) => ({
-                        ...prev,
-                        tech: prev.tech.filter((t) => t !== tech)
-                    }))
-                }
-                searchTerm={searchTerm}
-                onSearchClear={() => setSearchTerm('')}
-                onClearAll={() =>
-                    setFilters({
-                        subcategory: [],
-                        subcategory_slug: [],
-                        tech: [],
-                        languages: [],
-                        pricing: []
-                    })
-                }
-            />
+
             <ToolkitList libraries={filteredToolkits} />
         </div>
     );
