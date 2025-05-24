@@ -18,7 +18,7 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { faCubes } from '@fortawesome/free-solid-svg-icons';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { getTechColor } from './IconColorsTech';
+import { getTechColor } from './iconColorsTech';
 
 const ICON_MAP: Record<string, React.ReactElement> = {
     javascript: <RiJavascriptFill title="JavaScript" />,

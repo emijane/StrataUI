@@ -1,121 +1,119 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { supabase } from '@/lib/supabaseClient';
+import type { Toolkit } from '@/types';
+import { matchesToolkit } from '@/lib/matchesToolkit';
+
 import HeaderSection from './Header';
 import ToolkitList from './ToolkitList';
 import SearchBar from './SearchBar';
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
-import type { Toolkit } from '@/types';
-import HorizontalFilterBar from './HorizontalFilterBar';
+import LibraryMenu from './LibraryMenu';
+import SidebarToggle from './SidebarToggle';
 
 type Props = {
     typeSlug?: string;
 };
 
-function getAllTypes(toolkits: Toolkit[]) {
-    const map = new Map<string, string>();
-    toolkits.forEach(t => {
-        if (t.type && t.type_slug) {
-            map.set(t.type_slug, t.type);
-        }
-    });
-    return Array.from(map.entries()).map(([type_slug, type]) => ({
-        type,
-        type_slug
-    }));
-}
-
 export default function ToolkitFetcher({ typeSlug }: Props) {
+    const searchParams = useSearchParams();
+    const selectedSubSlug = searchParams.get('subcategory');
+
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [filters, setFilters] = useState({
-        subcategory: [] as string[],
-        subcategory_slug: [] as string[],
+    const [filters] = useState({
+        subcategory_ids: [] as number[],
         tech: [] as string[],
         languages: [] as string[],
         pricing: [] as string[]
     });
 
+    const [mobileOpen, setMobileOpen] = useState(false);
+
     useEffect(() => {
         const fetchToolkits = async () => {
-            let query = supabase
-                .from('strataui_db')
+            const { data, error } = await supabase
+                .from('libraries')
                 .select(`
-                    id,
-                    name,
-                    url,
-                    type,
-                    type_slug,
-                    subcategory,
-                    subcategory_slug,
-                    tech,
-                    languages,
-                    tags,
-                    pricing,
-                    description,
-                    image_url,
-                    popularity,
-                    created_at
+                    *,
+                    subcategories (
+                        id,
+                        name,
+                        slug,
+                        types (
+                            id,
+                            name,
+                            slug
+                        )
+                    ),
+                    library_tags (tag: tag_id (name)),
+                    library_tech (tech: tech_id (name)),
+                    library_languages (language: language_id (name))
                 `);
 
-            if (typeSlug) {
-                query = query.eq('type_slug', typeSlug);
-            }
-
-            const { data, error } = await query;
-
             if (error) {
-                console.error('Error fetching toolkits:', error);
-                setToolkits([]);
-            } else {
-                setToolkits((data || []) as Toolkit[]);
+                console.error('Error fetching toolkits:', JSON.stringify(error, null, 2));
+                return;
             }
+
+            const filtered = (data || []).filter(lib => {
+                const sub = lib.subcategories;
+                const matchesType = !typeSlug || sub?.types?.slug === typeSlug;
+                const matchesSub = !selectedSubSlug || sub?.slug === selectedSubSlug;
+                return matchesType && matchesSub;
+            });
+
+            setToolkits(filtered);
         };
 
         fetchToolkits();
-    }, [typeSlug]);
+    }, [typeSlug, selectedSubSlug]);
 
-    const filteredToolkits = toolkits.filter((toolkit) => {
-        return (
-            (filters.subcategory_slug.length === 0 || filters.subcategory_slug.includes(toolkit.subcategory_slug)) &&
-            (filters.tech.length === 0 || filters.tech.some(t => toolkit.tech?.includes(t))) &&
-            (filters.languages.length === 0 || filters.languages.some(l => toolkit.languages?.includes(l))) &&
-            (filters.pricing.length === 0 || filters.pricing.some(p => toolkit.pricing?.includes(p))) &&
-            (searchTerm.trim() === '' ||
-                toolkit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                toolkit.description?.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-    });
+    useEffect(() => {
+        const handleBodyScroll = () => {
+            const isMobile = window.innerWidth < 1024;
+            if (mobileOpen && isMobile) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        };
 
-    const handleClearAll = () => {
-        setFilters({
-            subcategory: [],
-            subcategory_slug: [],
-            tech: [],
-            languages: [],
-            pricing: []
-        });
-        setSearchTerm('');
-    };
+        handleBodyScroll(); // Run once immediately
+
+        window.addEventListener('resize', handleBodyScroll);
+        return () => {
+            document.body.style.overflow = '';
+            window.removeEventListener('resize', handleBodyScroll);
+        };
+    }, [mobileOpen]);
+
+    const filteredToolkits = toolkits.filter(toolkit =>
+        matchesToolkit(toolkit, filters, searchTerm)
+    );
 
     return (
-        <div className="flex flex-col w-full mt-20 mx-auto px-15">
-            <HeaderSection />
-            <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-            <HorizontalFilterBar
-            typeSlug={typeSlug}
-            allToolkits={toolkits}
-            allTypes={getAllTypes(toolkits)}
-            selectedSubcategories={filters.subcategory_slug}
-            onSubcategoryChange={(subs) =>
-                setFilters((prev) => ({ ...prev, subcategory_slug: subs }))
-            }
-            selectedTech={filters.tech}
-            onTechChange={(techs) =>
-                setFilters((prev) => ({ ...prev, tech: techs }))
-            }
-            onClearAll={handleClearAll}
-            />
+        <div className="flex w-full min-h-screen flex-col">
+            {/* Mobile toggle below navbar */}
+            <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
+                <div className='lg:hidden'>
+                    <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
+                </div>
+                <p className='text-black'>Library / Designer Tools</p>
+            </div>
 
-            <ToolkitList libraries={filteredToolkits} />
+            <div className='flex flex-row'>
+                {/* Sidebar */}
+                <LibraryMenu mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+
+                {/* Main Content */}
+                <div className={`flex-1 flex flex-col mt-20 px-5 ${mobileOpen ? 'overflow-hidden h-screen' : ''}`}>
+                    <HeaderSection />
+                    <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+                    <ToolkitList libraries={filteredToolkits} />
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,34 +1,16 @@
 'use client';
 
 import type { Toolkit } from '@/types';
-import { useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { getTechColor } from '@/lib/iconColorsTech';
 import { getLanguageIcon, TECH_ICONS } from '@/lib/languageIcons';
 
-const TAG_LABELS: Record<string, string> = {
-    'ui-library': 'UI Library',
-    'component-kit': 'Component Kit',
-    'design-system': 'Design System',
-    'headless-ui': 'Headless UI',
-    'mobile-ui-framework': 'Mobile UI Framework',
-    framework: 'Framework'
+type Props = {
+    lib: Toolkit;
 };
 
-function formatTagLabel(tag: string): string {
-    return TAG_LABELS[tag] || tag;
-}
-
-export default function LibraryCard({ lib }: { lib: Toolkit }) {
-    const formattedTags = useMemo(
-        () => (lib.tags || []).map((tag: string) => ({
-            key: tag,
-            label: formatTagLabel(tag)
-        })),
-        [lib.tags]
-    );
-
+export default function LibraryCard({ lib }: Props) {
     const handleShare = (e: React.MouseEvent) => {
         e.preventDefault();
         if (navigator.share) {
@@ -46,14 +28,17 @@ export default function LibraryCard({ lib }: { lib: Toolkit }) {
         }
     };
 
+    const tags = lib.library_tags?.map(t => t.tag?.name).filter(Boolean) || [];
+    const techs = lib.library_tech?.map(t => t.tech?.name).filter(Boolean) || [];
+    const languages = lib.library_languages?.map(l => l.language?.name).filter(Boolean) || [];
+
     return (
         <article className="break-inside-avoid mb-6 w-full inline-block">
             <a
                 href={lib.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block outline-1 outline-black/10 
-                rounded-2xl shadow-sm cursor-pointer no-underline p-5"
+                className="block outline-1 outline-black/10 rounded-2xl shadow-sm cursor-pointer no-underline p-5"
             >
                 <div className="flex flex-col h-full">
                     <div className="relative">
@@ -75,15 +60,17 @@ export default function LibraryCard({ lib }: { lib: Toolkit }) {
                         <p className="text-black/70 text-sm mt-2">{lib.description}</p>
                     )}
 
-                    {(lib.languages?.length || 0) + (lib.tech?.length || 0) > 0 && (
+                    {(languages.length > 0 || techs.length > 0) && (
                         <div className="flex gap-2 mt-3 text-black/80 text-xl items-center flex-wrap">
-                            {(lib.languages || []).map((lang) => (
-                                <span key={lang} className="hover:text-purple-300 transition">
-                                    {getLanguageIcon(lang)}
-                                </span>
-                            ))}
-                            {(lib.tech || []).map((tech) => {
-                                const icon = TECH_ICONS[tech.toLowerCase()];
+                            {languages.map(lang =>
+                                lang ? (
+                                    <span key={lang} className="hover:text-purple-300 transition">
+                                        {getLanguageIcon(lang)}
+                                    </span>
+                                ) : null
+                            )}
+                            {techs.map(tech => {
+                                const icon = tech ? TECH_ICONS[tech.toLowerCase()] : undefined;
                                 return icon ? (
                                     <FontAwesomeIcon
                                         key={tech}
@@ -94,16 +81,17 @@ export default function LibraryCard({ lib }: { lib: Toolkit }) {
                                     />
                                 ) : null;
                             })}
+
                         </div>
                     )}
 
                     <div className="flex flex-wrap gap-2 mt-3 items-center">
-                        {formattedTags.map(({ key, label }) => (
+                        {tags.map(tag => (
                             <span
-                                key={key}
+                                key={tag}
                                 className="font-space-mono text-[0.6rem] outline outline-black/30 text-black pl-2 pr-2 pt-1 pb-1 rounded-xl"
                             >
-                                {label}
+                                {tag}
                             </span>
                         ))}
                     </div>
