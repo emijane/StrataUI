@@ -113,7 +113,7 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                                         href={`/library/${group.typeSlug}?subcategory=${sub.slug}`}
                                         className={`block px-4 py-2 rounded-lg ${
                                             isActive
-                                                ? 'text-black font-semibold'
+                                                ? 'text-black font-semibold text-sm'
                                                 : 'text-black text-sm'
                                         }`}
                                         onClick={onClose}
