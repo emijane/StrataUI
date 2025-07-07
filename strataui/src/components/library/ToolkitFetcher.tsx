@@ -1,5 +1,17 @@
 'use client';
 
+/**
+ * ToolkitFetcher Component
+ *
+ * The core client-side controller that:
+ * - Fetches all toolkits (libraries) from Supabase
+ * - Filters them by selected type, subcategory, and search term
+ * - Manages sidebar visibility for mobile and layout composition
+ *
+ * Props:
+ * - `typeSlug` (optional string): The current category (type) slug to filter toolkits
+ */
+
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
@@ -20,8 +32,13 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
     const searchParams = useSearchParams();
     const selectedSubSlug = searchParams.get('subcategory');
 
+    // Raw toolkit data fetched from Supabase
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
+
+    // Search query entered by the user
     const [searchTerm, setSearchTerm] = useState('');
+
+    // Future-proofed filters (tech, language, pricing)
     const [filters] = useState({
         subcategory_ids: [] as number[],
         tech: [] as string[],
@@ -29,8 +46,13 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
         pricing: [] as string[]
     });
 
+    // Mobile sidebar state
     const [mobileOpen, setMobileOpen] = useState(false);
 
+    /**
+     * Fetch toolkits from Supabase on mount and when the
+     * type or subcategory changes.
+     */
     useEffect(() => {
         const fetchToolkits = async () => {
             const { data, error } = await supabase
@@ -57,6 +79,7 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
                 return;
             }
 
+            // Filter by typeSlug and/or subcategorySlug
             const filtered = (data || []).filter(lib => {
                 const sub = lib.subcategories;
                 const matchesType = !typeSlug || sub?.types?.slug === typeSlug;
@@ -70,6 +93,9 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
         fetchToolkits();
     }, [typeSlug, selectedSubSlug]);
 
+    /**
+     * Prevent body scroll when mobile sidebar is open.
+     */
     useEffect(() => {
         const handleBodyScroll = () => {
             const isMobile = window.innerWidth < 1024;
@@ -80,7 +106,7 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
             }
         };
 
-        handleBodyScroll(); // Run once immediately
+        handleBodyScroll(); // Run immediately on mount
 
         window.addEventListener('resize', handleBodyScroll);
         return () => {
@@ -89,13 +115,16 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
         };
     }, [mobileOpen]);
 
+    /**
+     * Final filtered list of toolkits (search term + future filters)
+     */
     const filteredToolkits = toolkits.filter(toolkit =>
         matchesToolkit(toolkit, filters, searchTerm)
     );
 
     return (
         <div className="flex w-full min-h-screen flex-col">
-            {/* Mobile toggle below navbar */}
+            {/* Top nav section with mobile sidebar toggle and breadcrumb */}
             <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
                 <div className='lg:hidden'>
                     <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
@@ -104,10 +133,10 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
             </div>
 
             <div className='flex flex-row'>
-                {/* Sidebar */}
+                {/* Sidebar navigation */}
                 <LibraryMenu mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
 
-                {/* Main Content */}
+                {/* Main content area */}
                 <div className={`flex-1 flex flex-col mt-20 px-5 ${mobileOpen ? 'overflow-hidden h-screen' : ''}`}>
                     <HeaderSection />
                     <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />

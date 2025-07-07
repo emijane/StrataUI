@@ -1,36 +1,58 @@
 @import "tailwindcss";
 
-/* Light mode theme (default) */
+/* 
+  Global Theme Variables: Light Mode
+  -----------------------------------
+  These CSS custom properties define the base theme used across StrataUI.
+  You can override them for dark mode or additional themes using media queries or data attributes.
+*/
+
 :root {
+  /* Primary light mode background and text color */
   --background: #ffffff;
   --foreground: #171717;
 
+  /* Aliases for more readable use in components */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
+  /* Font variables injected by next/font */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-
+  /* Custom color tokens */
   --color-white: #ffffff;
   --color-gray-custom: #221e2f;
 }
 
+/* 
+  Base Global Styles
+  -------------------
+  Sets up the default body font and background using the defined variables.
+*/
 
-/* Base styles */
 body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   background-color: #ffffff;
 }
 
+/*
+  Font Utility
+  -------------
+  Applies the Space Mono font family (must be imported with next/font and exposed as --font-space-mono).
+*/
 .font-space-mono {
   font-family: var(--font-space-mono), monospace;
 }
 
-/* Custom color utilities */
-/* Violet */
+/* 
+  Custom Color Utilities
+  -----------------------
+  These can be used in className-based styling alongside Tailwind classes.
+*/
 
+/* Applies custom violet (likely needs defining via --color-pink) */
 .bg-violet {
   background-color: var(--color-pink);
 }
@@ -39,10 +61,11 @@ body {
   color: var(--color-pink);
 }
 
+/* Custom gray text and background */
 .text-custom-gray {
-  color: var(--color-gray-custom)
+  color: var(--color-gray-custom);
 }
 
 .bg-custom-gray {
-  background-color: var(--color-gray-custom)
+  background-color: var(--color-gray-custom);
 }

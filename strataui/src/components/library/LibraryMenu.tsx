@@ -1,5 +1,18 @@
 'use client';
 
+/**
+ * LibraryMenu Component
+ *
+ * This sidebar navigation component fetches a list of toolkits grouped by type and subcategory
+ * from Supabase, and renders them as a responsive sidebar for navigation.
+ *
+ * Behavior:
+ * - Fetches all subcategories and their related types (`type_id`)
+ * - Groups subcategories by type
+ * - Highlights the active subcategory based on the current route
+ * - Responsive layout with a mobile drawer and static desktop sidebar
+ */
+
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -7,15 +20,17 @@ import { supabase } from '@/lib/supabaseClient';
 
 type Props = {
     mobileOpen: boolean;
-    onClose: () => void; // Optional future usage
+    onClose: () => void; // Called when a menu item is clicked (used to close the drawer on mobile)
 };
 
+// Represents a group of subcategories under a single type
 type MenuGroup = {
     type: string;
     typeSlug: string;
     subcategories: { name: string; slug: string }[];
 };
 
+// Raw subcategory row fetched from Supabase, with nested type info
 type SubcategoryRow = {
     name: string;
     slug: string;
@@ -31,6 +46,10 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
     const activeSub = searchParams.get('subcategory');
     const [menu, setMenu] = useState<MenuGroup[]>([]);
 
+    /**
+     * Fetches all subcategories and their associated type info from Supabase.
+     * Groups them into a structured format to drive sidebar rendering.
+     */
     useEffect(() => {
         const fetchMenu = async () => {
             const { data, error } = await supabase
@@ -49,6 +68,7 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                 return;
             }
 
+            // Normalize and safely cast rows to ensure type consistency
             const typedData: SubcategoryRow[] = (data as unknown[]).map((row) => {
                 const r = row as {
                     name: string;
@@ -62,6 +82,7 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                 };
             });
 
+            // Group subcategories by their typeSlug
             const grouped: Record<string, MenuGroup> = {};
 
             typedData.forEach((row) => {
@@ -99,15 +120,19 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
             aria-label="Sidebar"
         >
             <div className="px-3 py-4">
-                <ul className="space-y-2 font-medium">
+                <ul className="space-y-2">
                     {menu.map((group) => (
                         <li key={group.typeSlug} className="mb-5">
+                            {/* Optional: Make this a clickable link to show all in the category */}
                             <p className="text-xs uppercase tracking-wide text-black mb-2">
                                 {group.type}
                             </p>
+
+                            {/* Subcategory links */}
                             {group.subcategories.map((sub) => {
                                 const isActive =
                                     pathname.includes(group.typeSlug) && activeSub === sub.slug;
+
                                 return (
                                     <Link
                                         key={sub.slug}

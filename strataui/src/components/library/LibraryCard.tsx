@@ -1,5 +1,19 @@
 'use client';
 
+/**
+ * LibraryCard Component
+ *
+ * Displays an individual toolkit/library card in the StrataUI interface.
+ * Each card shows:
+ * - Library name and description
+ * - Associated languages and tech stack icons
+ * - Share button (native or clipboard fallback)
+ * - Tag badges
+ *
+ * Props:
+ * - `lib` (Toolkit): A toolkit object containing all metadata to render the card
+ */
+
 import type { Toolkit } from '@/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +25,11 @@ type Props = {
 };
 
 export default function LibraryCard({ lib }: Props) {
+    /**
+     * Handles the "share" button click.
+     * Tries to use native `navigator.share` if available,
+     * otherwise falls back to copying the library URL to clipboard.
+     */
     const handleShare = (e: React.MouseEvent) => {
         e.preventDefault();
         if (navigator.share) {
@@ -28,12 +47,14 @@ export default function LibraryCard({ lib }: Props) {
         }
     };
 
+    // Extract related metadata safely
     const tags = lib.library_tags?.map(t => t.tag?.name).filter(Boolean) || [];
     const techs = lib.library_tech?.map(t => t.tech?.name).filter(Boolean) || [];
     const languages = lib.library_languages?.map(l => l.language?.name).filter(Boolean) || [];
 
     return (
         <article className="break-inside-avoid mb-6 w-full inline-block">
+            {/* Entire card is clickable */}
             <a
                 href={lib.url}
                 target="_blank"
@@ -41,30 +62,42 @@ export default function LibraryCard({ lib }: Props) {
                 className="block outline-1 outline-black/10 rounded-2xl shadow-sm cursor-pointer no-underline p-5"
             >
                 <div className="flex flex-col h-full">
+                    
+                    {/* Library Name + Share Button */}
                     <div className="relative">
                         <div className="flex items-center gap-3 pr-10">
                             <p className="text-black font-semibold text-lg leading-tight flex items-center gap-2">
                                 {lib.name}
                             </p>
                         </div>
+
+                        {/* Share button (top-right corner) */}
                         <button
                             onClick={handleShare}
                             className="absolute top-0 right-0 text-black hover:text-black/80 transition-colors"
                             aria-label={`Share ${lib.name}`}
                         >
-                            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-3 h-3 opacity-60" />
+                            <FontAwesomeIcon
+                                icon={faArrowUpRightFromSquare}
+                                className="w-3 h-3 opacity-60"
+                            />
                         </button>
                     </div>
 
+                    {/* Description (optional) */}
                     {lib.description && (
                         <p className="text-black/70 text-sm mt-2">{lib.description}</p>
                     )}
 
+                    {/* Icons for languages and tech stack */}
                     {(languages.length > 0 || techs.length > 0) && (
                         <div className="flex gap-2 mt-3 text-black/80 text-xl items-center flex-wrap">
                             {languages.map(lang =>
                                 lang ? (
-                                    <span key={lang} className="hover:text-purple-300 transition">
+                                    <span
+                                        key={lang}
+                                        className="hover:text-purple-300 transition"
+                                    >
                                         {getLanguageIcon(lang)}
                                     </span>
                                 ) : null
@@ -81,10 +114,10 @@ export default function LibraryCard({ lib }: Props) {
                                     />
                                 ) : null;
                             })}
-
                         </div>
                     )}
 
+                    {/* Tag badges (e.g., "Design", "Components") */}
                     <div className="flex flex-wrap gap-2 mt-3 items-center">
                         {tags.map(tag => (
                             <span

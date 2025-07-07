@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * SidebarToggle Component
+ *
+ * A simple accessible button used to toggle the sidebar (typically in mobile or narrow viewports).
+ * It uses an inline SVG icon (hamburger menu) and triggers a callback when clicked.
+ *
+ * Props:
+ * - `onToggle` (function): Function to call when the button is clicked (toggles sidebar open/close)
+ */
+
 type Props = {
     onToggle: () => void;
 };
@@ -11,8 +21,16 @@ export default function SidebarToggle({ onToggle }: Props) {
             onClick={onToggle}
             className="inline-flex items-center p-1 text-sm text-gray-500 rounded-lg hover:bg-gray-200 hover:cursor-pointer"
         >
+            {/* Visually hidden label for screen readers */}
             <span className="sr-only">Toggle sidebar</span>
-            <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+
+            {/* Hamburger icon */}
+            <svg
+                className="w-5 h-5"
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+            >
                 <path
                     clipRule="evenodd"
                     fillRule="evenodd"
