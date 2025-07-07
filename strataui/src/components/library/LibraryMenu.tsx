@@ -112,7 +112,7 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                                     <Link
                                         key={sub.slug}
                                         href={`/library/${group.typeSlug}?subcategory=${sub.slug}`}
-                                        className={`block px-4 py-2 rounded-lg ${
+                                        className={`block px-4 py-2 rounded-lg hover:underline ${
                                             isActive
                                                 ? 'text-black font-semibold text-sm'
                                                 : 'text-black text-sm'
