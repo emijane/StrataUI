@@ -91,16 +91,17 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
     return (
         <aside
             className={`
-                 bg-white border-r border-gray-200 px-3 py-4 sm:w-75 w-full overflow-y-auto
-                ${mobileOpen ? 'fixed top-[128px] left-0 h-[calc(100vh-128px)] z-40' : 'hidden'}
-                lg:static lg:block lg:top-auto lg:left-auto lg:h-auto lg:z-0
+                bg-white border-r border-gray-200 px-3 py-4 sm:w-75 w-full
+                overflow-y-auto h-[calc(100vh-128px)]
+                ${mobileOpen ? 'fixed top-[128px] left-0 z-40' : 'hidden'}
+                lg:static lg:block lg:top-auto lg:left-auto lg:z-0 lg:h-[calc(100vh-128px)]
             `}
             aria-label="Sidebar"
         >
-            <div className="h-full px-3 py-4 overflow-y-auto">
-                <ul className="space-y-2 font-medium ">
+            <div className="px-3 py-4">
+                <ul className="space-y-2 font-medium">
                     {menu.map((group) => (
-                        <li key={group.typeSlug} className='mb-5'>
+                        <li key={group.typeSlug} className="mb-5">
                             <p className="text-xs uppercase tracking-wide text-black mb-2">
                                 {group.type}
                             </p>
