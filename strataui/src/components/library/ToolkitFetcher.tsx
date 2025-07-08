@@ -150,26 +150,29 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
             return {};
         };
 
-        const fetchOptimizedToolkits = async () => {
-            let query = supabase
-                .from('libraries')
-                .select(`
-                    id,
-                    name,
-                    url,
-                    pricing,
-                    description,
-                    subcategories!inner (
-                        id,
-                        name,
-                        slug,
-                        types!inner (
-                            id,
-                            name,
-                            slug
-                        )
-                    )
-                `);
+                 const fetchOptimizedToolkits = async () => {
+             let query = supabase
+                 .from('libraries')
+                 .select(`
+                     id,
+                     name,
+                     url,
+                     pricing,
+                     description,
+                     subcategories!inner (
+                         id,
+                         name,
+                         slug,
+                         types!inner (
+                             id,
+                             name,
+                             slug
+                         )
+                     ),
+                     library_tags (tag: tag_id (name)),
+                     library_tech (tech: tech_id (name)),
+                     library_languages (language: language_id (name))
+                 `);
 
             // Server-side filtering for better performance
             if (typeSlug) {
