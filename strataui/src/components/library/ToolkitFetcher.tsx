@@ -1,11 +1,12 @@
 'use client';
 
 /**
- * ToolkitFetcher Component
+ * ToolkitFetcher Component (Performance Optimized)
  *
  * The core client-side controller that:
- * - Fetches all toolkits (libraries) from Supabase
- * - Filters them by selected type, subcategory, and search term
+ * - Fetches filtered toolkits directly from Supabase (server-side filtering)
+ * - Parallel data fetching for better performance
+ * - Loading states and skeleton screens for better UX
  * - Manages sidebar visibility for mobile and layout composition
  *
  * Props:
@@ -25,6 +26,7 @@ import SearchBar from './SearchBar';
 import LibraryMenu from './LibraryMenu';
 import SidebarToggle from './SidebarToggle';
 import Breadcrumb from './Breadcrumb';
+import ToolkitSkeleton from './ToolkitSkeleton';
 
 type Props = {
     typeSlug?: string;
@@ -38,6 +40,10 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
 
     // Raw toolkit data fetched from Supabase
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
+    
+    // Loading states
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
     
     // Store category and subcategory names for breadcrumbs
     const [categoryData, setCategoryData] = useState<{
@@ -60,30 +66,41 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     /**
-     * Fetch toolkits from Supabase on mount and when the
-     * type or subcategory changes.
+     * Optimized data fetching with parallel requests and server-side filtering
      */
     useEffect(() => {
         const fetchData = async () => {
-            // First, fetch category and subcategory metadata for breadcrumbs
-            await fetchBreadcrumbData();
-            
-            // Then fetch and filter the toolkits
-            await fetchToolkits();
+            setIsLoading(true);
+            setIsError(false);
+
+            try {
+                // Parallel data fetching for better performance
+                const [breadcrumbResult, toolkitResult] = await Promise.all([
+                    fetchBreadcrumbData(),
+                    fetchOptimizedToolkits()
+                ]);
+
+                // Handle results
+                if (breadcrumbResult) {
+                    setCategoryData(breadcrumbResult);
+                }
+                
+                if (toolkitResult) {
+                    setToolkits(toolkitResult);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setIsError(true);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         const fetchBreadcrumbData = async () => {
-            // Always clear category data first
-            setCategoryData({});
-            
-            if (!typeSlug) {
-                // If no typeSlug, we're on the main library page - keep data cleared
-                return;
-            }
+            if (!typeSlug) return {};
 
             try {
                 if (selectedSubSlug) {
-                    // If we have a subcategory, fetch subcategory with its type info
                     const { data, error } = await supabase
                         .from('subcategories')
                         .select(`
@@ -98,7 +115,6 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                         .single();
 
                     if (!error && data) {
-                        // Handle types relationship which could be an array or object
                         let typeName: string | undefined;
                         if (data.types) {
                             if (Array.isArray(data.types)) {
@@ -108,13 +124,12 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                             }
                         }
                         
-                        setCategoryData({
+                        return {
                             typeName,
                             subcategoryName: data.name
-                        });
+                        };
                     }
                 } else if (typeSlug) {
-                    // If we only have a type, fetch type info
                     const { data, error } = await supabase
                         .from('types')
                         .select('name, slug')
@@ -122,51 +137,57 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                         .single();
 
                     if (!error && data) {
-                        setCategoryData({
+                        return {
                             typeName: data.name,
                             subcategoryName: undefined
-                        });
+                        };
                     }
                 }
             } catch (error) {
                 console.error('Error fetching breadcrumb data:', error);
             }
+            
+            return {};
         };
 
-        const fetchToolkits = async () => {
-            const { data, error } = await supabase
+        const fetchOptimizedToolkits = async () => {
+            let query = supabase
                 .from('libraries')
                 .select(`
-                    *,
-                    subcategories (
+                    id,
+                    name,
+                    url,
+                    pricing,
+                    description,
+                    subcategories!inner (
                         id,
                         name,
                         slug,
-                        types (
+                        types!inner (
                             id,
                             name,
                             slug
                         )
-                    ),
-                    library_tags (tag: tag_id (name)),
-                    library_tech (tech: tech_id (name)),
-                    library_languages (language: language_id (name))
+                    )
                 `);
 
-            if (error) {
-                console.error('Error fetching toolkits:', JSON.stringify(error, null, 2));
-                return;
+            // Server-side filtering for better performance
+            if (typeSlug) {
+                query = query.eq('subcategories.types.slug', typeSlug);
+            }
+            
+            if (selectedSubSlug) {
+                query = query.eq('subcategories.slug', selectedSubSlug);
             }
 
-            // Filter by typeSlug and/or subcategorySlug
-            const filtered = (data || []).filter(lib => {
-                const sub = lib.subcategories;
-                const matchesType = !typeSlug || sub?.types?.slug === typeSlug;
-                const matchesSub = !selectedSubSlug || sub?.slug === selectedSubSlug;
-                return matchesType && matchesSub;
-            });
+            const { data, error } = await query;
 
-            setToolkits(filtered);
+            if (error) {
+                console.error('Error fetching toolkits:', error);
+                throw error;
+            }
+
+            return data || [];
         };
 
         fetchData();
@@ -185,8 +206,7 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
             }
         };
 
-        handleBodyScroll(); // Run immediately on mount
-
+        handleBodyScroll();
         window.addEventListener('resize', handleBodyScroll);
         return () => {
             document.body.style.overflow = '';
@@ -225,11 +245,27 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                     onClose={() => setMobileOpen(false)}
                 />
 
-                {/* Main content area */}
+                {/* Main content area with loading states */}
                 <div className={`flex-1 flex flex-col mt-20 px-5 ${mobileOpen ? 'overflow-hidden h-screen' : ''}`}>
                     <HeaderSection />
                     <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-                    <ToolkitList libraries={filteredToolkits} />
+                    
+                    {/* Loading, Error, and Success states */}
+                    {isError ? (
+                        <div className="text-center py-12">
+                            <p className="text-red-600 mb-4">Failed to load libraries. Please try again.</p>
+                            <button 
+                                onClick={() => window.location.reload()} 
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Retry
+                            </button>
+                        </div>
+                    ) : isLoading ? (
+                        <ToolkitSkeleton />
+                    ) : (
+                        <ToolkitList libraries={filteredToolkits} />
+                    )}
                 </div>
             </div>
         </div>
