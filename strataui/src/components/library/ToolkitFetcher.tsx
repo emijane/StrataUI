@@ -61,6 +61,62 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
      * type or subcategory changes.
      */
     useEffect(() => {
+        const fetchData = async () => {
+            // First, fetch category and subcategory metadata for breadcrumbs
+            await fetchBreadcrumbData();
+            
+            // Then fetch and filter the toolkits
+            await fetchToolkits();
+        };
+
+        const fetchBreadcrumbData = async () => {
+            if (!typeSlug && !selectedSubSlug) {
+                setCategoryData({});
+                return;
+            }
+
+            try {
+                if (selectedSubSlug) {
+                    // If we have a subcategory, fetch subcategory with its type info
+                    const { data, error } = await supabase
+                        .from('subcategories')
+                        .select(`
+                            name,
+                            slug,
+                            types (
+                                name,
+                                slug
+                            )
+                        `)
+                        .eq('slug', selectedSubSlug)
+                        .single();
+
+                    if (!error && data) {
+                        setCategoryData({
+                            typeName: data.types?.name,
+                            subcategoryName: data.name
+                        });
+                    }
+                } else if (typeSlug) {
+                    // If we only have a type, fetch type info
+                    const { data, error } = await supabase
+                        .from('types')
+                        .select('name, slug')
+                        .eq('slug', typeSlug)
+                        .single();
+
+                    if (!error && data) {
+                        setCategoryData({
+                            typeName: data.name,
+                            subcategoryName: undefined
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching breadcrumb data:', error);
+            }
+        };
+
         const fetchToolkits = async () => {
             const { data, error } = await supabase
                 .from('libraries')
@@ -95,38 +151,9 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
             });
 
             setToolkits(filtered);
-
-            // Extract category and subcategory names from the first result for breadcrumbs
-            if (filtered.length > 0 && filtered[0].subcategories) {
-                const sub = filtered[0].subcategories;
-                setCategoryData({
-                    typeName: sub.types?.name,
-                    subcategoryName: selectedSubSlug ? sub.name : undefined
-                });
-            } else if (typeSlug) {
-                // If no results but we have a typeSlug, we still need to fetch the category name
-                fetchCategoryName();
-            }
         };
 
-        const fetchCategoryName = async () => {
-            if (!typeSlug) return;
-            
-            const { data, error } = await supabase
-                .from('types')
-                .select('name')
-                .eq('slug', typeSlug)
-                .single();
-
-            if (!error && data) {
-                setCategoryData({
-                    typeName: data.name,
-                    subcategoryName: undefined
-                });
-            }
-        };
-
-        fetchToolkits();
+        fetchData();
     }, [typeSlug, selectedSubSlug]);
 
     /**
