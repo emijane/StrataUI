@@ -62,14 +62,6 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
                     </Link>
                 </>
             )}
-
-            {/* If no specific data, show generic "Designer Tools" */}
-            {!typeSlug && (
-                <>
-                    {renderSeparator()}
-                    <span className="text-black font-medium">Designer Tools</span>
-                </>
-            )}
         </nav>
     );
 }
