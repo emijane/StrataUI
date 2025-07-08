@@ -191,18 +191,22 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
 
     return (
         <div className="flex w-full min-h-screen flex-col">
-            {/* Top nav section with mobile sidebar toggle and breadcrumb */}
-            <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
-                <div className='lg:hidden'>
-                    <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
-                </div>
-                <Breadcrumb 
-                    typeSlug={typeSlug}
-                    typeName={categoryData.typeName}
-                    subcategorySlug={selectedSubSlug || undefined}
-                    subcategoryName={categoryData.subcategoryName}
-                />
+            {/* Mobile sidebar toggle - always available */}
+            <div className="lg:hidden flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
+                <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
             </div>
+
+            {/* Breadcrumb section - only show when breadcrumbs exist */}
+            {typeSlug && (
+                <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
+                    <Breadcrumb 
+                        typeSlug={typeSlug}
+                        typeName={categoryData.typeName}
+                        subcategorySlug={selectedSubSlug || undefined}
+                        subcategoryName={categoryData.subcategoryName}
+                    />
+                </div>
+            )}
 
             <div className='flex flex-row'>
                 {/* Sidebar navigation */}
