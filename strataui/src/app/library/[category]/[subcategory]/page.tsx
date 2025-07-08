@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import ClientToolkitFetcher from '@/components/library/ClientToolkitFetcher';
 
 type Props = {
