@@ -29,6 +29,9 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
 
     return (
         <nav aria-label="Breadcrumb" className="flex items-center text-sm">
+            {/* Leading separator */}
+            <span className="text-gray-400 mr-2">/</span>
+            
             {/* Always show Library as the root */}
             <Link 
                 href="/library" 
