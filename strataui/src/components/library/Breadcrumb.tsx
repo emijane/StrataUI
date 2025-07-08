@@ -32,37 +32,43 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
             {/* Leading separator */}
             <span className="text-gray-400 mr-2">/</span>
             
-            {/* Always show Library as the root */}
-            <Link 
-                href="/library" 
-                className="text-gray-600 hover:text-black transition-colors"
-            >
-                Library
-            </Link>
+            {/* Library - clickable if not on main library page, bolded if current page */}
+            {typeSlug ? (
+                <Link 
+                    href="/library" 
+                    className="text-gray-600 hover:text-black transition-colors"
+                >
+                    Library
+                </Link>
+            ) : (
+                <span className="text-black font-bold">Library</span>
+            )}
 
             {/* Show category if we have type data */}
             {typeSlug && typeName && (
                 <>
                     {renderSeparator()}
-                    <Link 
-                        href={`/library/${typeSlug}`}
-                        className="text-gray-600 hover:text-black transition-colors"
-                    >
-                        {typeName}
-                    </Link>
+                    {/* Category - clickable if we have subcategory, bolded if current page */}
+                    {subcategorySlug && subcategoryName ? (
+                        <Link 
+                            href={`/library/${typeSlug}`}
+                            className="text-gray-600 hover:text-black transition-colors"
+                        >
+                            {typeName}
+                        </Link>
+                    ) : (
+                        <span className="text-black font-bold">{typeName}</span>
+                    )}
                 </>
             )}
 
-            {/* Show subcategory if present */}
+            {/* Show subcategory if present - always current page so always bolded */}
             {subcategorySlug && subcategoryName && (
                 <>
                     {renderSeparator()}
-                    <Link 
-                        href={`/library/${typeSlug}?subcategory=${subcategorySlug}`}
-                        className="text-black font-medium hover:text-gray-700 transition-colors"
-                    >
+                    <span className="text-black font-bold">
                         {subcategoryName}
-                    </Link>
+                    </span>
                 </>
             )}
         </nav>
