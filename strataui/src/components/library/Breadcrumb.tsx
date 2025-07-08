@@ -41,7 +41,7 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
                     Library
                 </Link>
             ) : (
-                <span className="text-black font-semibold">Library</span>
+                <span className="text-black font-semibold">Library /</span>
             )}
 
             {/* Show category if we have type data */}
@@ -57,7 +57,7 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
                             {typeName}
                         </Link>
                     ) : (
-                        <span className="text-black font-semibold">{typeName}</span>
+                        <span className="text-black font-semibold">{typeName} /</span>
                     )}
                 </>
             )}
