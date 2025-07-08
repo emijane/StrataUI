@@ -1,29 +1,27 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import ClientToolkitFetcher from '@/components/library/ClientToolkitFetcher';
 
 type Props = {
-  params: { category: string; subcategory: string }
+  params: { category: string }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category, subcategory } = params;
+  const { category } = params;
   
-  // Convert slugs to readable names
+  // Convert slug to readable name
   const categoryName = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  const subcategoryName = subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   
-  const title = `${subcategoryName} - ${categoryName} | StrataUI`;
-  const description = `Discover ${subcategoryName.toLowerCase()} tools and libraries in our ${categoryName.toLowerCase()} collection. Curated resources for modern frontend development.`;
+  const title = `${categoryName} | StrataUI`;
+  const description = `Explore our curated collection of ${categoryName.toLowerCase()} tools and libraries. Find the perfect UI components, design systems, and development resources for your next project.`;
 
   return {
     title,
     description,
-    keywords: [subcategoryName, categoryName, 'UI library', 'frontend tools', 'development resources'],
+    keywords: [categoryName, 'UI library', 'frontend tools', 'development resources', 'component library'],
     openGraph: {
       title,
       description,
-      url: `https://strataui.dev/library/${category}/${subcategory}`,
+      url: `https://strataui.dev/library/${category}`,
       siteName: 'StrataUI',
       type: 'website',
     },
@@ -33,17 +31,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
     },
     alternates: {
-      canonical: `https://strataui.dev/library/${category}/${subcategory}`,
+      canonical: `https://strataui.dev/library/${category}`,
     },
   };
 }
 
-export default function SubcategoryPage({ params }: Props) {
-  const { category, subcategory } = params;
+export default function CategoryPage({ params }: Props) {
+  const { category } = params;
   
-  // Convert slugs to readable names for structured data
+  // Convert slug to readable name for structured data
   const categoryName = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  const subcategoryName = subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   // Structured data for breadcrumbs
   const breadcrumbSchema = {
@@ -61,12 +58,6 @@ export default function SubcategoryPage({ params }: Props) {
         position: 2,
         name: categoryName,
         item: `https://strataui.dev/library/${category}`
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: subcategoryName,
-        item: `https://strataui.dev/library/${category}/${subcategory}`
       }
     ]
   };
@@ -82,15 +73,12 @@ export default function SubcategoryPage({ params }: Props) {
       <main className="relative min-h-screen overflow-visible max-w-full items-center justify-center mx-auto">
         {/* Page Title for SEO */}
         <div className="sr-only">
-          <h1>{subcategoryName} - {categoryName} Tools and Libraries</h1>
+          <h1>{categoryName} Tools and Libraries</h1>
         </div>
         
         {/* Content area */}
         <div className="relative z-10 mx-auto">
-          <ClientToolkitFetcher 
-            typeSlug={category} 
-            subcategorySlug={subcategory}
-          />
+          <ClientToolkitFetcher typeSlug={category} />
         </div>
       </main>
     </>

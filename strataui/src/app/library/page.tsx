@@ -1,5 +1,3 @@
-'use client';
-
 /**
  * LibraryPage
  *
@@ -16,7 +14,7 @@
  */
 
 import { Metadata } from 'next';
-import ToolkitFetcher from '@/components/library/ToolkitFetcher';
+import ClientToolkitFetcher from '@/components/library/ClientToolkitFetcher';
 
 export const metadata: Metadata = {
   title: 'Frontend UI Library Collection | StrataUI',
@@ -80,7 +78,7 @@ export default function LibraryPage() {
         
         {/* Content area */}
         <div className="relative z-10 mx-auto">
-          <ToolkitFetcher />
+          <ClientToolkitFetcher />
         </div>
       </main>
     </>
