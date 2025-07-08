@@ -213,7 +213,6 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
                 <LibraryMenu 
                     mobileOpen={mobileOpen} 
                     onClose={() => setMobileOpen(false)}
-                    hasBreadcrumbs={!!typeSlug}
                 />
 
                 {/* Main content area */}
