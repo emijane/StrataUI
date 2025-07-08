@@ -124,7 +124,7 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                             {/* Make this a clickable link to show all in the category */}
                             <Link 
                                 href={`/library/${group.typeSlug}`}
-                                className="block text-xs uppercase tracking-wide text-black mb-2 hover:text-gray-700 transition-colors"
+                                className="block text-xs uppercase tracking-wide text-gray-700 mb-2 hover:text-black hover:underline transition-colors"
                                 onClick={onClose}
                             >
                                 {group.type}
