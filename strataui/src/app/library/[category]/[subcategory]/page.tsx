@@ -7,7 +7,7 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category, subcategory } = params;
+  const { category, subcategory } = await params;
   
   // Convert slugs to readable names
   const categoryName = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -38,8 +38,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SubcategoryPage({ params }: Props) {
-  const { category, subcategory } = params;
+export default async function SubcategoryPage({ params }: Props) {
+  const { category, subcategory } = await params;
   
   // Convert slugs to readable names for structured data
   const categoryName = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
