@@ -31,7 +31,8 @@ type Props = {
 
 export default function ToolkitFetcher({ typeSlug }: Props) {
     const searchParams = useSearchParams();
-    const selectedSubSlug = searchParams.get('subcategory');
+    // Only use subcategory parameter if we have a typeSlug (category page)
+    const selectedSubSlug = typeSlug ? searchParams.get('subcategory') : null;
 
     // Raw toolkit data fetched from Supabase
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
