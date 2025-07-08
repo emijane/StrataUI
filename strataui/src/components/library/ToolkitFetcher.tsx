@@ -23,6 +23,7 @@ import ToolkitList from './ToolkitList';
 import SearchBar from './SearchBar';
 import LibraryMenu from './LibraryMenu';
 import SidebarToggle from './SidebarToggle';
+import Breadcrumb from './Breadcrumb';
 
 type Props = {
     typeSlug?: string;
@@ -34,6 +35,12 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
 
     // Raw toolkit data fetched from Supabase
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
+    
+    // Store category and subcategory names for breadcrumbs
+    const [categoryData, setCategoryData] = useState<{
+        typeName?: string;
+        subcategoryName?: string;
+    }>({});
 
     // Search query entered by the user
     const [searchTerm, setSearchTerm] = useState('');
@@ -88,6 +95,35 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
             });
 
             setToolkits(filtered);
+
+            // Extract category and subcategory names from the first result for breadcrumbs
+            if (filtered.length > 0 && filtered[0].subcategories) {
+                const sub = filtered[0].subcategories;
+                setCategoryData({
+                    typeName: sub.types?.name,
+                    subcategoryName: selectedSubSlug ? sub.name : undefined
+                });
+            } else if (typeSlug) {
+                // If no results but we have a typeSlug, we still need to fetch the category name
+                fetchCategoryName();
+            }
+        };
+
+        const fetchCategoryName = async () => {
+            if (!typeSlug) return;
+            
+            const { data, error } = await supabase
+                .from('types')
+                .select('name')
+                .eq('slug', typeSlug)
+                .single();
+
+            if (!error && data) {
+                setCategoryData({
+                    typeName: data.name,
+                    subcategoryName: undefined
+                });
+            }
         };
 
         fetchToolkits();
@@ -129,7 +165,12 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
                 <div className='lg:hidden'>
                     <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
                 </div>
-                <p className='text-black'>Library / Designer Tools</p>
+                <Breadcrumb 
+                    typeSlug={typeSlug}
+                    typeName={categoryData.typeName}
+                    subcategorySlug={selectedSubSlug || undefined}
+                    subcategoryName={categoryData.subcategoryName}
+                />
             </div>
 
             <div className='flex flex-row'>

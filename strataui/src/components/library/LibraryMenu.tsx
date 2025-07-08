@@ -123,10 +123,14 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                 <ul className="space-y-2">
                     {menu.map((group) => (
                         <li key={group.typeSlug} className="mb-5">
-                            {/* Optional: Make this a clickable link to show all in the category */}
-                            <p className="text-xs uppercase tracking-wide text-black mb-2">
+                            {/* Make this a clickable link to show all in the category */}
+                            <Link 
+                                href={`/library/${group.typeSlug}`}
+                                className="block text-xs uppercase tracking-wide text-black mb-2 hover:text-gray-700 transition-colors"
+                                onClick={onClose}
+                            >
                                 {group.type}
-                            </p>
+                            </Link>
 
                             {/* Subcategory links */}
                             {group.subcategories.map((sub) => {
