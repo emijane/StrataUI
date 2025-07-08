@@ -10,6 +10,7 @@
  *
  * Props:
  * - `typeSlug` (optional string): The current category (type) slug to filter toolkits
+ * - `subcategorySlug` (optional string): The current subcategory slug to filter toolkits
  */
 
 import { useEffect, useState } from 'react';
@@ -27,12 +28,13 @@ import Breadcrumb from './Breadcrumb';
 
 type Props = {
     typeSlug?: string;
+    subcategorySlug?: string;
 };
 
-export default function ToolkitFetcher({ typeSlug }: Props) {
+export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
     const searchParams = useSearchParams();
-    // Only use subcategory parameter if we have a typeSlug (category page)
-    const selectedSubSlug = typeSlug ? searchParams.get('subcategory') : null;
+    // Support both new clean URLs and legacy query params for backward compatibility
+    const selectedSubSlug = subcategorySlug || (typeSlug ? searchParams.get('subcategory') : null);
 
     // Raw toolkit data fetched from Supabase
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);

@@ -1,56 +1,86 @@
-'use client';
-
-/**
- * TypePage
- *
- * This dynamic route component renders a category-specific page in StrataUI,
- * such as `/library/design-systems-kits`, based on the `type` slug in the URL.
- *
- * Responsibilities:
- * - Extracts the `type` slug from the URL
- * - Formats a readable title from the slug (e.g., "design-systems-kits" → "Design Systems Kits")
- * - Sets up dynamic metadata with `<Head>` for SEO and social sharing
- * - Renders the <ToolkitFetcher /> to display filtered toolkits by category
- *
- * Behavior:
- * - If the URL contains query parameters (e.g., `?subcategory=...`), a `noindex` tag is added for SEO purposes
- */
-
-import { useParams, usePathname } from 'next/navigation';
-import Head from 'next/head';
+import { Metadata } from 'next';
 import ToolkitFetcher from '@/components/library/ToolkitFetcher';
 
-export default function TypePage() {
-    // Grab the `type` slug from the dynamic route (e.g., "design-systems-kits")
-    const { page } = useParams();
+type Props = {
+  params: { page: string }
+}
 
-    // Get the full pathname (used to set canonical URL and noindex condition)
-    const pathname = usePathname();
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { page } = params;
+  
+  // Convert slug to readable name
+  const categoryName = page.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  
+  const title = `${categoryName} | StrataUI`;
+  const description = `Explore our curated collection of ${categoryName.toLowerCase()} tools and libraries. Find the perfect UI components, design systems, and development resources for your next project.`;
 
-    // Convert the slug to a readable page title (e.g., "design-systems-kits" → "Design Systems Kits")
-    const readableTitle = String(page)
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, l => l.toUpperCase());
+  return {
+    title,
+    description,
+    keywords: [categoryName, 'UI library', 'frontend tools', 'development resources', 'component library'],
+    openGraph: {
+      title,
+      description,
+      url: `https://strataui.dev/library/${page}`,
+      siteName: 'StrataUI',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `https://strataui.dev/library/${page}`,
+    },
+  };
+}
 
-    return (
-        <>
-            <Head>
-                <title>{readableTitle} | StrataUI</title>
-                <meta
-                    name="description"
-                    content={`Explore ${readableTitle} toolkits curated to enhance your workflow.`}
-                />
-                <link rel="canonical" href={`https://strataui.dev${pathname}`} />
-                {/* Prevent search engines from indexing filtered views */}
-                {pathname.includes('?') && <meta name="robots" content="noindex" />}
-            </Head>
+export default function CategoryPage({ params }: Props) {
+  const { page } = params;
+  
+  // Convert slug to readable name for structured data
+  const categoryName = page.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
-            <main className="relative min-h-screen overflow-visible max-w-full items-center justify-center mx-auto">
-                {/* Foreground content area */}
-                <div className="relative z-10 mx-auto">
-                    <ToolkitFetcher typeSlug={page as string} />
-                </div>
-            </main>
-        </>
-    );
+  // Structured data for breadcrumbs
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Library',
+        item: 'https://strataui.dev/library'
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: categoryName,
+        item: `https://strataui.dev/library/${page}`
+      }
+    ]
+  };
+
+  return (
+    <>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      
+      <main className="relative min-h-screen overflow-visible max-w-full items-center justify-center mx-auto">
+        {/* Page Title for SEO */}
+        <div className="sr-only">
+          <h1>{categoryName} Tools and Libraries</h1>
+        </div>
+        
+        {/* Content area */}
+        <div className="relative z-10 mx-auto">
+          <ToolkitFetcher typeSlug={page} />
+        </div>
+      </main>
+    </>
+  );
 }

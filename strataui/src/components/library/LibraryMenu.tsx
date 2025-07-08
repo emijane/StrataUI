@@ -132,15 +132,15 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                                 {group.type}
                             </Link>
 
-                            {/* Subcategory links */}
+                            {/* Subcategory links - using clean URLs */}
                             {group.subcategories.map((sub) => {
                                 const isActive =
-                                    pathname.includes(group.typeSlug) && activeSub === sub.slug;
+                                    pathname.includes(`${group.typeSlug}/${sub.slug}`);
 
                                 return (
                                     <Link
                                         key={sub.slug}
-                                        href={`/library/${group.typeSlug}?subcategory=${sub.slug}`}
+                                        href={`/library/${group.typeSlug}/${sub.slug}`}
                                         className={`block px-4 py-2 rounded-lg hover:underline ${
                                             isActive
                                                 ? 'text-black font-semibold text-sm'
