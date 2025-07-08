@@ -70,8 +70,11 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
         };
 
         const fetchBreadcrumbData = async () => {
-            if (!typeSlug && !selectedSubSlug) {
-                setCategoryData({});
+            // Always clear category data first
+            setCategoryData({});
+            
+            if (!typeSlug) {
+                // If no typeSlug, we're on the main library page - keep data cleared
                 return;
             }
 
