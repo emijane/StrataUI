@@ -191,7 +191,7 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
 
     return (
         <div className="flex w-full min-h-screen flex-col">
-            {/* Mobile sidebar toggle - always available */}
+            {/* Mobile sidebar toggle - always available on mobile */}
             <div className="lg:hidden flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
                 <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
             </div>
@@ -210,7 +210,11 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
 
             <div className='flex flex-row'>
                 {/* Sidebar navigation */}
-                <LibraryMenu mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+                <LibraryMenu 
+                    mobileOpen={mobileOpen} 
+                    onClose={() => setMobileOpen(false)}
+                    hasBreadcrumbs={!!typeSlug}
+                />
 
                 {/* Main content area */}
                 <div className={`flex-1 flex flex-col mt-20 px-5 ${mobileOpen ? 'overflow-hidden h-screen' : ''}`}>
