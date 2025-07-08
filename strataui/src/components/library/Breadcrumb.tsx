@@ -27,31 +27,28 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
         <span className="text-gray-400 mx-2">/</span>
     );
 
+    // Don't show breadcrumbs on main library page (homepage-like)
+    if (!typeSlug) {
+        return null;
+    }
+
     return (
         <nav aria-label="Breadcrumb" className="flex items-center text-sm">
             {/* Leading separator */}
             <span className="text-gray-400 mr-2">/</span>
             
-            {/* Library - clickable if not on main library page, bolded if current page */}
-            {typeSlug ? (
-                <Link 
-                    href="/library" 
-                    className="text-gray-600 hover:text-black transition-colors"
-                >
-                    Library
-                </Link>
-            ) : (
-                <>
-                    <span className="text-black font-semibold">Library</span>
-                    <span className="text-gray-400 ml-1">/</span>
-                </>
-            )}
+            {/* Library - always clickable when breadcrumbs are shown */}
+            <Link 
+                href="/library" 
+                className="text-gray-600 hover:text-black transition-colors"
+            >
+                Library
+            </Link>
 
-            {/* Show category if we have type data */}
+            {/* Show category - clickable if we have subcategory, semi-bold if current page */}
             {typeSlug && typeName && (
                 <>
                     {renderSeparator()}
-                    {/* Category - clickable if we have subcategory, bolded if current page */}
                     {subcategorySlug && subcategoryName ? (
                         <Link 
                             href={`/library/${typeSlug}`}
@@ -68,7 +65,7 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
                 </>
             )}
 
-            {/* Show subcategory if present - always current page so always bolded */}
+            {/* Show subcategory if present - always current page so always semi-bold */}
             {subcategorySlug && subcategoryName && (
                 <>
                     {renderSeparator()}
