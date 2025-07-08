@@ -15,7 +15,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 
 type Props = {
@@ -42,8 +42,6 @@ type SubcategoryRow = {
 
 export default function LibraryMenu({ mobileOpen, onClose }: Props) {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const activeSub = searchParams.get('subcategory');
     const [menu, setMenu] = useState<MenuGroup[]>([]);
 
     /**

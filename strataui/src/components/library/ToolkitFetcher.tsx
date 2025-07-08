@@ -99,7 +99,7 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
 
                     if (!error && data) {
                         setCategoryData({
-                            typeName: data.types?.name,
+                            typeName: Array.isArray(data.types) ? data.types[0]?.name : data.types?.name,
                             subcategoryName: data.name
                         });
                     }
