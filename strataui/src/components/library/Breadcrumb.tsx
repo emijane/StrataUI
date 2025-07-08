@@ -54,9 +54,12 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
             {subcategorySlug && subcategoryName && (
                 <>
                     {renderSeparator()}
-                    <span className="text-black font-medium">
+                    <Link 
+                        href={`/library/${typeSlug}?subcategory=${subcategorySlug}`}
+                        className="text-black font-medium hover:text-gray-700 transition-colors"
+                    >
                         {subcategoryName}
-                    </span>
+                    </Link>
                 </>
             )}
 

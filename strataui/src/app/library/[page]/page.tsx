@@ -4,11 +4,11 @@
  * TypePage
  *
  * This dynamic route component renders a category-specific page in StrataUI,
- * such as `/library/design-tools`, based on the `type` slug in the URL.
+ * such as `/library/design-systems-kits`, based on the `type` slug in the URL.
  *
  * Responsibilities:
  * - Extracts the `type` slug from the URL
- * - Formats a readable title from the slug (e.g., "design-tools" → "Design Tools")
+ * - Formats a readable title from the slug (e.g., "design-systems-kits" → "Design Systems Kits")
  * - Sets up dynamic metadata with `<Head>` for SEO and social sharing
  * - Renders the <ToolkitFetcher /> to display filtered toolkits by category
  *
@@ -21,14 +21,14 @@ import Head from 'next/head';
 import ToolkitFetcher from '@/components/library/ToolkitFetcher';
 
 export default function TypePage() {
-    // Grab the `type` slug from the dynamic route (e.g., "design-tools")
-    const { type } = useParams();
+    // Grab the `type` slug from the dynamic route (e.g., "design-systems-kits")
+    const { page } = useParams();
 
     // Get the full pathname (used to set canonical URL and noindex condition)
     const pathname = usePathname();
 
-    // Convert the slug to a readable page title (e.g., "design-tools" → "Design Tools")
-    const readableTitle = String(type)
+    // Convert the slug to a readable page title (e.g., "design-systems-kits" → "Design Systems Kits")
+    const readableTitle = String(page)
         .replace(/-/g, ' ')
         .replace(/\b\w/g, l => l.toUpperCase());
 
@@ -45,10 +45,12 @@ export default function TypePage() {
                 {pathname.includes('?') && <meta name="robots" content="noindex" />}
             </Head>
 
-            {/* Main content */}
-            <div className="relative z-10 mx-auto">
-                <ToolkitFetcher typeSlug={type as string} />
-            </div>
+            <main className="relative min-h-screen overflow-visible max-w-full items-center justify-center mx-auto">
+                {/* Foreground content area */}
+                <div className="relative z-10 mx-auto">
+                    <ToolkitFetcher typeSlug={page as string} />
+                </div>
+            </main>
         </>
     );
 }
