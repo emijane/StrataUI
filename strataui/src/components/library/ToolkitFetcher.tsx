@@ -98,8 +98,18 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                         .single();
 
                     if (!error && data) {
+                        // Handle types relationship which could be an array or object
+                        let typeName: string | undefined;
+                        if (data.types) {
+                            if (Array.isArray(data.types)) {
+                                typeName = data.types[0]?.name;
+                            } else {
+                                typeName = (data.types as any).name;
+                            }
+                        }
+                        
                         setCategoryData({
-                            typeName: Array.isArray(data.types) ? data.types[0]?.name : data.types?.name,
+                            typeName,
                             subcategoryName: data.name
                         });
                     }
