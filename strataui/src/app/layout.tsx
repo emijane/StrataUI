@@ -3,6 +3,7 @@ import { Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import "@/lib/fontawesome";
+import QueryProvider from "@/components/providers/QueryProvider";
 
 /**
  * Font Configuration
@@ -68,8 +69,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceMono.variable}`}>
       <body className="antialiased">
-        <Navbar />
-        {children}
+        <QueryProvider>
+          <Navbar />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
