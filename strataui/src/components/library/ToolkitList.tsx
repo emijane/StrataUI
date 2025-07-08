@@ -22,7 +22,7 @@ type Props = {
 
 export default function ToolkitList({ libraries, children }: Props) {
     return (
-        <section className="w-full mx-auto relative z-0" aria-label="Library section">
+        <section className="w-full max-w-[92rem] mx-auto relative z-0" aria-label="Library section">
             {/* Optional content (e.g. filter UI, summary) */}
             {children && <div>{children}</div>}
 

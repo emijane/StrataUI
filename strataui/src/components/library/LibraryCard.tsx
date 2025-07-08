@@ -6,9 +6,8 @@
  * Displays an individual toolkit/library card in the StrataUI interface.
  * Each card shows:
  * - Library name and description
- * - Associated languages and tech stack icons
+ * - Subcategory badge
  * - Share button (native or clipboard fallback)
- * - Tag badges
  *
  * Props:
  * - `lib` (Toolkit): A toolkit object containing all metadata to render the card
@@ -17,19 +16,12 @@
 import type { Toolkit } from '@/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
-import { getTechColor } from '@/lib/iconColorsTech';
-import { getLanguageIcon, TECH_ICONS } from '@/lib/languageIcons';
 
 type Props = {
     lib: Toolkit;
 };
 
 export default function LibraryCard({ lib }: Props) {
-    /**
-     * Handles the "share" button click.
-     * Tries to use native `navigator.share` if available,
-     * otherwise falls back to copying the library URL to clipboard.
-     */
     const handleShare = (e: React.MouseEvent) => {
         e.preventDefault();
         if (navigator.share) {
@@ -47,14 +39,14 @@ export default function LibraryCard({ lib }: Props) {
         }
     };
 
-    // Extract related metadata safely
-    const tags = lib.library_tags?.map(t => t.tag?.name).filter(Boolean) || [];
-    const techs = lib.library_tech?.map(t => t.tech?.name).filter(Boolean) || [];
-    const languages = lib.library_languages?.map(l => l.language?.name).filter(Boolean) || [];
+    // Extract subcategory name safely (e.g., from lib.subcategory.name or lib.subcategory)
+    const subcategory =
+        typeof lib.subcategory === 'object' && lib.subcategory !== null
+            ? lib.subcategory.name
+            : lib.subcategory || null;
 
     return (
         <article className="break-inside-avoid mb-6 w-full inline-block">
-            {/* Entire card is clickable */}
             <a
                 href={lib.url}
                 target="_blank"
@@ -62,7 +54,7 @@ export default function LibraryCard({ lib }: Props) {
                 className="block outline-1 outline-black/10 rounded-2xl shadow-sm cursor-pointer no-underline p-5"
             >
                 <div className="flex flex-col h-full">
-                    
+
                     {/* Library Name + Share Button */}
                     <div className="relative">
                         <div className="flex items-center gap-3 pr-10">
@@ -71,7 +63,6 @@ export default function LibraryCard({ lib }: Props) {
                             </p>
                         </div>
 
-                        {/* Share button (top-right corner) */}
                         <button
                             onClick={handleShare}
                             className="absolute top-0 right-0 text-black hover:text-black/80 transition-colors"
@@ -84,50 +75,19 @@ export default function LibraryCard({ lib }: Props) {
                         </button>
                     </div>
 
-                    {/* Description (optional) */}
-                    {lib.description && (
-                        <p className="text-black/70 text-sm mt-2">{lib.description}</p>
-                    )}
-
-                    {/* Icons for languages and tech stack */}
-                    {(languages.length > 0 || techs.length > 0) && (
-                        <div className="flex gap-2 mt-3 text-black/80 text-xl items-center flex-wrap">
-                            {languages.map(lang =>
-                                lang ? (
-                                    <span
-                                        key={lang}
-                                        className="hover:text-purple-300 transition"
-                                    >
-                                        {getLanguageIcon(lang)}
-                                    </span>
-                                ) : null
-                            )}
-                            {techs.map(tech => {
-                                const icon = tech ? TECH_ICONS[tech.toLowerCase()] : undefined;
-                                return icon ? (
-                                    <FontAwesomeIcon
-                                        key={tech}
-                                        icon={icon}
-                                        className="w-4 h-4"
-                                        style={{ color: getTechColor(tech.toLowerCase()) }}
-                                        title={tech}
-                                    />
-                                ) : null;
-                            })}
+                    {/* Subcategory badge */}
+                    {subcategory && (
+                        <div className="flex flex-wrap mt-2 items-center">
+                            <span className="text-xs text-black">
+                                {subcategory}
+                            </span>
                         </div>
                     )}
 
-                    {/* Tag badges (e.g., "Design", "Components") */}
-                    <div className="flex flex-wrap gap-2 mt-3 items-center">
-                        {tags.map(tag => (
-                            <span
-                                key={tag}
-                                className="font-space-mono text-[0.6rem] outline outline-black/30 text-black pl-2 pr-2 pt-1 pb-1 rounded-xl"
-                            >
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
+                    {/* Description */}
+                    {lib.description && (
+                        <p className="text-black/70 text-sm mt-3">{lib.description}</p>
+                    )}
                 </div>
             </a>
         </article>
