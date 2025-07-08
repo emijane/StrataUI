@@ -17,7 +17,6 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import type { Toolkit } from '@/types';
 import { matchesToolkit } from '@/lib/matchesToolkit';
 import { useLibraryPageData } from '@/hooks/useLibraryData';
 
