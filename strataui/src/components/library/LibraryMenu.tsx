@@ -15,7 +15,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 
 type Props = {
@@ -42,8 +42,6 @@ type SubcategoryRow = {
 
 export default function LibraryMenu({ mobileOpen, onClose }: Props) {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const activeSub = searchParams.get('subcategory');
     const [menu, setMenu] = useState<MenuGroup[]>([]);
 
     /**
@@ -113,9 +111,9 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
         <aside
             className={`
                 bg-white border-r border-gray-200 px-3 py-4 sm:w-75 w-full
-                overflow-y-auto h-[calc(100vh-128px)]
-                ${mobileOpen ? 'fixed top-[128px] left-0 z-40' : 'hidden'}
-                lg:static lg:block lg:top-auto lg:left-auto lg:z-0 lg:h-[calc(100vh-128px)]
+                overflow-y-auto 
+                ${mobileOpen ? 'block fixed top-[160px] left-0 right-0 z-40 shadow-lg border-b max-h-[calc(100vh-160px)]' : 'hidden'}
+                lg:static lg:block lg:top-auto lg:left-auto lg:z-0 lg:h-[calc(100vh-128px)] lg:w-auto lg:shadow-none lg:border-b-0
             `}
             aria-label="Sidebar"
         >
@@ -132,15 +130,15 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
                                 {group.type}
                             </Link>
 
-                            {/* Subcategory links */}
+                            {/* Subcategory links - using clean URLs */}
                             {group.subcategories.map((sub) => {
                                 const isActive =
-                                    pathname.includes(group.typeSlug) && activeSub === sub.slug;
+                                    pathname.includes(`${group.typeSlug}/${sub.slug}`);
 
                                 return (
                                     <Link
                                         key={sub.slug}
-                                        href={`/library/${group.typeSlug}?subcategory=${sub.slug}`}
+                                        href={`/library/${group.typeSlug}/${sub.slug}`}
                                         className={`block px-4 py-2 rounded-lg hover:underline ${
                                             isActive
                                                 ? 'text-black font-semibold text-sm'

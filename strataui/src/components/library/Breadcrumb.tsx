@@ -29,42 +29,42 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
 
     return (
         <nav aria-label="Breadcrumb" className="flex items-center text-sm">
-            {/* Always show Library as the root */}
-            <Link 
-                href="/library" 
-                className="text-gray-600 hover:text-black transition-colors"
-            >
-                Library
-            </Link>
+            {/* Library - clickable if not on main library page, semi-bold if current page */}
+            {typeSlug ? (
+                <Link 
+                    href="/library" 
+                    className="text-gray-600 hover:text-black transition-colors"
+                >
+                    Library
+                </Link>
+            ) : (
+                <span className="text-black font-semibold">Library</span>
+            )}
 
-            {/* Show category if we have type data */}
+            {/* Show category - clickable if we have subcategory, semi-bold if current page */}
             {typeSlug && typeName && (
                 <>
                     {renderSeparator()}
-                    <Link 
-                        href={`/library/${typeSlug}`}
-                        className="text-gray-600 hover:text-black transition-colors"
-                    >
-                        {typeName}
-                    </Link>
+                    {subcategorySlug && subcategoryName ? (
+                        <Link 
+                            href={`/library/${typeSlug}`}
+                            className="text-gray-600 hover:text-black transition-colors"
+                        >
+                            {typeName}
+                        </Link>
+                    ) : (
+                        <span className="text-black font-semibold">{typeName}</span>
+                    )}
                 </>
             )}
 
-            {/* Show subcategory if present */}
+            {/* Show subcategory if present - always current page so always semi-bold */}
             {subcategorySlug && subcategoryName && (
                 <>
                     {renderSeparator()}
-                    <span className="text-black font-medium">
+                    <span className="text-black font-semibold">
                         {subcategoryName}
                     </span>
-                </>
-            )}
-
-            {/* If no specific data, show generic "Designer Tools" */}
-            {!typeSlug && (
-                <>
-                    {renderSeparator()}
-                    <span className="text-black font-medium">Designer Tools</span>
                 </>
             )}
         </nav>

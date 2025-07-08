@@ -10,6 +10,7 @@
  *
  * Props:
  * - `typeSlug` (optional string): The current category (type) slug to filter toolkits
+ * - `subcategorySlug` (optional string): The current subcategory slug to filter toolkits
  */
 
 import { useEffect, useState } from 'react';
@@ -27,11 +28,13 @@ import Breadcrumb from './Breadcrumb';
 
 type Props = {
     typeSlug?: string;
+    subcategorySlug?: string;
 };
 
-export default function ToolkitFetcher({ typeSlug }: Props) {
+export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
     const searchParams = useSearchParams();
-    const selectedSubSlug = searchParams.get('subcategory');
+    // Support both new clean URLs and legacy query params for backward compatibility
+    const selectedSubSlug = subcategorySlug || (typeSlug ? searchParams.get('subcategory') : null);
 
     // Raw toolkit data fetched from Supabase
     const [toolkits, setToolkits] = useState<Toolkit[]>([]);
@@ -70,8 +73,11 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
         };
 
         const fetchBreadcrumbData = async () => {
-            if (!typeSlug && !selectedSubSlug) {
-                setCategoryData({});
+            // Always clear category data first
+            setCategoryData({});
+            
+            if (!typeSlug) {
+                // If no typeSlug, we're on the main library page - keep data cleared
                 return;
             }
 
@@ -92,8 +98,18 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
                         .single();
 
                     if (!error && data) {
+                        // Handle types relationship which could be an array or object
+                        let typeName: string | undefined;
+                        if (data.types) {
+                            if (Array.isArray(data.types)) {
+                                typeName = data.types[0]?.name;
+                            } else {
+                                typeName = (data.types as any).name;
+                            }
+                        }
+                        
                         setCategoryData({
-                            typeName: data.types?.name,
+                            typeName,
                             subcategoryName: data.name
                         });
                     }
@@ -187,11 +203,13 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
 
     return (
         <div className="flex w-full min-h-screen flex-col">
-            {/* Top nav section with mobile sidebar toggle and breadcrumb */}
+            {/* Mobile sidebar toggle - always available on mobile */}
+            <div className="lg:hidden flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
+                <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
+            </div>
+
+            {/* Breadcrumb section - always show */}
             <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
-                <div className='lg:hidden'>
-                    <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
-                </div>
                 <Breadcrumb 
                     typeSlug={typeSlug}
                     typeName={categoryData.typeName}
@@ -202,7 +220,10 @@ export default function ToolkitFetcher({ typeSlug }: Props) {
 
             <div className='flex flex-row'>
                 {/* Sidebar navigation */}
-                <LibraryMenu mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+                <LibraryMenu 
+                    mobileOpen={mobileOpen} 
+                    onClose={() => setMobileOpen(false)}
+                />
 
                 {/* Main content area */}
                 <div className={`flex-1 flex flex-col mt-20 px-5 ${mobileOpen ? 'overflow-hidden h-screen' : ''}`}>
