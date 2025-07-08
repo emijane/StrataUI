@@ -27,23 +27,19 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
         <span className="text-gray-400 mx-2">/</span>
     );
 
-    // Don't show breadcrumbs on main library page (homepage-like)
-    if (!typeSlug) {
-        return null;
-    }
-
     return (
         <nav aria-label="Breadcrumb" className="flex items-center text-sm">
-            {/* Leading separator */}
-            <span className="text-gray-400 mr-2">/</span>
-            
-            {/* Library - always clickable when breadcrumbs are shown */}
-            <Link 
-                href="/library" 
-                className="text-gray-600 hover:text-black transition-colors"
-            >
-                Library
-            </Link>
+            {/* Library - clickable if not on main library page, semi-bold if current page */}
+            {typeSlug ? (
+                <Link 
+                    href="/library" 
+                    className="text-gray-600 hover:text-black transition-colors"
+                >
+                    Library
+                </Link>
+            ) : (
+                <span className="text-black font-semibold">Library</span>
+            )}
 
             {/* Show category - clickable if we have subcategory, semi-bold if current page */}
             {typeSlug && typeName && (
@@ -57,10 +53,7 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
                             {typeName}
                         </Link>
                     ) : (
-                        <>
-                            <span className="text-black font-semibold">{typeName}</span>
-                            <span className="text-gray-400 ml-1">/</span>
-                        </>
+                        <span className="text-black font-semibold">{typeName}</span>
                     )}
                 </>
             )}
