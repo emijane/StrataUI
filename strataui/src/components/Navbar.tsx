@@ -21,7 +21,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 export default function Navbar() {
     return (
-        <nav className="text-black flex flex-row justify-between pt-5 pb-5 pr-10 pl-10 bg-white/80 backdrop-blur-lg border-b border-black/10">
+        <nav className="text-black flex flex-row justify-between pt-5 pb-5 pr-10 pl-10 bg-white/80 backdrop-blur-lg border-b border-black/5">
             {/* Left section: logo + title + version tag */}
             <div className="flex flex-row items-center gap-2">
                 <Link href="/" className="flex items-center gap-2 text-2xl font-semibold">
@@ -36,7 +36,7 @@ export default function Navbar() {
                 </Link>
 
                 {/* Version tag */}
-                <span className="text-black/60 pt-1 pb-1 pl-2 pr-2 text-xs rounded-xl outline-1 outline-black/30 font-semibold">
+                <span className="text-black/60 pt-1 pb-1 pl-2 pr-2 text-xs rounded-xl outline-1 outline-black/20 font-semibold">
                     v0.1
                 </span>
             </div>

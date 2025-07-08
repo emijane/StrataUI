@@ -24,7 +24,7 @@ type Props = {
 
 export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcategoryName }: Props) {
     const renderSeparator = () => (
-        <span className="text-gray-400 mx-2">/</span>
+        <span className="text-gray-300 mx-2">/</span>
     );
 
     return (

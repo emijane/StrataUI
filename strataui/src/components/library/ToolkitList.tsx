@@ -33,7 +33,7 @@ export default function ToolkitList({ libraries, children }: Props) {
                 </p>
             ) : (
                 // Masonry-style responsive column layout using Tailwind’s `columns` utility
-                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-2 xl:columns-3 2xl:columns-4 gap-x-6 gap-y-8 [&>*]:break-inside-avoid">
+                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-2 xl:columns-3 2xl:columns-4 gap-x-3 gap-y-8 [&>*]:break-inside-avoid">
                     {libraries.map((lib) => (
                         <LibraryCard key={lib.id} lib={lib} />
                     ))}

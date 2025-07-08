@@ -96,12 +96,12 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
     return (
         <div className="flex w-full min-h-screen flex-col">
             {/* Mobile sidebar toggle - always available on mobile */}
-            <div className="lg:hidden flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
+            <div className="lg:hidden flex px-5 py-3 items-center gap-3 z-50">
                 <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
             </div>
 
             {/* Breadcrumb section - always show */}
-            <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/20 z-50">
+            <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/10 z-50">
                 <Breadcrumb 
                     typeSlug={typeSlug}
                     typeName={categoryData.typeName}

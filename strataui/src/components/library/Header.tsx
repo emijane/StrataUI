@@ -26,18 +26,18 @@ export default function HeaderSection() {
                                rounded-3xl no-underline px-3 py-1 
                                transition-all duration-300 hover:scale-[1.02]"
                 >
-                    Over 300 tools for you to discover!
+                    Over 300+ tools for you to discover!
                 </p>
 
                 {/* Main heading */}
                 <h1 className="text-black text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight">
-                    Explore Toolkits
+                    Find your next toolkit
                 </h1>
             </div>
 
             {/* Supporting description */}
             <p className="text-black/60 mt-5 text-sm md:text-md lg:text-base font-semibold">
-                Discover your next go-to toolkit — explore powerful, beautifully crafted libraries and components
+                Explore powerful, beautifully crafted libraries and components
                 to supercharge your next project and streamline your development workflow.
             </p>
         </div>
