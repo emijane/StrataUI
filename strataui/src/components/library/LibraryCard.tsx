@@ -51,7 +51,7 @@ export default function LibraryCard({ lib }: Props) {
                 href={lib.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block outline-1 outline-black/10 rounded-2xl shadow-sm cursor-pointer no-underline p-5"
+                className="block outline-1 outline-black/10 rounded-2xl shadow-sm cursor-pointer no-underline p-5 hover:outline-black/30 hover:shadow-md transition-shadow h-full"
             >
                 <div className="flex flex-col h-full">
 
