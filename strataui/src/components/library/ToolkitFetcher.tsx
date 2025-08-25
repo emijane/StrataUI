@@ -1,22 +1,17 @@
 'use client';
 
 /**
- * ToolkitFetcher Component (Performance Optimized with Caching)
+ * ToolkitFetcher Component (Polished)
  *
- * The core client-side controller that:
- * - Uses React Query for intelligent caching (reduces API calls by 80-90%)
- * - Server-side filtering for better performance
- * - Automatic background refetching for fresh data
- * - Loading states and skeleton screens for better UX
- * - Manages sidebar visibility for mobile and layout composition
- *
- * Props:
- * - `typeSlug` (optional string): The current category (type) slug to filter toolkits
- * - `subcategorySlug` (optional string): The current subcategory slug to filter toolkits
+ * - Uses React Query (via useLibraryPageData) for cached data & refetch controls
+ * - Simple search + future filters (matchesToolkit)
+ * - Mobile sidebar drawer with backdrop and body-scroll lock
+ * - Sticky breadcrumb area
+ * - Memoized filtering for performance
  */
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { matchesToolkit } from '@/lib/matchesToolkit';
 import { useLibraryPageData } from '@/hooks/useLibraryData';
 
@@ -34,24 +29,27 @@ type Props = {
 };
 
 export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
+    const pathname = usePathname();
     const searchParams = useSearchParams();
-    // Support both new clean URLs and legacy query params for backward compatibility
-    const selectedSubSlug = subcategorySlug || (typeSlug ? searchParams.get('subcategory') : null);
 
-    // Cached data fetching with React Query
+    // Support both new clean URLs and legacy query params for backward compatibility
+    const selectedSubSlug =
+        subcategorySlug || (typeSlug ? searchParams.get('subcategory') : null);
+
+    // Cached data fetching with React Query (custom hook)
     const {
         toolkits,
         categoryData,
         isLoading,
         isError,
         error,
-        refetchAll,
+        refetchAll
     } = useLibraryPageData(typeSlug, selectedSubSlug);
 
-    // Search query entered by the user
+    // Search term
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Future-proofed filters (tech, language, pricing)
+    // Light future-proof filter object
     const [filters] = useState({
         subcategory_ids: [] as number[],
         tech: [] as string[],
@@ -62,14 +60,11 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
     // Mobile sidebar state
     const [mobileOpen, setMobileOpen] = useState(false);
 
-    // Data is now fetched automatically by React Query hooks
-    // No manual useEffect needed - caching handles everything!
-
     /**
-     * Prevent body scroll when mobile sidebar is open.
+     * Body scroll lock when mobile sidebar is open
      */
     useEffect(() => {
-        const handleBodyScroll = () => {
+        const apply = () => {
             const isMobile = window.innerWidth < 1024;
             if (mobileOpen && isMobile) {
                 document.body.style.overflow = 'hidden';
@@ -77,60 +72,89 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                 document.body.style.overflow = '';
             }
         };
-
-        handleBodyScroll();
-        window.addEventListener('resize', handleBodyScroll);
+        apply();
+        window.addEventListener('resize', apply);
         return () => {
             document.body.style.overflow = '';
-            window.removeEventListener('resize', handleBodyScroll);
+            window.removeEventListener('resize', apply);
         };
     }, [mobileOpen]);
 
     /**
-     * Final filtered list of toolkits (search term + future filters)
+     * Reset search when route changes (so prior search doesn’t “stick”)
      */
-    const filteredToolkits = toolkits.filter(toolkit =>
-        matchesToolkit(toolkit, filters, searchTerm)
-    );
+    useEffect(() => {
+        setSearchTerm('');
+    }, [pathname]);
+
+    /**
+     * Final filtered list (memoized)
+     */
+    const filteredToolkits = useMemo(() => {
+        return toolkits.filter((toolkit) => matchesToolkit(toolkit, filters, searchTerm));
+    }, [toolkits, filters, searchTerm]);
 
     return (
         <div className="flex w-full min-h-screen flex-col">
-            {/* Mobile sidebar toggle - always available on mobile */}
+            {/* Mobile top bar with sidebar toggle */}
             <div className="lg:hidden flex px-5 py-3 items-center gap-3 z-50">
-                <SidebarToggle onToggle={() => setMobileOpen(prev => !prev)} />
+                <SidebarToggle onToggle={() => setMobileOpen((prev) => !prev)} />
+                <span className="text-sm text-gray-600">Browse categories</span>
             </div>
 
-            {/* Breadcrumb section - always show */}
-            <div className="flex px-5 py-3 items-center gap-3 outline-1 outline-black/10 z-50">
-                <Breadcrumb 
-                    typeSlug={typeSlug}
-                    typeName={categoryData.typeName}
-                    subcategorySlug={selectedSubSlug || undefined}
-                    subcategoryName={categoryData.subcategoryName}
-                />
+            {/* Sticky breadcrumb */}
+            <div className="sticky top-0 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 z-40 border-b border-gray-100">
+                <div className="flex px-5 py-3 items-center gap-3">
+                    <Breadcrumb
+                        typeSlug={typeSlug}
+                        typeName={categoryData.typeName}
+                        subcategorySlug={selectedSubSlug || undefined}
+                        subcategoryName={categoryData.subcategoryName}
+                    />
+                </div>
             </div>
 
-            <div className='flex flex-row'>
-                {/* Sidebar navigation */}
-                <LibraryMenu 
-                    mobileOpen={mobileOpen} 
+            <div className="flex flex-row">
+                {/* Sidebar navigation (drawer on mobile, static on desktop) */}
+                <LibraryMenu
+                    mobileOpen={mobileOpen}
                     onClose={() => setMobileOpen(false)}
                 />
 
-                {/* Main content area with loading states */}
-                <div className={`flex-1 flex flex-col mt-20 px-5 ${mobileOpen ? 'overflow-hidden h-screen' : ''}`}>
-                    <HeaderSection />
-                    <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-                    
-                    {/* Loading, Error, and Success states */}
+                {/* Backdrop for mobile drawer */}
+                {mobileOpen && (
+                    <button
+                        aria-label="Close sidebar"
+                        onClick={() => setMobileOpen(false)}
+                        className="fixed inset-0 z-30 bg-black/30 lg:hidden"
+                    />
+                )}
+
+                {/* Main content */}
+                <div
+                    className={`flex-1 flex flex-col px-5 ${
+                        mobileOpen ? 'overflow-hidden h-screen' : ''
+                    }`}
+                >
+                    <div className="mt-6">
+                        <HeaderSection />
+                    </div>
+
+                    <div className="mt-4">
+                        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+                    </div>
+
+                    {/* States: error / loading / content */}
                     {isError ? (
                         <div className="text-center py-12">
-                            <p className="text-red-600 mb-4">Failed to load libraries. Please try again.</p>
+                            <p className="text-red-600 mb-2">
+                                Failed to load libraries. Please try again.
+                            </p>
                             <p className="text-gray-600 text-sm mb-4">
                                 {error?.message || 'Unknown error occurred'}
                             </p>
-                            <button 
-                                onClick={() => refetchAll()} 
+                            <button
+                                onClick={() => refetchAll()}
                                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                             >
                                 Retry
@@ -139,7 +163,9 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                     ) : isLoading ? (
                         <ToolkitSkeleton />
                     ) : (
-                        <ToolkitList libraries={filteredToolkits} />
+                        <div className="mt-4">
+                            <ToolkitList libraries={filteredToolkits} />
+                        </div>
                     )}
                 </div>
             </div>

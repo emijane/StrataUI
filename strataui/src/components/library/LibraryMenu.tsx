@@ -5,7 +5,6 @@
  *
  * Features:
  * - Collapsible type groups with subcategories.
- * - Remembers expanded state in localStorage.
  * - Auto-expands the group matching the current route.
  */
 

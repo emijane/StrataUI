@@ -28,7 +28,9 @@ export function useBreadcrumbData(typeSlug?: string, subcategorySlug?: string) {
             .eq('slug', subcategorySlug)
             .single();
 
-          if (!error && data) {
+          if (error) throw error;
+
+          if (data) {
             let typeName: string | undefined;
             if (data.types) {
               if (Array.isArray(data.types)) {
@@ -37,23 +39,25 @@ export function useBreadcrumbData(typeSlug?: string, subcategorySlug?: string) {
                 typeName = (data.types as any).name;
               }
             }
-            
+
             return {
               typeName,
-              subcategoryName: data.name
+              subcategoryName: data.name,
             };
           }
-        } else if (typeSlug) {
+        } else {
           const { data, error } = await supabase
             .from('types')
             .select('name, slug')
             .eq('slug', typeSlug)
             .single();
 
-          if (!error && data) {
+          if (error) throw error;
+
+          if (data) {
             return {
               typeName: data.name,
-              subcategoryName: undefined
+              subcategoryName: undefined,
             };
           }
         }
@@ -61,13 +65,13 @@ export function useBreadcrumbData(typeSlug?: string, subcategorySlug?: string) {
         console.error('Error fetching breadcrumb data:', error);
         throw error;
       }
-      
+
       return {};
     },
-    // Only fetch if we have a typeSlug
     enabled: !!typeSlug,
-    // Cache for 5 minutes (breadcrumb data is fairly static)
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,     // 5 minutes
+    gcTime: 30 * 60 * 1000,       // keep around 30 minutes
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -75,6 +79,10 @@ export function useBreadcrumbData(typeSlug?: string, subcategorySlug?: string) {
  * Custom hook for fetching and caching toolkit/library data
  * Cache key: ['toolkits', typeSlug, subcategorySlug]
  * Cache time: 3 minutes (library data might change more frequently)
+ *
+ * NOTE:
+ * - Adds `image` to the select so your cards can render thumbnails.
+ * - Keeps subcategory/type joins, then normalizes to your Toolkit shape.
  */
 export function useToolkitData(typeSlug?: string, subcategorySlug?: string) {
   return useQuery({
@@ -88,6 +96,7 @@ export function useToolkitData(typeSlug?: string, subcategorySlug?: string) {
           url,
           pricing,
           description,
+          library_image,                                 
           subcategories!inner (
             id,
             name,
@@ -103,11 +112,10 @@ export function useToolkitData(typeSlug?: string, subcategorySlug?: string) {
           library_languages (language: language_id (name))
         `);
 
-      // Server-side filtering for better performance
+      // Server-side filtering
       if (typeSlug) {
         query = query.eq('subcategories.types.slug', typeSlug);
       }
-      
       if (subcategorySlug) {
         query = query.eq('subcategories.slug', subcategorySlug);
       }
@@ -119,34 +127,52 @@ export function useToolkitData(typeSlug?: string, subcategorySlug?: string) {
         throw error;
       }
 
-      // Transform the data to match the Toolkit type structure
-      const transformedData = (data || []).map((item: any) => ({
-        ...item,
-        subcategory: Array.isArray(item.subcategories) 
-          ? {
-              ...item.subcategories[0],
-              type: Array.isArray(item.subcategories[0]?.types) 
-                ? item.subcategories[0].types[0] 
-                : item.subcategories[0]?.types
-            }
-          : item.subcategories,
-      }));
+      // Normalize nested arrays from joins to match Toolkit shape
+      const transformed = (data || []).map((item: any) => {
+        const sub = Array.isArray(item.subcategories) ? item.subcategories[0] : item.subcategories;
+        const type =
+          sub && sub.types
+            ? (Array.isArray(sub.types) ? sub.types[0] : sub.types)
+            : undefined;
 
-      return transformedData as Toolkit[];
+        return {
+          id: item.id,
+          name: item.name,
+          url: item.url,
+          pricing: item.pricing ?? undefined,
+          description: item.description ?? undefined,
+          library_image: item.library_image ?? null,                
+          subcategory: sub
+            ? {
+                id: sub.id,
+                name: sub.name,
+                slug: sub.slug,
+                type: type
+                  ? { id: type.id, name: type.name, slug: type.slug }
+                  : undefined,
+              }
+            : undefined,
+          library_tags: item.library_tags ?? [],
+          library_tech: item.library_tech ?? [],
+          library_languages: item.library_languages ?? [],
+        } as Toolkit;
+      });
+
+      return transformed;
     },
-    // Cache for 3 minutes (libraries might be added/updated)
-    staleTime: 3 * 60 * 1000,
+    staleTime: 3 * 60 * 1000,     // 3 minutes
+    gcTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 }
 
 /**
  * Combined hook that fetches both breadcrumb and toolkit data in parallel
- * Uses React Query's automatic deduplication and caching
  */
 export function useLibraryPageData(typeSlug?: string, subcategorySlug?: string | null) {
-  const normalizedSubcategorySlug = subcategorySlug || undefined;
-  const breadcrumbQuery = useBreadcrumbData(typeSlug, normalizedSubcategorySlug);
-  const toolkitQuery = useToolkitData(typeSlug, normalizedSubcategorySlug);
+  const normalizedSub = subcategorySlug || undefined;
+  const breadcrumbQuery = useBreadcrumbData(typeSlug, normalizedSub);
+  const toolkitQuery = useToolkitData(typeSlug, normalizedSub);
 
   return {
     // Breadcrumb data
@@ -159,12 +185,12 @@ export function useLibraryPageData(typeSlug?: string, subcategorySlug?: string |
     toolkitsLoading: toolkitQuery.isLoading,
     toolkitsError: toolkitQuery.error,
 
-    // Combined loading/error states
+    // Combined states
     isLoading: breadcrumbQuery.isLoading || toolkitQuery.isLoading,
     isError: breadcrumbQuery.isError || toolkitQuery.isError,
     error: breadcrumbQuery.error || toolkitQuery.error,
 
-    // Refetch functions
+    // Refetchers
     refetchBreadcrumb: breadcrumbQuery.refetch,
     refetchToolkits: toolkitQuery.refetch,
     refetchAll: () => {
