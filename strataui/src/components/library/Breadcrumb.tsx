@@ -28,7 +28,7 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
     );
 
     return (
-        <nav aria-label="Breadcrumb" className="flex items-center text-sm ml-5">
+        <nav aria-label="Breadcrumb" className="flex items-center text-sm">
             {/* Library - clickable if not on main library page, semi-bold if current page */}
             {typeSlug ? (
                 <Link 
