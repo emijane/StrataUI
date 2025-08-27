@@ -15,9 +15,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { matchesToolkit } from '@/lib/matchesToolkit';
 import { useLibraryPageData } from '@/hooks/useLibraryData';
 
-import HeaderSection from './Header';
 import ToolkitList from './ToolkitList';
-import SearchBar from './SearchBar';
 import LibraryMenu from './LibraryMenu';
 import SidebarToggle from './SidebarToggle';
 import Breadcrumb from './Breadcrumb';
@@ -136,13 +134,6 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                         mobileOpen ? 'overflow-hidden h-screen' : ''
                     }`}
                 >
-                    <div className="mt-6">
-                        <HeaderSection />
-                    </div>
-
-                    <div className="mt-4">
-                        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-                    </div>
 
                     {/* States: error / loading / content */}
                     {isError ? (

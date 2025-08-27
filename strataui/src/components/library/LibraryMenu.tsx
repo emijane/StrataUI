@@ -158,7 +158,7 @@ export default function LibraryMenu({ mobileOpen, onClose }: Props) {
     return (
         <aside
             className={`
-                bg-white border-r border-gray-200 px-3 py-5 sm:w-75 w-full
+                bg-white border-r border-gray-200 px-4 py-5 sm:w-75 w-full
                 overflow-y-auto
                 ${mobileOpen ? 'block fixed top-[160px] left-0 right-0 z-40 shadow-lg border-b max-h-[calc(100vh-160px)]' : 'hidden'}
                 lg:static lg:block lg:top-auto lg:left-auto lg:z-0 lg:h-[calc(100vh-128px)] lg:w-auto lg:shadow-none lg:border-b-0

@@ -29,7 +29,7 @@ export default function ToolkitList({ libraries, children }: Props) {
             {/* Display message if no toolkits are available */}
             {libraries.length === 0 ? (
                 <p className="text-black/70 text-sm">
-                    No tools to display. Try searching for an existing tool, or submit one to be added!
+                    404 tools not found. Maybe you’ve got the one we’re missing?
                 </p>
             ) : (
                 // Masonry-style responsive column layout using Tailwind’s `columns` utility

@@ -28,18 +28,17 @@ export default function Breadcrumb({ typeSlug, typeName, subcategorySlug, subcat
     );
 
     return (
-        <nav aria-label="Breadcrumb" className="flex items-center text-sm">
+        <nav aria-label="Breadcrumb" className="flex items-center text-sm ml-3">
             {/* Library - clickable if not on main library page, semi-bold if current page */}
-            {typeSlug ? (
+            {typeSlug && (
                 <Link 
                     href="/library" 
                     className="text-gray-600 hover:text-black hover:underline transition-colors"
                 >
                     Library
                 </Link>
-            ) : (
-                <span className="text-black font-semibold">Library</span>
             )}
+
 
             {/* Show category - clickable if we have subcategory, semi-bold if current page */}
             {typeSlug && typeName && (
