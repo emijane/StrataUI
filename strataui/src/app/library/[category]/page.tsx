@@ -4,8 +4,11 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import ClientToolkitFetcher from '@/components/library/ClientToolkitFetcher';
 
+// Revalidate this route every hour (optional)
+export const revalidate = 3600;
+
 type Props = {
-    params: { category: string };
+    params: Promise<{ category: string }>;
 };
 
 const prettifySlug = (slug: string) =>
@@ -26,7 +29,7 @@ async function getTypeRow(slug: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const slug = params.category;
+    const { category: slug } = await params; // <-- await params
     const typeRow = await getTypeRow(slug);
 
     const categoryName = typeRow?.name ?? prettifySlug(slug);
@@ -62,7 +65,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         alternates: {
             canonical: `https://strataui.dev/library/${slug}`,
         },
-        // Optional, but nice for search engines:
         robots: {
             index: true,
             follow: true,
@@ -71,7 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CategoryPage({ params }: Props) {
-    const slug = params.category;
+    const { category: slug } = await params; // <-- await params
     const typeRow = await getTypeRow(slug);
 
     if (!typeRow) {
@@ -106,7 +108,6 @@ export default async function CategoryPage({ params }: Props) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
             />
             <main className="relative min-h-screen overflow-visible max-w-full items-center justify-center mx-auto">
-                {/* Content */}
                 <div className="relative z-10 mx-auto">
                     <ClientToolkitFetcher typeSlug={slug} />
                 </div>
