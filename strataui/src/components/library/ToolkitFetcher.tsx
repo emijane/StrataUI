@@ -100,8 +100,8 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                 <span className="text-sm text-gray-600">Browse categories</span>
             </div>
 
-            {/* Breadcrumbs */}
-            <div>
+            {/* Breadcrumbs - hidden on mobile */}
+            <div className="hidden lg:block">
                 <Breadcrumb
                     typeSlug={typeSlug}
                     typeName={categoryData.typeName}
@@ -122,7 +122,7 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                     <button
                         aria-label="Close sidebar"
                         onClick={() => setMobileOpen(false)}
-                        className="fixed inset-0 z-30lg:hidden"
+                        className="fixed inset-0 z-[95] lg:hidden"
                     />
                 )}
 
@@ -152,10 +152,14 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                     ) : isLoading ? (
                         <ToolkitSkeleton />
                     ) : (
-                        <div className="mt-4">
+                        <div
+                            className={`mt-4 ${
+                                mobileOpen ? 'hidden lg:block' : '' 
+                            }`}
+                        >
                             <div className="text-sm text-gray-600 mb-2">
                                 {filteredToolkits.length === 1
-                                    ? "1 result"
+                                    ? '1 result'
                                     : `${filteredToolkits.length} results`}
                             </div>
                             <ToolkitList libraries={filteredToolkits} />
