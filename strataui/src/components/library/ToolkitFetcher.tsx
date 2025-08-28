@@ -152,16 +152,7 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                     ) : isLoading ? (
                         <ToolkitSkeleton />
                     ) : (
-                        <div
-                            className={`mt-4 ${
-                                mobileOpen ? 'hidden lg:block' : '' 
-                            }`}
-                        >
-                            <div className="text-sm text-gray-600 mb-2">
-                                {filteredToolkits.length === 1
-                                    ? '1 result'
-                                    : `${filteredToolkits.length} results`}
-                            </div>
+                        <div className={`${mobileOpen ? 'hidden lg:block' : ''}`}>
                             <ToolkitList libraries={filteredToolkits} />
                         </div>
                     )}
