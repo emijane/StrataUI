@@ -15,7 +15,6 @@
 
 import { Metadata } from 'next';
 import ClientToolkitFetcher from '@/components/library/ClientToolkitFetcher';
-import HeaderSection from '@/components/library/Header';
 
 export const metadata: Metadata = {
   title: 'Frontend UI Library Collection | StrataUI',
@@ -79,7 +78,6 @@ export default function LibraryPage() {
         
         {/* Content area */}
         <div className="relative z-10 mx-auto">
-          <HeaderSection />
           <ClientToolkitFetcher />
         </div>
       </main>
