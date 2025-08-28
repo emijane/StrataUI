@@ -100,16 +100,14 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                 <span className="text-sm text-gray-600">Browse categories</span>
             </div>
 
-            {/* Sticky breadcrumb */}
-            <div className="sticky top-0 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 z-40 border-b border-gray-100">
-                <div className="flex px-5 py-3 items-center gap-3">
-                    <Breadcrumb
-                        typeSlug={typeSlug}
-                        typeName={categoryData.typeName}
-                        subcategorySlug={selectedSubSlug || undefined}
-                        subcategoryName={categoryData.subcategoryName}
-                    />
-                </div>
+            {/* Breadcrumbs */}
+            <div>
+                <Breadcrumb
+                    typeSlug={typeSlug}
+                    typeName={categoryData.typeName}
+                    subcategorySlug={selectedSubSlug || undefined}
+                    subcategoryName={categoryData.subcategoryName}
+                />
             </div>
 
             <div className="flex flex-row">
