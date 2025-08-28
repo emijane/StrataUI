@@ -110,7 +110,7 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                 />
             </div>
 
-            <div className="flex flex-row">
+            <div className="flex flex-row items-start">
                 {/* Sidebar navigation (drawer on mobile, static on desktop) */}
                 <LibraryMenu
                     mobileOpen={mobileOpen}
@@ -122,7 +122,7 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
                     <button
                         aria-label="Close sidebar"
                         onClick={() => setMobileOpen(false)}
-                        className="fixed inset-0 z-30 bg-black/30 lg:hidden"
+                        className="fixed inset-0 z-30lg:hidden"
                     />
                 )}
 
