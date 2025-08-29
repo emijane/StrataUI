@@ -11,22 +11,38 @@
  * - `onSearchChange` (function): Callback to update the parent state when the input changes
  */
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+
 type Props = {
-    searchTerm: string;
-    onSearchChange: (term: string) => void;
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  onSubmit?: () => void;
 };
 
-export default function SearchBar({ searchTerm, onSearchChange }: Props) {
-    return (
-        // Container centers the search bar and limits width
-        <div className="w-full max-w-[42rem] mx-auto my-10">
-            <input
-                type="text"
-                placeholder="Search by name, tag, or technology.."
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)} // Updates parent state
-                className="w-full px-5 py-3 rounded-3xl text-sm text-black bg-white/10 outline-none border border-black/20 focus:ring"
-            />
-        </div>
-    );
+export default function SearchBar({ searchTerm, onSearchChange, onSubmit }: Props) {
+  return (
+    <div className="w-full max-w-[20rem] mx-auto">
+      <div className="flex flex-row items-center gap-2 border border-black/10 rounded-3xl px-3 py-1">
+        <input
+          type="text"
+          placeholder="What tool are you looking for?"
+          value={searchTerm}
+          maxLength={80}
+          onChange={(e) => onSearchChange(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && onSubmit?.()}
+          className="w-full px-1.5 py-2 rounded-3xl text-sm font-normal focus:outline-none"
+        />
+        <button
+          type="button"
+          aria-label="Search"
+          onClick={onSubmit}
+          className="text-gray-500 hover:text-gray-700 hover:cursor-pointer pr-2"
+        >
+          <FontAwesomeIcon icon={faSearch} />
+        </button>
+      </div>
+    </div>
+  );
 }
+
