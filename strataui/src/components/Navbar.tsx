@@ -37,7 +37,14 @@ export default function Navbar() {
       {/* Left: logo + version */}
       <div className="flex flex-row items-center gap-2">
         <Link href="/" className="flex items-center gap-2 text-2xl font-semibold">
-          <Image src="/strataui-icon.png" alt="StrataUI Icon" width={25} height={25} priority />
+          <Image
+              src="/strataui-icon.png"
+              alt="StrataUI Icon"
+              width={25}
+              height={23}
+              priority
+              style={{ width: "25px", height: "22px", objectFit: "fill" }}
+          />
           StrataUI
         </Link>
         <span className="text-black/60 pt-1 pb-1 pl-2 pr-2 text-xs rounded-xl outline-1 outline-black/20 font-semibold">
