@@ -39,7 +39,7 @@ export default function LibraryCard({ lib, index = 0 }: Props) {
 
     return (
         <article
-            className="break-inside-avoid mb-6 w-full inline-block"
+            className="break-inside-avoid w-full inline-block"
             style={!isLCP ? { contentVisibility: 'auto' } : undefined}
         >
             <a

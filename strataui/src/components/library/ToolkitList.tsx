@@ -23,7 +23,7 @@ type Props = {
 export default function ToolkitList({ libraries, children }: Props) {
     return (
         <section
-            className="w-full max-w-[92rem] mx-auto relative z-0 mt-4"
+            className="w-full max-w-[90rem] mx-auto relative z-0 mt-4"
             aria-label="Library section"
         >
             {/* Results count */}
@@ -43,7 +43,7 @@ export default function ToolkitList({ libraries, children }: Props) {
                 </p>
             ) : (
                 // Masonry-style responsive column layout
-                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-2 xl:columns-3 2xl:columns-4 gap-x-3 gap-y-8 [&>*]:break-inside-avoid">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-3 gap-y-5">
                     {libraries.map((lib) => (
                         <LibraryCard key={lib.id} lib={lib} />
                     ))}
