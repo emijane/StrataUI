@@ -14,6 +14,7 @@
 import type { Toolkit } from '@/types';
 import LibraryCard from './LibraryCard';
 import { ReactNode } from 'react';
+import DropDownMenu from './ui/SortDropdownMenu';
 
 type Props = {
     libraries: Toolkit[];
@@ -25,12 +26,16 @@ export default function ToolkitList({ libraries, children }: Props) {
         <section
             className="w-full max-w-[90rem] mx-auto relative z-0 mt-4"
             aria-label="Library section"
-        >
-            {/* Results count */}
-            <div className="text-sm text-gray-600 mb-2">
-                {libraries.length === 1
-                    ? '1 result'
-                    : `${libraries.length} results`}
+        >   
+            <div className="flex items-center justify-between mb-3">
+                {/* Results count */}
+                <div className="text-sm text-gray-600">
+                    {libraries.length === 1
+                        ? '1 result'
+                        : `${libraries.length} results`}
+                </div>
+
+                <DropDownMenu />
             </div>
 
             {/* Optional extra UI above the grid */}
