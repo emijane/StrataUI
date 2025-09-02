@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 
-type SortKey = 'default' | 'popular-14d';
+type SortKey = 'default' | 'popularity';
 
 export default function SortDropdownMenu() {
     const [open, setOpen] = useState(false);
@@ -58,10 +58,10 @@ export default function SortDropdownMenu() {
                         Default (Newest)
                     </button>
                     <button
-                        className={`block w-full text-left py-2 pl-4 hover:bg-gray-100 ${currentSort === 'popular-14d' ? 'bg-gray-50 font-medium' : ''}`}
-                        onClick={() => setSort('popular-14d')}
+                        className={`block w-full text-left py-2 pl-4 hover:bg-gray-100 ${currentSort === 'popularity' ? 'bg-gray-50 font-medium' : ''}`}
+                        onClick={() => setSort('popularity')}
                     >
-                        Popular (14d)
+                        Popularity
                     </button>
                 </menu>
             )}

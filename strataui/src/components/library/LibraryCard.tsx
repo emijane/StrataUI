@@ -14,15 +14,6 @@ type Props = {
 
 export default function LibraryCard({ lib, index = 0 }: Props) {
     // Track outbound clicks (fire-and-forget)
-    const onVisit = () => {
-        // fire-and-forget
-        fetch('/api/track-click', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ libraryId: lib.id })
-        });
-        window.open(lib.url, '_blank', 'noopener,noreferrer');
-    };
 
     const handleShare = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -52,7 +43,6 @@ export default function LibraryCard({ lib, index = 0 }: Props) {
         <article
             className="break-inside-avoid w-full inline-block"
             style={!isLCP ? { contentVisibility: 'auto' } : undefined}
-            onClick={onVisit}
         >
             <a
                 href={lib.url}
