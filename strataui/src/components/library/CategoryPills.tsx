@@ -10,13 +10,23 @@ export default function CategoryPills({ categories }: { categories: Category[] }
     const pathname = usePathname();
     const params = useSearchParams();
 
-    const active = params.get('type') ?? categories[0]?.slug;
+    // Treat absence of ?type as "all"
+    const active = params.get('type') ?? 'all';
 
     const setType = (slug: string) => {
         const q = new URLSearchParams(params.toString());
-        q.set('type', slug);
-        q.delete('subs'); // reset subcategory filters when switching category
-        router.push(`${pathname}?${q.toString()}`, { scroll: false });
+
+        if (slug === 'all') {
+            q.delete('type'); // clean URL for "All"
+        } else {
+            q.set('type', slug);
+        }
+
+        // switching category (or "All") should reset subcategory filters
+        q.delete('subs');
+
+        const qs = q.toString();
+        router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     };
 
     if (!categories?.length) {
@@ -29,9 +39,12 @@ export default function CategoryPills({ categories }: { categories: Category[] }
         );
     }
 
+    // Prepend the synthetic "All" option
+    const pills: Category[] = [{ name: 'All', slug: 'all' }, ...categories];
+
     return (
         <div className="flex flex-wrap justify-center gap-2 py-2">
-            {categories.map((c) => {
+            {pills.map((c) => {
                 const isActive = c.slug === active;
                 return (
                     <button

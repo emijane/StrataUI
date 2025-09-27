@@ -38,7 +38,7 @@ export default function Breadcrumb({
     return (
         <nav
             aria-label="Breadcrumb"
-            className="hidden lg:block text-sm px-7 py-2 border-b border-black/10"
+            className="hidden lg:block text-sm px-7 py-2"
         >
             {/* Library - always clickable if we have a typeSlug */}
             <Link

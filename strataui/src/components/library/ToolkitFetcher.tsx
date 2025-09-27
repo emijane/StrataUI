@@ -6,7 +6,6 @@ import { matchesToolkit } from '@/lib/matchesToolkit';
 import { useLibraryPageData } from '@/hooks/useLibraryData';
 
 import ToolkitList from './ToolkitList';
-import Breadcrumb from './Breadcrumb';
 import ToolkitSkeleton from './ToolkitSkeleton';
 import type { Toolkit } from '@/types';
 
@@ -27,7 +26,6 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
 
     const {
         toolkits,
-        categoryData,
         isLoading,
         isError,
         error,
@@ -51,14 +49,6 @@ export default function ToolkitFetcher({ typeSlug, subcategorySlug }: Props) {
 
     return (
         <div className="flex w-full min-h-screen flex-col">
-            <div className="hidden lg:block">
-                <Breadcrumb
-                    typeSlug={activeType}
-                    typeName={categoryData.typeName}
-                    subcategorySlug={selectedSubSlug || undefined}
-                    subcategoryName={categoryData.subcategoryName}
-                />
-            </div>
 
             <div className="flex-1 flex flex-col px-5">
                 {isError ? (

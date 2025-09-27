@@ -35,11 +35,11 @@ export default function ToolkitList({ libraries, children }: Props) {
 
     return (
         <section
-            className="w-full max-w-[90rem] mx-auto relative z-0 mt-4"
+            className="w-full max-w-[95%] mx-auto relative z-0"
             aria-label="Library section"
         >
             {/* Sticky controls bar: Category Pills */}
-            <div className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-gray-200">
+            <div className="sticky top-0 z-30 bg-white/90 backdrop-blur">
                 <div className="py-3">
                     {!isLoading && categories.length > 0 ? (
                         <CategoryPills categories={categories} />

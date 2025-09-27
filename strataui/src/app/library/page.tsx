@@ -77,7 +77,8 @@ export default function LibraryPage() {
         </div>
         
         {/* Content area */}
-        <div className="relative z-10 mx-auto">
+        <div className="relative mx-auto my-15">
+          <h1 className="text-4xl font-semibold tracking-tight text-center mb-3">Find any frontend development tool, all at your fingertips.</h1>
           <ClientToolkitFetcher />
         </div>
       </main>
