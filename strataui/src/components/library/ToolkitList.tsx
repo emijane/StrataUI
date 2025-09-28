@@ -74,7 +74,7 @@ export default function ToolkitList({ libraries, children }: Props) {
                     404 tools not found. Maybe you’ve got the one we’re missing?
                 </p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-3 gap-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-7">
                     {libraries.map((lib) => (
                         <LibraryCard key={lib.id} lib={lib} />
                     ))}

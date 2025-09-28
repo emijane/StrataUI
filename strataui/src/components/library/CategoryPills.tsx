@@ -52,7 +52,7 @@ export default function CategoryPills({ categories }: { categories: Category[] }
                         onClick={() => setType(c.slug)}
                         className={`h-8 px-3 rounded-full border whitespace-nowrap transition
                             ${isActive
-                                ? 'bg-black text-white border-black'
+                                ? 'bg-black/80 text-white'
                                 : 'bg-white text-black border-gray-300 hover:bg-gray-100'}`}
                         aria-pressed={isActive}
                         aria-current={isActive ? 'page' : undefined}

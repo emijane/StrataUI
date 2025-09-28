@@ -51,32 +51,48 @@ export default function LibraryCard({ lib, index = 0 }: Props) {
                 className="block rounded-2xl border border-black/10 p-0 shadow-sm hover:shadow-md transition-shadow h-full overflow-hidden no-underline"
                 aria-label={lib.name}
             >
-                {hasImage && (
-                    <div className="relative w-full aspect-[16/9] bg-gray-100">
-                        <Image
-                            src={imgSrc as string}
-                            alt={lib.name}
-                            fill
-                            // Tighter sizes for 1/2/3 columns
-                            sizes="(max-width: 640px) 100vw,
-                                   (max-width: 1024px) 50vw,
-                                   33vw"
-                            className="object-cover"
-                            // Only the first card is truly prioritized
-                            priority={isLCP}
-                            loading={isLCP ? 'eager' : 'lazy'}
-                            fetchPriority={isLCP ? 'high' : 'auto'}
-                            // No blur on the LCP; keep blur for non-LCP if you like
-                            placeholder={isLCP ? 'empty' : 'blur'}
-                            blurDataURL={
-                                isLCP
-                                    ? undefined
-                                    : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2U1ZTVlNSIgdmlld0JveD0iMCAwIDQwMCAzMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PC9zdmc+'
-                            }
-                            quality={60}
-                        />
-                    </div>
-                )}
+            {hasImage ? (
+                <div className="relative w-full aspect-[16/9] bg-gray-100">
+                    <Image
+                        src={imgSrc as string}
+                        alt={lib.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw,
+                            (max-width: 1024px) 50vw,
+                            33vw"
+                        className="object-cover"
+                        priority={isLCP}
+                        loading={isLCP ? 'eager' : 'lazy'}
+                        fetchPriority={isLCP ? 'high' : 'auto'}
+                        placeholder={isLCP ? 'empty' : 'blur'}
+                        blurDataURL={
+                            isLCP
+                                ? undefined
+                                : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2U1ZTVlNSIgdmlld0JveD0iMCAwIDQwMCAzMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PC9zdmc+'
+                        }
+                        quality={60}
+                        onError={(e) => {
+                            // swap to fallback.png if the image fails
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/fallback.png';
+                        }}
+                    />
+                </div>
+            ) : (
+                <div className="relative w-full aspect-[16/9] bg-gray-100">
+                    <Image
+                        src="/fallback.png"
+                        alt="Fallback image"
+                        fill
+                        sizes="(max-width: 640px) 100vw,
+                            (max-width: 1024px) 50vw,
+                            33vw"
+                        className="object-cover"
+                        priority={isLCP}
+                    />
+                </div>
+            )}
+
 
                 <div className="p-5">
                     <div className="relative">
