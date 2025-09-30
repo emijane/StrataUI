@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import SearchBar from './library/SearchBar';
+import SearchBar from './library/ui/SearchBar';
 
 export default function Navbar() {
   // --- add state + handler ---

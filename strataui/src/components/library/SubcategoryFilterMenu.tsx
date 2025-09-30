@@ -66,7 +66,7 @@ export default function SubcategoryFilterMenu({ options }: { options: SubOption[
                         {hasSelection && (
                             <button
                                 onClick={clearAll}
-                                className="text-xs text-blue-600 hover:underline"
+                                className="text-xs text-purple-500 hover:underline hover:cursor-pointer"
                             >
                                 Clear
                             </button>
