@@ -47,7 +47,7 @@ export default function SubcategoryFilterMenu({ options }: { options: SubOption[
         <div className="relative">
             <details className="group">
                 <summary
-                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-gray-300 bg-white cursor-pointer select-none"
+                    className="inline-flex items-center gap-2 h-9 px-3 rounded-4xl border border-gray-300 bg-white cursor-pointer select-none"
                     aria-haspopup="listbox"
                 >
                     <span className="text-sm">
@@ -78,22 +78,23 @@ export default function SubcategoryFilterMenu({ options }: { options: SubOption[
                             const active = selected.has(o.slug);
                             return (
                                 <li key={o.slug}>
-                                    <button
-                                        onClick={() => toggle(o.slug)}
-                                        role="option"
-                                        aria-selected={active}
-                                        className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md ${
-                                            active
-                                                ? 'bg-gray-900 text-white'
-                                                : 'hover:bg-gray-100'
-                                        }`}
+                                    <label
+                                        className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md cursor-pointer hover:bg-gray-50"
                                         title={o.name}
                                     >
-                                        <span className="truncate">{o.name}</span>
-                                        <span className={`ml-2 text-xs ${active ? 'text-white/80' : 'text-gray-500'}`}>
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={active}
+                                                onChange={() => toggle(o.slug)}
+                                                className="h-4 w-4 appearance-none border border-gray-300 rounded-xl checked:bg-purple-300 checked:border-transparent"
+                                            />
+                                            <span className="truncate">{o.name}</span>
+                                        </div>
+                                        <span className="ml-2 text-xs text-gray-500">
                                             {o.count ?? ''}
                                         </span>
-                                    </button>
+                                    </label>
                                 </li>
                             );
                         })}
